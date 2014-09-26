@@ -123,6 +123,18 @@ int main(int argc, char **argv)
 	vpDisplay::flush(I3) ;	
 	vpDisplay::getClick(I1);
 
+
+
+	vpImage<unsigned char>  I4(384,256);//,255);
+	for (int i=188; i<196; i++) 
+		for (int j=0; j<256; j++)
+            I4[i][j] = 128;
+
+	vpDisplayX d4(I4,100,100) ;
+	vpDisplay::display(I4);
+	vpDisplay::flush(I4) ;	
+	vpDisplay::getClick(I4);
+
 	return 0;
 /*
 	
