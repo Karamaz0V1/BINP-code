@@ -169,13 +169,18 @@ int main(int argc, char **argv)
 	vpDisplay::flush(I6);
 	vpDisplay::getClick(I6);
 
-	vpImage<unsigned char>  I7(168,168,255);
+	vpImage<unsigned char> I7(168,168,255);
 
-	for (int i=0; i<168; i++) {
-		for (int j=0; j<168; j++) {
-            I7[i][j] = 0;
-        }
-    }
+    for (int I=8; I<168; I+=40)
+        for (int J=8; J<168; J+=40)
+            for (int i=0; i<32; i++)
+                for (int j=0; j<32; j++)
+                    I7[i+I][j+J] = 0;
+
+	vpDisplayX d7(I7,100,100) ;
+	vpDisplay::display(I7);
+	vpDisplay::flush(I7);
+	vpDisplay::getClick(I7);
 
 	return 0;
 /*
