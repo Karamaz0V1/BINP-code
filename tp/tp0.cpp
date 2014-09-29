@@ -125,15 +125,57 @@ int main(int argc, char **argv)
 
 
 
-	vpImage<unsigned char>  I4(384,256);//,255);
+	vpImage<unsigned char>  I4(384,256,255);
 	for (int i=188; i<196; i++) 
 		for (int j=0; j<256; j++)
             I4[i][j] = 128;
 
+	vpImage<unsigned char>  I5(384,256);
+	for (int i=0; i<188; i++) 
+		for (int j=0; j<256; j++)
+            I5[i][j] = j;
+	for (int i=188; i<196; i++) 
+		for (int j=0; j<256; j++)
+            I5[i][j] = 128;
+	for (int i=196; i<384; i++) 
+		for (int j=0; j<256; j++)
+            I5[i][j] = j;
+
 	vpDisplayX d4(I4,100,100) ;
+	vpDisplayX d5(I5,500,100) ;
 	vpDisplay::display(I4);
 	vpDisplay::flush(I4) ;	
+	vpDisplay::display(I5);
+	vpDisplay::flush(I5) ;	
 	vpDisplay::getClick(I4);
+
+	vpImage<unsigned char>  I6(290,360,228);
+
+	for (int i=0; i<290; i++) {
+		for (int j=0; j<60; j++)
+            I6[i][j] = 102;
+		for (int j=60; j<120; j++)
+            I6[i][j] = 127;
+		for (int j=120; j<180; j++)
+            I6[i][j] = 152;
+		for (int j=180; j<240; j++)
+            I6[i][j] = 178;
+		for (int j=240; j<300; j++)
+            I6[i][j] = 202;
+    }
+
+	vpDisplayX d6(I6,500,100) ;
+	vpDisplay::display(I6);
+	vpDisplay::flush(I6);
+	vpDisplay::getClick(I6);
+
+	vpImage<unsigned char>  I7(168,168,255);
+
+	for (int i=0; i<168; i++) {
+		for (int j=0; j<168; j++) {
+            I7[i][j] = 0;
+        }
+    }
 
 	return 0;
 /*
@@ -173,18 +215,3 @@ int main(int argc, char **argv)
 	return(0);
 */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
