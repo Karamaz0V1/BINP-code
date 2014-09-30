@@ -17,6 +17,7 @@
 
 
 #include <iostream>
+#include <cstdlib>
 
 /*!
  tp0_exemple.cpp
@@ -181,6 +182,41 @@ int main(int argc, char **argv)
 	vpDisplay::display(I7);
 	vpDisplay::flush(I7);
 	vpDisplay::getClick(I7);
+
+	vpImage<unsigned char> I8(256,256);
+
+    int lb, hb;
+
+    cout<<"LB : ";
+    cin>>lb;
+
+    while (lb != -1) {
+        cout<<"HB : ";
+        cin>>hb;
+        cout<<endl;
+
+        for (int i=0; i<256; i++)
+            for (int j=0; j<128; j++)
+                I8[i][j] = 255;
+
+        unsigned char valb;
+        for (int j=128-lb/2; j<128+lb/2; j++) {
+            if (I8[0][j] == 0) 
+                valb = I8[0][j] + (rand() % hb);
+            else
+                valb = I8[0][j] - (rand() % hb);
+
+            for (int i=0; i<256; i++)
+                I8[i][j] = valb;
+        }
+
+        vpDisplayX d8(I8,100,100) ;
+        vpDisplay::display(I8);
+        vpDisplay::flush(I8);
+
+        cout<<"LB : ";
+        cin>>lb;
+    }
 
 	return 0;
 /*
