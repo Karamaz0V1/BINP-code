@@ -11,10 +11,10 @@
 
 /****************************************************************************
  * NOMS - PRENOMS:
- *  -
- *	-
+ *  - BECKER Frédéric
+ *	- GUIOTTE Florent
  * 
- * Date :
+ * Date : sept 2014
  *****************************************************************************/
 
 
@@ -119,25 +119,51 @@ void RGBtoHSV( int &h, int &s, int &v , vpRGBa &pix)
 putBitInString : modifie le bit ˆ la position pos dans chaine (et donc le caractere concerne)
 */
 void putBitInString(char chaine[],const bool val,const unsigned int position) {
-	
-	
+    chaine[position] = 0;
 }
 
+void q11() {
+    cout<<"Question 1.1"<<endl;
+    cout<<"Décodage"<<endl;
 
+	vpImage<unsigned char> Ii;
+    vpImageIo::read(Ii,"../img/mixer.pgm") ;
 
+	vpImage<unsigned char> Io1; //TODO
+	vpImage<unsigned char> Io2;
+
+	vpDisplayX di(Ii,100,100) ;
+	vpDisplay::display(Ii);
+	vpDisplay::flush(Ii);
+	vpDisplayX do1(Io1,200,100) ;
+	vpDisplay::display(Io1);
+	vpDisplay::flush(Io1);
+	vpDisplayX do2(Io2,300,100) ;
+	vpDisplay::display(Io2);
+	vpDisplay::flush(Io2);
+
+	vpDisplay::getClick(Ii);
+}
+
+void q12() {
+    cout<<"Question 1"<<endl;
+	vpImage<unsigned char> I1;
+    vpImageIo::read(I1,"../img/water.pgm") ;
+	vpDisplayX d1(I1,100,100) ;
+	vpDisplay::display(I1);
+	vpDisplay::flush(I1);
+	vpDisplay::getClick(I1);
+}
 
 int main(int argc, char **argv)
 {
 
-  cout << "BINP TP2 : MANIPULATION DES COULEURS " << endl ;
-  cout << "--" << endl ;
+    cout << "BINP TP2 : MANIPULATION DES COULEURS " << endl ;
+    cout << "--" << endl ;
 
   // creation du menu
 
-
-
-
-
+    q11();
 
   cout << "Fin du programme " << endl ;
   return(0);
