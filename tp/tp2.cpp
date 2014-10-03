@@ -119,8 +119,7 @@ void RGBtoHSV( int &h, int &s, int &v , vpRGBa &pix)
 putBitInString : modifie le bit  la position pos dans chaine (et donc le caractere concerne)
 */
 void putBitInString(char chaine[],const bool val,const unsigned int position) {
-    chaine[position/8] &= (char)pow(2,(position%8));
-    cout<<"Debug bool : "<<(position/8)<<" : "<<pow(2,(position%8))<<endl; // TODO Il y a quelque chose qui coince par là
+    if (val) chaine[position/8] |= (char)pow(2,(position%8));
 }
 
 void q11() {
@@ -186,7 +185,7 @@ void q11() {
 }
 
 void q12() {
-    cout<<"Question 1"<<endl;
+    cout<<"Question 1.2"<<endl;
 	vpImage<unsigned char> I1;
     vpImageIo::read(I1,"../img/water.pgm") ;
 	vpDisplayX d1(I1,100,100) ;
@@ -197,9 +196,8 @@ void q12() {
     char mark[I1.getHeight()*I1.getWidth()/8];
 
     for (int i=0; i<I1.getWidth(); i++)
-        for (int j=0; j<I1.getHeight(); j++) {
+        for (int j=0; j<I1.getHeight(); j++)
             putBitInString(mark, (I1[i][j] & 1), i*I1.getWidth()+j);
-        }
 
     cout<<"Oh ! I Mark : "<<mark<<endl;
 }
