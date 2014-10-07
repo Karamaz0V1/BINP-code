@@ -54,26 +54,53 @@ void tracer_histo(const unsigned int *histo, const unsigned int max, const int s
 
 void histogramme(const vpImage<unsigned char>  &I, unsigned int* histo, int &max)
 {
+    for (int i=0; i<256; i++) 
+        histo[i] = 0;
 
+    for (int i=0; i<I.getHeight(); i++)
+        for (int j=0; j<I.getWidth(); j++)
+            if (++histo[I[i][j]] > max) max = histo[I[i][j]];
 }
 
 
 double entropie (const unsigned int* histo, const unsigned int h, const unsigned int w)
 {
+    int nbpix = 0;
+    for (int i=0; i<256; i++) nbpix+= histo[i]; 
+
+    float prob;
+    int sum = 0;
+    for (int i=0; i<256; i++) {
+        prob = (histo[i]/nbpix);
+        if (prob == 0) continue;
+        sum += log(histo[i]); //TODO
+    }
 
 
 }
 
 void histocumule(const vpImage<unsigned char> &I, unsigned int* histo, unsigned int* histocumul)
 {
+    int max = 0;
+    int cumul = 0;
 
-
+    histogramme(I, histo, max);
+    for (int i=0; i<256; i++) {
+        cumul += histo[i];
+        histocumul[i] = cumul;
+    }
 }
 
 void compute_stat(const vpImage<unsigned char>  &I0, const unsigned int h,const unsigned int w, const int posX, const int posY)
 {
+    unsigned int histo[256];
+    unsigned int histocumul[256];
 
-	
+    int max = 0;
+    histogramme(I0, histo, max);
+    tracer_histo(histo, max, 256, 100, 300);
+    histocumule(I0, histo, histocumul);
+    tracer_histo(histocumul, I0.getWidth()*I0.getHeight(), 256, 100, 300);
 }
 
 void anamorphose1(const vpImage<unsigned char>  &I0, const float pente)
@@ -170,23 +197,6 @@ int main(int argc, char **argv)
 		}
 	}
 	
-
-	
   cout << "Fin du programme " << endl ;
   return(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
