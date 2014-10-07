@@ -110,6 +110,10 @@ void RGBtoHSV( int &h, int &s, int &v , vpRGBa &pix)
         }
     }
 }
+
+//void RGBtoYUV(const vpImage<unsigned char> & const irgb , vpImage<unsigned char> & iyuv) {
+
+//}
 //////////////////////////////////////////////////////////////////
 
 /* 
@@ -127,7 +131,7 @@ void q11() {
     cout<<"Décodage"<<endl;
 
 	vpImage<unsigned char> Ii;
-    vpImageIo::read(Ii,"../img/mixer.pgm") ;
+    vpImageIo::read(Ii,"../BINP-code/img/mixer.pgm") ;
 
 	vpImage<unsigned char> Io1(Ii.getHeight(),Ii.getWidth());
 	vpImage<unsigned char> Io2(Ii.getHeight(),Ii.getWidth());
@@ -155,9 +159,9 @@ void q11() {
     cout<<"Encodage"<<endl;
 
 	vpImage<unsigned char> Ii1;
-    vpImageIo::read(Ii1,"../img/otter.pgm") ;
+    vpImageIo::read(Ii1,"../BINP-code/img/otter.pgm") ;
 	vpImage<unsigned char> Ii2;
-    vpImageIo::read(Ii2,"../img/ottre.pgm") ;
+    vpImageIo::read(Ii2,"../BINP-code/img/ottre.pgm") ;
 
 	vpImage<unsigned char> Io(Ii1.getHeight(),Ii1.getWidth());
 
@@ -178,7 +182,7 @@ void q11() {
 	vpDisplay::display(Io);
 	vpDisplay::flush(Io);
 
-	vpImageIo::write(Io,"../img/otrte.pgm") ;
+	vpImageIo::write(Io,"./img/otrte.pgm") ;
 
 	vpDisplay::getClick(Ii1);
 
@@ -187,7 +191,7 @@ void q11() {
 void q12() {
     cout<<"Question 1.2"<<endl;
 	vpImage<unsigned char> I1;
-    vpImageIo::read(I1,"../img/water.pgm") ;
+    vpImageIo::read(I1,"../BINP-code/img/water.pgm") ;
 	vpDisplayX d1(I1,100,100) ;
 	vpDisplay::display(I1);
 	vpDisplay::flush(I1);
@@ -202,6 +206,9 @@ void q12() {
     cout<<"Oh ! I Mark : "<<mark<<endl;
 }
 
+void q21() {
+}
+
 int main(int argc, char **argv)
 {
 
@@ -210,7 +217,7 @@ int main(int argc, char **argv)
 
   // creation du menu
 
-    q12();
+    q11();
 
   cout << "Fin du programme " << endl ;
   return(0);
