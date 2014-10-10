@@ -19,6 +19,7 @@
 
 
 #include <iostream>
+#include <cstdlib>
 
 #include <visp/vpConfig.h>
 #include <visp/vpDebug.h>
