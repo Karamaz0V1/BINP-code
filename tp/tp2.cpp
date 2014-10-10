@@ -112,6 +112,11 @@ void RGBtoHSV( int &h, int &s, int &v , vpRGBa &pix)
 }
 
 //void RGBtoYUV(const vpImage<unsigned char> & const irgb , vpImage<unsigned char> & iyuv) {
+void RGBtoYUV(const vpRGBa &rgb, vpRGBa &yuv) {
+    yuv.R = 0.299 * rgb.R + 0.587 * rgb.G + 0.114 * rgb.B;
+    yuv.G = 0.492 * (rgb.B - yuv.R);
+    yuv.B = 0.877 * (rgb.R - yuv.R);
+}
 
 //}
 //////////////////////////////////////////////////////////////////
@@ -206,7 +211,44 @@ void q12() {
     cout<<"Oh ! I Mark : "<<mark<<endl;
 }
 
-void q21() {
+void q22() {
+    cout<<"Question 2.2"<<endl;
+	vpImage<vpRGBa> I1;
+    vpImageIo::read(I1,"../BINP-code/img/baboon_jpg.ppm") ;
+	vpImage<vpRGBa> I2(I1.getWidth(),I1.getHeight());
+
+    for (int i=0; i<I1.getHeight(); i++)
+        for (int j=0; j<I1.getWidth(); j++)
+            RGBtoYUV(I1[i][j],I2[i][j]);
+
+	vpImage<unsigned char> I2R(I2.getWidth(),I2.getHeight());
+    for (int i=0; i<I2.getHeight(); i++)
+        for (int j=0; j<I2.getWidth(); j++)
+            I2R[i][j] = I2[i][j].R;
+
+	vpImage<unsigned char> I2G(I2.getWidth(),I2.getHeight());
+    for (int i=0; i<I2.getHeight(); i++)
+        for (int j=0; j<I2.getWidth(); j++)
+            I2G[i][j] = I2[i][j].G;
+
+	vpImage<unsigned char> I2B(I2.getWidth(),I2.getHeight());
+    for (int i=0; i<I2.getHeight(); i++)
+        for (int j=0; j<I2.getWidth(); j++)
+            I2B[i][j] = I2[i][j].B;
+
+	vpDisplayX d1(I2,100,000) ;
+	vpDisplay::display(I2);
+	vpDisplay::flush(I2);
+	vpDisplayX d2R(I2R,100,500) ;
+	vpDisplay::display(I2R);
+	vpDisplay::flush(I2R);
+	vpDisplayX d2G(I2G,500,000) ;
+	vpDisplay::display(I2G);
+	vpDisplay::flush(I2G);
+	vpDisplayX d2B(I2B,500,500) ;
+	vpDisplay::display(I2B);
+	vpDisplay::flush(I2B);
+	vpDisplay::getClick(I1);
 }
 
 int main(int argc, char **argv)
@@ -217,7 +259,7 @@ int main(int argc, char **argv)
 
   // creation du menu
 
-    q11();
+    q22();
 
   cout << "Fin du programme " << endl ;
   return(0);
