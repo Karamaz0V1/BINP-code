@@ -113,6 +113,7 @@ void RGBtoHSV( int &h, int &s, int &v , vpRGBa &pix)
 
 //void RGBtoYUV(const vpImage<unsigned char> & const irgb , vpImage<unsigned char> & iyuv) {
 void RGBtoYUV(const vpRGBa &rgb, vpRGBa &yuv) {
+    // TODO U et V signés 
     yuv.R = 0.299 * rgb.R + 0.587 * rgb.G + 0.114 * rgb.B;
     yuv.G = 0.492 * (rgb.B - yuv.R);
     yuv.B = 0.877 * (rgb.R - yuv.R);
@@ -248,7 +249,7 @@ void q22() {
 	vpDisplayX d2B(I2B,500,500) ;
 	vpDisplay::display(I2B);
 	vpDisplay::flush(I2B);
-	vpDisplay::getClick(I1);
+	vpDisplay::getClick(I2);
 }
 
 int main(int argc, char **argv)

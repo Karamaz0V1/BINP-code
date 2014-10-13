@@ -65,18 +65,14 @@ void histogramme(const vpImage<unsigned char>  &I, unsigned int* histo, int &max
 
 double entropie (const unsigned int* histo, const unsigned int h, const unsigned int w)
 {
-    int nbpix = 0;
-    for (int i=0; i<256; i++) nbpix+= histo[i]; 
+    double sum = 0;
 
-    float prob;
-    int sum = 0;
     for (int i=0; i<256; i++) {
-        prob = (histo[i]/nbpix);
+        float prob = (histo[i]*1.0/(h*w));
         if (prob == 0) continue;
-        sum += log(histo[i]); //TODO
+        sum += prob * (log(prob)/log(2));
     }
-
-
+    return -sum;
 }
 
 void histocumule(const vpImage<unsigned char> &I, unsigned int* histo, unsigned int* histocumul)
@@ -91,6 +87,37 @@ void histocumule(const vpImage<unsigned char> &I, unsigned int* histo, unsigned 
     }
 }
 
+float moyenne (const unsigned int* histo, const unsigned int h, const unsigned int w) {
+    double sum = 0;
+    for (int i=0; i<256; i++)
+        sum += histo[i] * i;
+    return sum/(h*w);
+}
+
+float  ecart_type (const unsigned int* histo, const unsigned int h, const unsigned int w) {
+    int moy = moyenne(histo, h, w);
+    double sum = 0;
+    for (int i=0; i<256; i++)
+        sum += pow(i - moy, 2) / (h*w) * histo[i];
+    return sqrt(sum);
+}
+
+void dynamique (const unsigned int* histo, int &min, int &max) {
+    int i=0;
+    while (histo[i] == 0) i++;
+    min = i;
+    i=255;
+    while (histo[i] == 0) i--;
+    max = i;
+}
+
+int niveaux_de_gris (const unsigned int* histo) {
+    int nb = 0;
+    for (int i=0; i<256; i++)
+        if (histo[i] != 0) nb++;
+    return nb;
+}
+
 void compute_stat(const vpImage<unsigned char>  &I0, const unsigned int h,const unsigned int w, const int posX, const int posY)
 {
     unsigned int histo[256];
@@ -101,11 +128,30 @@ void compute_stat(const vpImage<unsigned char>  &I0, const unsigned int h,const 
     tracer_histo(histo, max, 256, 100, 300);
     histocumule(I0, histo, histocumul);
     tracer_histo(histocumul, I0.getWidth()*I0.getHeight(), 256, 100, 300);
+
+    cout<<"Entropie : "<<entropie(histo, h, w)<<endl;
+    cout<<"Moyenne : "<<moyenne(histo, h, w)<<endl;
+    cout<<"Écart type : "<<ecart_type(histo, h, w)<<endl;
+    int dmin, dmax;
+    dynamique(histo, dmin, dmax);
+    cout<<"Dynamique minimum : "<<dmin<<" maximum : "<<dmax<<endl;
+    cout<<"Nombre de niveaux de gris : "<<niveaux_de_gris(histo)<<endl;
 }
 
 void anamorphose1(const vpImage<unsigned char>  &I0, const float pente)
 {
+	vpImage<unsigned char> I1(I0.getWidth(), I0.getHeight());
+
+    for (int i=0; i<I0.getWidth(); i++)
+        for (int j=0; j<I0.getHeight(); j++)
+            I1[i][j] = I0[i][j] * pente;
+
+	vpDisplayX d2(I1,100,500) ;
+	vpDisplay::display(I1) ;
+	vpDisplay::flush(I1) ;
 	
+	
+	vpDisplay::getClick(I1) ;
 }
 
 
