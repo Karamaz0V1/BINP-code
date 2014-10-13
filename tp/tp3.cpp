@@ -157,7 +157,18 @@ void anamorphose1(const vpImage<unsigned char>  &I0, const float pente)
 
 void anamorphose2(const vpImage<unsigned char>  &I0, const unsigned int seuil)
 {
+	vpImage<unsigned char> I1(I0.getWidth(), I0.getHeight());
 
+    for (int i=0; i<I0.getWidth(); i++)
+        for (int j=0; j<I0.getHeight(); j++)
+            I1[i][j] = I0[i][j] * (255/seuil);
+
+	vpDisplayX d2(I1,100,500) ;
+	vpDisplay::display(I1) ;
+	vpDisplay::flush(I1) ;
+	
+	
+	vpDisplay::getClick(I1) ;
 }
 
 
