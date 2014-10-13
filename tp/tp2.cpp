@@ -115,8 +115,8 @@ void RGBtoHSV( int &h, int &s, int &v , vpRGBa &pix)
 void RGBtoYUV(const vpRGBa &rgb, vpRGBa &yuv) {
     // TODO U et V signés 
     yuv.R = 0.299 * rgb.R + 0.587 * rgb.G + 0.114 * rgb.B;
-    yuv.G = 0.492 * (rgb.B - yuv.R);
-    yuv.B = 0.877 * (rgb.R - yuv.R);
+    yuv.G = 0.492 * (rgb.B - yuv.R) + 128;
+    yuv.B = 0.877 * (rgb.R - yuv.R) + 128;
 }
 
 //}
