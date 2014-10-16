@@ -11,10 +11,10 @@
 
 /****************************************************************************
  * NOMS - PRENOMS:
- *  -
- *	-
+ *  - BECKER Frederic
+ *	- GUIOTTE Florent
  * 
- * Date :
+ * Date : Oct 2014
  *****************************************************************************/
 
 
@@ -160,8 +160,11 @@ void anamorphose2(const vpImage<unsigned char>  &I0, const unsigned int seuil)
 	vpImage<unsigned char> I1(I0.getWidth(), I0.getHeight());
 
     for (int i=0; i<I0.getWidth(); i++)
-        for (int j=0; j<I0.getHeight(); j++)
-            I1[i][j] = I0[i][j] * (255/seuil);
+        for (int j=0; j<I0.getHeight(); j++) {
+            int g = I0[i][j] * (255/seuil);
+            if (g > 255) I1[i][j] = 255;
+            else I1[i][j] = g;
+        }
 
 	vpDisplayX d2(I1,100,500) ;
 	vpDisplay::display(I1) ;
@@ -174,8 +177,34 @@ void anamorphose2(const vpImage<unsigned char>  &I0, const unsigned int seuil)
 
 void egalisation(const vpImage<unsigned char>  &I)
 {
-	
-	
+	vpImage<unsigned char>  I2(I.getHeight(), I.getWidth());
+
+    unsigned int histo[256];
+    unsigned int histocumul[256];
+    unsigned int anam[256];
+    int max;
+
+    histogramme(I, histo, max);
+    tracer_histo(histo, max, 256, 100, 300);
+    histocumule(I, histo, histocumul);
+    tracer_histo(histocumul, I.getWidth()*I.getHeight(), 256, 100, 300);
+
+    for (int i=0; i<256; i++)
+        anam[i] = round(1.0*histocumul[i]/(I.getWidth()*I.getHeight())*255);
+
+    tracer_histo(anam, max, 256, 100, 300);
+
+    for (int i=0; i<I.getHeight(); i++) 
+        for (int j=0; j<I.getWidth(); j++)
+            I2[i][j] = anam[I[i][j]];
+
+    histogramme(I2, histo, max);
+    tracer_histo(histo, max, 256, 100, 300);
+
+	vpDisplayX d2(I2,100,500) ;
+	vpDisplay::display(I2) ;
+	vpDisplay::flush(I2) ;
+	vpDisplay::getClick(I2) ;
 }
 
 int main(int argc, char **argv)
@@ -197,6 +226,7 @@ int main(int argc, char **argv)
 		cout<<"1. Affichage des stats d'une image"<<endl;
 		cout<<"2. Anamorphoses"<<endl;
 		cout<<"3. Egalisation d'histogramme"<<endl;
+		cout<<"4. Egalisation d'histogramme (choix)"<<endl;
 		cout<<"5. Quitter"<<endl;
 		
 		cin>>choix;
@@ -238,6 +268,19 @@ int main(int argc, char **argv)
 				break;
 			case 3 :
 				vpImageIo::read(I0,"../images/lezard.pgm") ;
+				d0.init(I0);
+				vpDisplay::display(I0);
+				vpDisplay::flush(I0) ;	
+				
+				// Egalisation
+				egalisation(I0);
+				
+				vpDisplay::getClick(I0);
+				vpDisplay::close(I0) ;
+				break;
+            case 4 :
+				cout << "Nom de l'image : "; cin >> sIm; 	
+				vpImageIo::read(I0,sIm) ;
 				d0.init(I0);
 				vpDisplay::display(I0);
 				vpDisplay::flush(I0) ;	
