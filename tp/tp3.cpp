@@ -150,6 +150,7 @@ void anamorphose1(const vpImage<unsigned char>  &I0, const float pente)
 	vpDisplay::display(I1) ;
 	vpDisplay::flush(I1) ;
 	
+	compute_stat(I1, I1.getHeight(), I1.getWidth(), 100, 500);
 	
 	vpDisplay::getClick(I1) ;
 }
@@ -170,6 +171,7 @@ void anamorphose2(const vpImage<unsigned char>  &I0, const unsigned int seuil)
 	vpDisplay::display(I1) ;
 	vpDisplay::flush(I1) ;
 	
+	compute_stat(I1, I1.getHeight(), I1.getWidth(), 100, 500);
 	
 	vpDisplay::getClick(I1) ;
 }
@@ -271,7 +273,6 @@ int main(int argc, char **argv)
 				d0.init(I0);
 				vpDisplay::display(I0);
 				vpDisplay::flush(I0) ;	
-				
 				// Egalisation
 				egalisation(I0);
 				

@@ -260,7 +260,7 @@ int main(int argc, char **argv)
 
   // creation du menu
 
-    q22();
+    q11();
 
   cout << "Fin du programme " << endl ;
   return(0);
