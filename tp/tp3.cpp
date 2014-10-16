@@ -185,27 +185,47 @@ void egalisation(const vpImage<unsigned char>  &I)
     unsigned int histocumul[256];
     unsigned int anam[256];
     int max;
+    int h = I.getHeight();
+    int w = I.getWidth();
 
     histogramme(I, histo, max);
     tracer_histo(histo, max, 256, 100, 300);
     histocumule(I, histo, histocumul);
-    tracer_histo(histocumul, I.getWidth()*I.getHeight(), 256, 100, 300);
+    tracer_histo(histocumul, w*h, 256, 100, 300);
+    cout<<"Entropie : "<<entropie(histo, h, w)<<endl;
+    cout<<"Moyenne : "<<moyenne(histo, h, w)<<endl;
+    cout<<"Écart type : "<<ecart_type(histo, h, w)<<endl;
+    int dmin, dmax;
+    dynamique(histo, dmin, dmax);
+    cout<<"Dynamique minimum : "<<dmin<<" maximum : "<<dmax<<endl;
+    cout<<"Nombre de niveaux de gris : "<<niveaux_de_gris(histo)<<endl;
 
     for (int i=0; i<256; i++)
         anam[i] = round(1.0*histocumul[i]/(I.getWidth()*I.getHeight())*255);
 
-    tracer_histo(anam, max, 256, 100, 300);
+    //tracer_histo(anam, max, 256, 100, 300);
 
     for (int i=0; i<I.getHeight(); i++) 
         for (int j=0; j<I.getWidth(); j++)
             I2[i][j] = anam[I[i][j]];
 
-    histogramme(I2, histo, max);
-    tracer_histo(histo, max, 256, 100, 300);
+    
 
 	vpDisplayX d2(I2,100,500) ;
 	vpDisplay::display(I2) ;
 	vpDisplay::flush(I2) ;
+	
+	histogramme(I2, histo, max);
+    tracer_histo(histo, max, 256, 100, 300);
+	histocumule(I2, histo, histocumul);
+    tracer_histo(histocumul, w*h, 256, 100, 300);
+    cout<<"Entropie : "<<entropie(histo, h, w)<<endl;
+    cout<<"Moyenne : "<<moyenne(histo, h, w)<<endl;
+    cout<<"Écart type : "<<ecart_type(histo, h, w)<<endl;
+    dynamique(histo, dmin, dmax);
+    cout<<"Dynamique minimum : "<<dmin<<" maximum : "<<dmax<<endl;
+    cout<<"Nombre de niveaux de gris : "<<niveaux_de_gris(histo)<<endl;
+	
 	vpDisplay::getClick(I2) ;
 }
 
