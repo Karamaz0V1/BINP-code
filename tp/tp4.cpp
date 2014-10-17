@@ -52,12 +52,91 @@ int corres(const vpRGBa &coul, const int * classeR, const int * classeG,const in
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
+void histogramme(const vpImage<unsigned char>  &I, unsigned int* histo, int &max)
+{
+    for (int i=0; i<256; i++) 
+        histo[i] = 0;
+
+    for (int i=0; i<I.getHeight(); i++)
+        for (int j=0; j<I.getWidth(); j++)
+            if (++histo[I[i][j]] > max) max = histo[I[i][j]];
+}
+
+void histocumule(const vpImage<unsigned char> &I, unsigned int* histo, unsigned int* histocumul)
+{
+    int max = 0;
+    int cumul = 0;
+
+    histogramme(I, histo, max);
+    for (int i=0; i<256; i++) {
+        cumul += histo[i];
+        histocumul[i] = cumul;
+    }
+}
+
+void decoupecompo(const vpImage<unsigned char> &compo, unsigned char * correscompo, int n) {
+    unsigned int histo[256];
+    unsigned int histocumul[256];
+
+    histocumule(compo, histo, histocumul);
+
+    int pas = (compo.getWidth() * compo.getHeight()) / n;
+    int palier = pas;
+    int nbiter = 0;
+    int aborne = 0;
+
+    for (int i=0; i<256; i++) {
+        if (histocumul[i] > palier) {
+            correscompo[nbiter] = (aborne + i)/2; //TODO Faire la moyenne plutôt que de prendre la mediane
+            aborne  = i;
+            nbiter++;
+            palier += pas;
+        }
+    }
+}
+
+// void separecompo(const vpImage<vpRGBa> &I, vpImage<unsigned char> is ...) //TODO split des composantes si possible
+
+void quantifnonuniforme(const vpImage<vpRGBa> &I, int n, unsigned char* R, unsigned char * G, unsigned char* B) {
+    vpImage<unsigned char> cr(I.getHeight(), I.getWidth());
+    vpImage<unsigned char> cg(I.getHeight(), I.getWidth());
+    vpImage<unsigned char> cb(I.getHeight(), I.getWidth());
+
+    //TODO la suite
+}
+
+void quantifuniforme(const vpImage<vpRGBa> &I, int n) {
+    int classe[256];
+    unsigned char repR[n];
+    unsigned char repG[n];
+    unsigned char repB[n];
+
+    int pas = 256 / n;
+    int palier = 0;
+
+    for(int i=0; i<256; i++) {
+        if(i>palier*pas+pas) {
+            repR[palier] = (palier*pas * 2 + pas) /2;
+            repG[palier] = (palier*pas * 2 + pas) /2;
+            repB[palier] = (palier*pas * 2 + pas) /2;
+            palier++;
+        }
+        classe[i] = palier;
+    }
+
+
+    vpRGBa pal[(int)pow(n,3)];
+    creerPalette(repR, repG, repB, n, pal);
+    /*
+    for(int=0; i<256; i++) {
+        corres(I.
+        */
+}
+
 void quantifVectoriel(const vpImage<vpRGBa> &imasrc,vpImage<vpRGBa> &imadest, vpRGBa * pal,const int taillePalette) 
 {
 	
 }
-
-
 
 int main(int argc, char **argv)
 {
@@ -85,18 +164,3 @@ int main(int argc, char **argv)
 	cout << "Fin du programme " << endl ;
 	return(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
