@@ -204,6 +204,8 @@ void q12() {
 	vpDisplay::getClick(I1);
 
     char mark[I1.getHeight()*I1.getWidth()/8];
+    for (int i=0; i<(I1.getHeight()*I1.getWidth()/8); i++) 
+        mark[i] = 0;
 
     for (int i=0; i<I1.getWidth(); i++)
         for (int j=0; j<I1.getHeight(); j++)
@@ -252,6 +254,63 @@ void q22() {
 	vpDisplay::getClick(I2);
 }
 
+void q3() {
+    cout<<"Question 3"<<endl;
+	vpImage<unsigned char> I1;
+    vpImageIo::read(I1,"../BINP-code/img/head.pgm") ;
+	vpImage<vpRGBa> I2(I1.getHeight(),I1.getWidth());
+    
+    vpRGBa pix;
+
+    for(int i=0; i<I1.getHeight(); i++) 
+        for(int j=0; j<I1.getWidth(); j++) {
+            HSVtoRGB(I1[i][j]+200,255,255,pix);
+            I2[i][j] = pix;
+        }
+
+
+	vpDisplayX d1(I1,100,100) ;
+	vpDisplay::display(I1);
+	vpDisplay::flush(I1);
+	vpDisplayX d2(I2,400,100) ;
+	vpDisplay::display(I2);
+	vpDisplay::flush(I2);
+	vpDisplay::getClick(I1);
+}
+
+void q4() {
+    cout<<"Question ?"<<endl;
+	vpImage<unsigned char> I1;
+    vpImageIo::read(I1,"../BINP-code/img/head.pgm") ;
+	vpImage<vpRGBa> I2(I1.getHeight(),I1.getWidth());
+    
+    vpRGBa pix;
+
+	vpDisplayX d1(I1,100,100) ;
+	vpDisplay::display(I1);
+	vpDisplay::flush(I1);
+	vpDisplayX d2(I2,400,100) ;
+
+    while (true)
+        for(int f=0; f<360; f+=1) {
+            for(int i=0; i<I1.getHeight(); i++) 
+                for(int j=0; j<I1.getWidth(); j++) {
+                    HSVtoRGB(I1[i][j]+f,255,255,pix);
+                    I2[i][j] = pix;
+                }
+            vpDisplay::display(I2);
+            vpDisplay::flush(I2);
+            /*
+            ostringstream file;
+            file<<"./gif/"<<f<<".pnm";
+            vpImageIo::write(I2,file.str());
+            //*/
+        }
+
+
+	vpDisplay::getClick(I1);
+}
+
 int main(int argc, char **argv)
 {
 
@@ -259,8 +318,42 @@ int main(int argc, char **argv)
     cout << "--" << endl ;
 
   // creation du menu
+  int choix=0;
+  while(choix<6) {
 
-    q11();
+    cout << "1. Décodage et Encodage" <<endl ;
+    cout << "2. Watermarking"<<endl;
+	cout << "3. Décomposition YUV" << endl;
+    cout << "4. Fausses couleurs"<<endl;
+    cout << "5. ?"<<endl;
+    cout << "6. Quitter"<<endl;
+
+    cin >> choix ;
+    switch(choix) {
+    case 1:
+      q11();
+      break;
+
+    case 2:
+      q12();
+      break;
+
+    case 3:
+      q22();
+      break;
+
+    case 4:
+      q3();
+      break;
+
+    case 5:
+      q4();
+	  break;
+
+    default:
+      break;
+    }
+  }
 
   cout << "Fin du programme " << endl ;
   return(0);
