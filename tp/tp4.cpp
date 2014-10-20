@@ -105,32 +105,41 @@ void quantifnonuniforme(const vpImage<vpRGBa> &I, int n, unsigned char* R, unsig
     //TODO la suite
 }
 
-void quantifuniforme(const vpImage<vpRGBa> &I, int n) {
+void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
+    int n = tailleComposante;
     int classe[256];
     unsigned char repR[n];
     unsigned char repG[n];
     unsigned char repB[n];
 
+
     int pas = 256 / n;
     int palier = 0;
 
     for(int i=0; i<256; i++) {
-        if(i>palier*pas+pas) {
+        if(i>palier*pas+pas||i==255) {
             repR[palier] = (palier*pas * 2 + pas) /2;
             repG[palier] = (palier*pas * 2 + pas) /2;
             repB[palier] = (palier*pas * 2 + pas) /2;
+            cout<<"I : "<<i<<"\tPalier : "<<palier<<"\tRepR : "<<(int)repR[palier]<<endl;
             palier++;
         }
         classe[i] = palier;
     }
 
-
     vpRGBa pal[(int)pow(n,3)];
     creerPalette(repR, repG, repB, n, pal);
-    /*
-    for(int=0; i<256; i++) {
-        corres(I.
-        */
+
+    vpImage<vpRGBa> I2(I.getHeight(),I.getWidth());
+    for(int i=0; i<I.getHeight(); i++)
+        for(int j=0; j<I.getWidth(); j++)
+            I2[i][j] = pal[corres(I[i][j], classe, classe, classe, n)];
+
+    vpDisplayX d(I2,100,300);
+    vpDisplay::setTitle(I2, "Tadaaaa!");
+    vpDisplay::display(I2);
+    vpDisplay::flush(I2);
+    vpDisplay::getClick(I2);
 }
 
 void quantifVectoriel(const vpImage<vpRGBa> &imasrc,vpImage<vpRGBa> &imadest, vpRGBa * pal,const int taillePalette) 
@@ -157,6 +166,9 @@ int main(int argc, char **argv)
     cin >> nbbits;
 	
 	// creation du menu
+    int tailleComposante = pow(2,nbbits);
+
+    quantifuniforme(I,tailleComposante);
 	
 	
 	
