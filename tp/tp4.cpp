@@ -74,7 +74,8 @@ void histocumule(const vpImage<unsigned char> &I, unsigned int* histo, unsigned 
     }
 }
 
-void decoupecompo(const vpImage<unsigned char> &compo, unsigned char * corresCompo, int * classeCompo, int n) {
+void quantitatifnonuniformesurcomposante(const vpImage<unsigned char> &compo, unsigned char * corresCompo, int * classeCompo, int n) {
+    cout<<"Travail sur une composante ---"<<endl;
     unsigned int histo[256];
     unsigned int histocumul[256];
 
@@ -89,16 +90,14 @@ void decoupecompo(const vpImage<unsigned char> &compo, unsigned char * corresCom
         classeCompo[i] = nbiter;
         if (histocumul[i] > (nbiter + 1) * pas - (pas/2) && valmoy == 0) valmoy = i;
         if (histocumul[i] > (nbiter + 1) * pas || i == 255) {
-            cout<<"I : "<<nbiter<<"\tPalier : "<<(nbiter+1)*pas<<"\tRepR : "<<(int)corresCompo[nbiter]<<endl;
             corresCompo[nbiter] = valmoy;
+            cout<<"I : "<<nbiter<<"\tPalier : "<<(nbiter+1)*pas<<"\tRep : "<<(int)corresCompo[nbiter]<<endl;
             aborne = i;
             nbiter++;
             valmoy = 0;
         }
     }
 }
-
-// void separecompo(const vpImage<vpRGBa> &I, vpImage<unsigned char> is ...) //TODO split des composantes si possible
 
 void quantifnonuniforme(const vpImage<vpRGBa> &I, int n) {
     vpImage<unsigned char> cr(I.getHeight(), I.getWidth());
@@ -113,11 +112,31 @@ void quantifnonuniforme(const vpImage<vpRGBa> &I, int n) {
         }
 
     unsigned char crCorres[n];
+    unsigned char cgCorres[n];
+    unsigned char cbCorres[n];
+
     int crClasse[256];
+    int cgClasse[256];
+    int cbClasse[256];
 
-    decoupecompo(cr,crCorres,crClasse,n);
+    quantitatifnonuniformesurcomposante(cr,crCorres,crClasse,n);
+    quantitatifnonuniformesurcomposante(cg,cgCorres,cgClasse,n);
+    quantitatifnonuniformesurcomposante(cb,cbCorres,cbClasse,n);
 
-    //TODO
+    vpRGBa pal[(int)pow(n,3)];
+    creerPalette(crCorres, cgCorres, cbCorres, n, pal);
+
+    vpImage<vpRGBa> I2(I.getHeight(),I.getWidth());
+
+    for(int i=0; i<I.getHeight(); i++)
+        for(int j=0; j<I.getWidth(); j++)
+            I2[i][j] = pal[corres(I[i][j], crClasse, cgClasse, cbClasse, n)];
+
+    vpDisplayX d(I2,100,300);
+    vpDisplay::setTitle(I2, "Tadaaaa!");
+    vpDisplay::display(I2);
+    vpDisplay::flush(I2);
+    vpDisplay::getClick(I2);
 }
 
 void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
@@ -128,12 +147,11 @@ void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
     unsigned char repG[n];
     unsigned char repB[n];
 
-
     int pas = 256 / n;
     int palier = 0;
 
     for(int i=0; i<256; i++) {
-        if(i>palier*pas+pas||i==255) {
+        if(i > palier * pas + pas || i == 255) {
             repR[palier] = (palier*pas * 2 + pas) /2;
             repG[palier] = (palier*pas * 2 + pas) /2;
             repB[palier] = (palier*pas * 2 + pas) /2;
@@ -147,11 +165,12 @@ void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
     creerPalette(repR, repG, repB, n, pal);
 
     vpImage<vpRGBa> I2(I.getHeight(),I.getWidth());
+
     for(int i=0; i<I.getHeight(); i++)
         for(int j=0; j<I.getWidth(); j++)
             I2[i][j] = pal[corres(I[i][j], classe, classe, classe, n)];
 
-    vpDisplayX d(I2,100,300);
+    vpDisplayX da(I2,100,300);
     vpDisplay::setTitle(I2, "Tadaaaa!");
     vpDisplay::display(I2);
     vpDisplay::flush(I2);
@@ -184,6 +203,7 @@ int main(int argc, char **argv)
 	// creation du menu
     int tailleComposante = pow(2,nbbits);
 
+    quantifuniforme(I,tailleComposante);
     quantifnonuniforme(I,tailleComposante);
 	
 	
