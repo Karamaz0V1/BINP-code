@@ -11,8 +11,8 @@
 
 /****************************************************************************
  * NOMS - PRENOMS:
- *  -
- *	-
+ *  - BECKER Frederic
+ *	- GUIOTTE Florent
  * 
  * Date :
  *****************************************************************************/
@@ -74,33 +74,48 @@ void histocumule(const vpImage<unsigned char> &I, unsigned int* histo, unsigned 
     }
 }
 
-void decoupecompo(const vpImage<unsigned char> &compo, unsigned char * correscompo, int n) {
+void decoupecompo(const vpImage<unsigned char> &compo, unsigned char * corresCompo, int * classeCompo, int n) {
     unsigned int histo[256];
     unsigned int histocumul[256];
 
     histocumule(compo, histo, histocumul);
 
     int pas = (compo.getWidth() * compo.getHeight()) / n;
-    int palier = pas;
     int nbiter = 0;
     int aborne = 0;
+    int valmoy = 0;
 
     for (int i=0; i<256; i++) {
-        if (histocumul[i] > palier) {
-            correscompo[nbiter] = (aborne + i)/2; //TODO Faire la moyenne plutôt que de prendre la mediane
-            aborne  = i;
+        classeCompo[i] = nbiter;
+        if (histocumul[i] > (nbiter + 1) * pas - (pas/2) && valmoy == 0) valmoy = i;
+        if (histocumul[i] > (nbiter + 1) * pas || i == 255) {
+            cout<<"I : "<<nbiter<<"\tPalier : "<<(nbiter+1)*pas<<"\tRepR : "<<(int)corresCompo[nbiter]<<endl;
+            corresCompo[nbiter] = valmoy;
+            aborne = i;
             nbiter++;
-            palier += pas;
+            valmoy = 0;
         }
     }
 }
 
 // void separecompo(const vpImage<vpRGBa> &I, vpImage<unsigned char> is ...) //TODO split des composantes si possible
 
-void quantifnonuniforme(const vpImage<vpRGBa> &I, int n, unsigned char* R, unsigned char * G, unsigned char* B) {
+void quantifnonuniforme(const vpImage<vpRGBa> &I, int n) {
     vpImage<unsigned char> cr(I.getHeight(), I.getWidth());
     vpImage<unsigned char> cg(I.getHeight(), I.getWidth());
     vpImage<unsigned char> cb(I.getHeight(), I.getWidth());
+
+    for (int i=0; i<I.getHeight(); i++)
+        for (int j=0; j<I.getWidth(); j++) {
+            cr[i][j] = I[i][j].R;
+            cg[i][j] = I[i][j].G;
+            cb[i][j] = I[i][j].B;
+        }
+
+    unsigned char crCorres[n];
+    int crClasse[256];
+
+    decoupecompo(cr,crCorres,crClasse,n);
 
     //TODO
 }
@@ -169,7 +184,7 @@ int main(int argc, char **argv)
 	// creation du menu
     int tailleComposante = pow(2,nbbits);
 
-    quantifuniforme(I,tailleComposante);
+    quantifnonuniforme(I,tailleComposante);
 	
 	
 	
