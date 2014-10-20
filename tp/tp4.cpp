@@ -102,11 +102,12 @@ void quantifnonuniforme(const vpImage<vpRGBa> &I, int n, unsigned char* R, unsig
     vpImage<unsigned char> cg(I.getHeight(), I.getWidth());
     vpImage<unsigned char> cb(I.getHeight(), I.getWidth());
 
-    //TODO la suite
+    //TODO
 }
 
 void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
     int n = tailleComposante;
+
     int classe[256];
     unsigned char repR[n];
     unsigned char repG[n];
