@@ -143,26 +143,22 @@ void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
     int n = tailleComposante;
 
     int classe[256];
-    unsigned char repR[n];
-    unsigned char repG[n];
-    unsigned char repB[n];
+    unsigned char rep[n];
 
     int pas = 256 / n;
     int palier = 0;
 
     for(int i=0; i<256; i++) {
         if(i > palier * pas + pas || i == 255) {
-            repR[palier] = (palier*pas * 2 + pas) /2;
-            repG[palier] = (palier*pas * 2 + pas) /2;
-            repB[palier] = (palier*pas * 2 + pas) /2;
-            cout<<"I : "<<i<<"\tPalier : "<<palier<<"\tRepR : "<<(int)repR[palier]<<endl;
+            rep[palier] = (palier*pas * 2 + pas) /2;
+            cout<<"I : "<<i<<"\tPalier : "<<palier<<"\tRepR : "<<(int)rep[palier]<<endl;
             palier++;
         }
         classe[i] = palier;
     }
 
     vpRGBa pal[(int)pow(n,3)];
-    creerPalette(repR, repG, repB, n, pal);
+    creerPalette(rep, rep, rep, n, pal);
 
     vpImage<vpRGBa> I2(I.getHeight(),I.getWidth());
 
@@ -179,7 +175,15 @@ void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
 
 void quantifVectoriel(const vpImage<vpRGBa> &imasrc,vpImage<vpRGBa> &imadest, vpRGBa * pal,const int taillePalette) 
 {
-	
+    float erreur = 0;
+    int i = 0;
+
+    float seuilErreur = 0.1;
+    int seuilIteration = 100000;
+
+    while (erreur < seuilErreur && i < seuilIteration) {
+
+    }
 }
 
 int main(int argc, char **argv)
