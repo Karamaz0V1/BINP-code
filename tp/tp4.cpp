@@ -14,7 +14,7 @@
  *  - BECKER Frederic
  *	- GUIOTTE Florent
  * 
- * Date :
+ * Date : oct 2014
  *****************************************************************************/
 
 
@@ -91,7 +91,7 @@ void quantitatifnonuniformesurcomposante(const vpImage<unsigned char> &compo, un
         if (histocumul[i] > (nbiter + 1) * pas - (pas/2) && valmoy == 0) valmoy = i;
         if (histocumul[i] > (nbiter + 1) * pas || i == 255) {
             corresCompo[nbiter] = valmoy;
-            cout<<"I : "<<nbiter<<"\tPalier : "<<(nbiter+1)*pas<<"\tRep : "<<(int)corresCompo[nbiter]<<endl;
+            cout<<"I : "<<i<<"\tPalier : "<<nbiter<<"\tRep : "<<valmoy<<endl;
             aborne = i;
             nbiter++;
             valmoy = 0;
@@ -173,6 +173,12 @@ void quantifuniforme(const vpImage<vpRGBa> &I, const int tailleComposante) {
     vpDisplay::getClick(I2);
 }
 
+
+int distance_pix(const vpRGBa &a, const vpRGBa &b) {
+    return sqrt(pow(b.R-a.R,2)+pow(b.G-a.G,2)+pow(b.B-a.B,2));
+}
+
+
 void quantifVectoriel(const vpImage<vpRGBa> &imasrc,vpImage<vpRGBa> &imadest, vpRGBa * pal,const int taillePalette) 
 {
     float erreur = 0;
@@ -181,8 +187,18 @@ void quantifVectoriel(const vpImage<vpRGBa> &imasrc,vpImage<vpRGBa> &imadest, vp
     float seuilErreur = 0.1;
     int seuilIteration = 100000;
 
-    while (erreur < seuilErreur && i < seuilIteration) {
+    double sumCompo[taillePalette][3];
+    for (int i=0; i<taillePalette; i++) 
+        for (int j=0; j<3; j++) sumCompo[i][j] = 0;
 
+    while (erreur < seuilErreur && i < seuilIteration) {
+        for(int i=0; i<imasrc.getHeight(); i++)
+            for(int j=0; j<imasrc.getWidth(); j++) {
+                int dist_min = distance_pix(imasrc[i][j],pal[0]);
+                int classe = 0;
+                for(int x=1; x<taillePalette; x++)
+                    if (distance_pix(imasrc[i][j],pal[x]) < dist_min) int classe = x;
+            }
     }
 }
 
