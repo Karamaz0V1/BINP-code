@@ -37,6 +37,46 @@ void decimation_lineaire(vpImage<vpRGBa> & I) {
     I = Is;
 }
 
+void decimation_bilineaire(vpImage<vpRGBa> & I) {
+    vpImage<vpRGBa> Is(I.getHeight()/2,I.getWidth()/2);
+    for (int i=0; i<Is.getHeight(); i++) 
+        for (int j=0; j<Is.getWidth(); j++) {
+            Is[i][j].R = (I[i*2][j*2].R+I[i*2+1][j*2].R+I[i*2][j*2+1].R+I[i*2+1][j*2+1].R) / 4;   
+            Is[i][j].G = (I[i*2][j*2].G+I[i*2+1][j*2].G+I[i*2][j*2+1].G+I[i*2+1][j*2+1].G) / 4;   
+            Is[i][j].B = (I[i*2][j*2].B+I[i*2+1][j*2].B+I[i*2][j*2+1].B+I[i*2+1][j*2+1].B) / 4;   
+        }
+
+    I = Is;
+}
+
+void agrandissement_lineaire(vpImage<vpRGBa> & I) {
+    vpImage<vpRGBa> Is(I.getHeight()*2,I.getWidth()*2);
+    for (int i=0; i<Is.getHeight(); i++) 
+        for (int j=0; j<Is.getWidth(); j++) {
+            Is[i][j].R = I[i/2][j/2].R;
+            Is[i][j].G = I[i/2][j/2].G;
+            Is[i][j].B = I[i/2][j/2].B;
+        }
+    I = Is;
+}
+
+vpRGBa & access(vpImage<vpRGBa> & I, int i, int j) {
+    if (i >= I.getHeight()) i = 2 * I.getHeight() - i;
+    if (j >= I.getWidth()) j = 2 * I.getWidth() - j;
+    return I[abs(i)][abs(j)];
+}
+
+void agrandissement_bilineaire(vpImage<vpRGBa> & I) {
+    vpImage<vpRGBa> Is(I.getHeight()*2,I.getWidth()*2);
+    for (int i=0; i<Is.getHeight(); i++) 
+        for (int j=0; j<Is.getWidth(); j++) {
+            Is[i][j].R = I[i/2][j/2].R;
+            Is[i][j].G = I[i/2][j/2].G;
+            Is[i][j].B = I[i/2][j/2].B;
+        }
+    I = Is;
+}
+
 void test_decimation_lineaire() {
   	vpImage<vpRGBa>  I;
 	vpImageIo::read(I,"../images/baboon.ppm") ;	
@@ -51,18 +91,6 @@ void test_decimation_lineaire() {
 	vpDisplay::display(I);
 	vpDisplay::flush(I) ;	
     vpDisplay::getClick(I);
-}
-
-void decimation_bilineaire(vpImage<vpRGBa> & I) {
-    vpImage<vpRGBa> Is(I.getHeight()/2,I.getWidth()/2);
-    for (int i=0; i<Is.getHeight(); i++) 
-        for (int j=0; j<Is.getWidth(); j++) {
-            Is[i][j].R = (I[i*2][j*2].R+I[i*2+1][j*2].R+I[i*2][j*2+1].R+I[i*2+1][j*2+1].R) / 4;   
-            Is[i][j].G = (I[i*2][j*2].G+I[i*2+1][j*2].G+I[i*2][j*2+1].G+I[i*2+1][j*2+1].G) / 4;   
-            Is[i][j].B = (I[i*2][j*2].B+I[i*2+1][j*2].B+I[i*2][j*2+1].B+I[i*2+1][j*2+1].B) / 4;   
-        }
-
-    I = Is;
 }
 
 void test_decimation_bilineaire() {
@@ -103,7 +131,24 @@ void test_decimation() {
 	vpDisplay::display(I2);
 	vpDisplay::flush(I2) ;	
     vpDisplay::getClick(I2);
+	vpImageIo::write(I,"./img/baboon_li.ppm") ;	
+	vpImageIo::write(I2,"./img/baboon_bi.ppm") ;	
+}
 
+void test_agrandissement_lineaire() {
+  	vpImage<vpRGBa>  I;
+	vpImageIo::read(I,"../images/baboon.ppm") ;	
+	vpDisplayX d(I,100,100) ;
+	vpDisplay::setTitle(I, "Image originale");
+	vpDisplay::display(I);
+	vpDisplay::flush(I) ;	
+
+    agrandissement_lineaire(I);
+	vpDisplayX d1(I,400,100) ;
+	vpDisplay::setTitle(I, "Agrandissement lineaire");
+	vpDisplay::display(I);
+	vpDisplay::flush(I) ;	
+    vpDisplay::getClick(I);
 }
 
 int main(int argc, char **argv)
@@ -115,6 +160,7 @@ int main(int argc, char **argv)
 
 	// creation du menu
     test_decimation();
+    test_agrandissement_lineaire();
 
 
 
