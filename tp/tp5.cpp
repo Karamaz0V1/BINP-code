@@ -60,27 +60,32 @@ void agrandissement_lineaire(vpImage<vpRGBa> & I) {
     I = Is;
 }
 
-vpRGBa & access(vpImage<vpRGBa> & I, int i, int j) {
-    if (i >= I.getHeight()) i = 2 * I.getHeight() - i;
-    if (j >= I.getWidth()) j = 2 * I.getWidth() - j;
+const vpRGBa & access(const vpImage<vpRGBa> & I, int i, int j) {
+    //cout<<i<<" "<<abs(i)<<endl;
+    //cout<<j<<" "<<abs(j)<<endl;
+    if (i >= I.getHeight()) i = 2 * I.getHeight() - i -1;
+    if (j >= I.getWidth()) j = 2 * I.getWidth() - j -1;
+    cout<<&I[abs(i)][abs(j)]<<endl;
     return I[abs(i)][abs(j)];
 }
 
 vpRGBa interpol(const vpImage<vpRGBa> & src, int i, int j) {
     vpRGBa sortie;
-    if(i<10 || j<10 || i> 300 || j>300) return sortie;
-    sortie.R = 0.25 * (src[i/2 - 1 + (i/2%2) * 2][j/2 - 1 + (j/2%2) *2].R * 0.25 + src[i/2 - 1 + (i/2%2) * 2][j/2].R * 0.75) + 0.75 * (src[i/2][j/2 - 1 + (j/2%2) * 2].R * 0.25 + src[i/2][j/2].R * 0.75);
+    //if (i<1||j<1) return sortie;
+    cout<<"3 ADDR :"<<endl;
+    cout<<& access(src,-1,-1)<<endl;
+    cout<<& src[1][1]<<endl;
+    sortie.R = 0.25 * (access(src,i/2 - 1 + (i%2) * 2,j/2 - 1 + (j%2) *2).R * 0.25 + access(src,i/2 - 1 + (i%2) * 2,j/2).R * 0.75) + 0.75 * (access(src,i/2,j/2 - 1 + (j%2) * 2).R * 0.25 + access(src,i/2,j/2).R * 0.75);
+    sortie.G = 0.25 * (access(src,i/2 - 1 + (i%2) * 2,j/2 - 1 + (j%2) *2).G * 0.25 + access(src,i/2 - 1 + (i%2) * 2,j/2).G * 0.75) + 0.75 * (access(src,i/2,j/2 - 1 + (j%2) * 2).G * 0.25 + access(src,i/2,j/2).G * 0.75);
+    sortie.B = 0.25 * (access(src,i/2 - 1 + (i%2) * 2,j/2 - 1 + (j%2) *2).B * 0.25 + access(src,i/2 - 1 + (i%2) * 2,j/2).B * 0.75) + 0.75 * (access(src,i/2,j/2 - 1 + (j%2) * 2).B * 0.25 + access(src,i/2,j/2).B * 0.75);
     return sortie;
 }
 
 void agrandissement_bilineaire(vpImage<vpRGBa> & I) {
     vpImage<vpRGBa> Is(I.getHeight()*2,I.getWidth()*2);
     for (int i=0; i<Is.getHeight(); i++) 
-        for (int j=0; j<Is.getWidth(); j++) {
+        for (int j=0; j<Is.getWidth(); j++)
             Is[i][j] = interpol(I, i, j);
-            //Is[i][j].G = I[i/2][j/2].G;
-            //Is[i][j].B = I[i/2][j/2].B;
-        }
     I = Is;
 }
 
@@ -144,7 +149,7 @@ void test_decimation() {
 
 void test_agrandissement_lineaire() {
   	vpImage<vpRGBa>  I;
-	vpImageIo::read(I,"../images/baboon.ppm") ;	
+	vpImageIo::read(I,"../images/lena.ppm") ;	
 	vpDisplayX d(I,100,100) ;
 	vpDisplay::setTitle(I, "Image originale");
 	vpDisplay::display(I);
@@ -161,7 +166,25 @@ void test_agrandissement_lineaire() {
 
 void test_agrandissement_bilineaire() {
   	vpImage<vpRGBa>  I;
-	vpImageIo::read(I,"../images/baboon.ppm") ;	
+	vpImageIo::read(I,"../images/lena.ppm") ;	
+	vpDisplayX d(I,100,100) ;
+	vpDisplay::setTitle(I, "Image originale");
+	vpDisplay::display(I);
+	vpDisplay::flush(I) ;	
+
+    agrandissement_bilineaire(I);
+	vpDisplayX d1(I,400,100) ;
+	vpDisplay::setTitle(I, "Agrandissement bilineaire");
+	vpDisplay::display(I);
+	vpDisplay::flush(I) ;	
+    vpDisplay::getClick(I);
+	vpImageIo::write(I,"./img/baboon_agbi.ppm") ;	
+}
+
+void test_agrandissement() {
+  	vpImage<vpRGBa>  I, I2;
+	vpImageIo::read(I,"../images/lena.ppm") ;	
+    I2 = I;
 	vpDisplayX d(I,100,100) ;
 	vpDisplay::setTitle(I, "Image originale");
 	vpDisplay::display(I);
@@ -185,8 +208,8 @@ int main(int argc, char **argv)
 
 	// creation du menu
     //test_decimation();
+    //test_agrandissement_lineaire();
     test_agrandissement_bilineaire();
-    test_agrandissement_lineaire();
 
 
 
