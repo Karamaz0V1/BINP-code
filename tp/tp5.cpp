@@ -11,10 +11,10 @@
 
 /****************************************************************************
  * NOMS - PRENOMS:
- *  -
- *	-
+ *  - Frédéric BECKER
+ *	- Florent GUIOTTE
  * 
- * Date :
+ * Date : oct 2014
  *****************************************************************************/
 
 
@@ -61,20 +61,13 @@ void agrandissement_lineaire(vpImage<vpRGBa> & I) {
 }
 
 const vpRGBa & access(const vpImage<vpRGBa> & I, int i, int j) {
-    //cout<<i<<" "<<abs(i)<<endl;
-    //cout<<j<<" "<<abs(j)<<endl;
-    if (i >= I.getHeight()) i = 2 * I.getHeight() - i -1;
-    if (j >= I.getWidth()) j = 2 * I.getWidth() - j -1;
-    cout<<&I[abs(i)][abs(j)]<<endl;
-    return I[abs(i)][abs(j)];
+    if (i >= (int)I.getHeight()) i = 2 * I.getHeight() - i -1;
+    if (j >= (int)I.getWidth()) j = 2 * I.getWidth() - j -1;
+    return I[(int)abs(i)][(int)abs(j)];
 }
 
 vpRGBa interpol(const vpImage<vpRGBa> & src, int i, int j) {
     vpRGBa sortie;
-    //if (i<1||j<1) return sortie;
-    cout<<"3 ADDR :"<<endl;
-    cout<<& access(src,-1,-1)<<endl;
-    cout<<& src[1][1]<<endl;
     sortie.R = 0.25 * (access(src,i/2 - 1 + (i%2) * 2,j/2 - 1 + (j%2) *2).R * 0.25 + access(src,i/2 - 1 + (i%2) * 2,j/2).R * 0.75) + 0.75 * (access(src,i/2,j/2 - 1 + (j%2) * 2).R * 0.25 + access(src,i/2,j/2).R * 0.75);
     sortie.G = 0.25 * (access(src,i/2 - 1 + (i%2) * 2,j/2 - 1 + (j%2) *2).G * 0.25 + access(src,i/2 - 1 + (i%2) * 2,j/2).G * 0.75) + 0.75 * (access(src,i/2,j/2 - 1 + (j%2) * 2).G * 0.25 + access(src,i/2,j/2).G * 0.75);
     sortie.B = 0.25 * (access(src,i/2 - 1 + (i%2) * 2,j/2 - 1 + (j%2) *2).B * 0.25 + access(src,i/2 - 1 + (i%2) * 2,j/2).B * 0.75) + 0.75 * (access(src,i/2,j/2 - 1 + (j%2) * 2).B * 0.25 + access(src,i/2,j/2).B * 0.75);
