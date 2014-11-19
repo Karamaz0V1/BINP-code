@@ -39,7 +39,7 @@ const uchar & access(const vpImage<uchar> & I, int i, int j) {
     return I[(int)abs(i)][(int)abs(j)];
 }
 
-uchar interpole(vpImage<uchar> I, float i, float j) {
+uchar interpole(vpImage<uchar> &I, float i, float j) {
     uchar p1, p2, p3, p4, x1, x2;
 
     p1 = access(I,(int)floor(i),(int)floor(j));
@@ -59,49 +59,52 @@ void test() {
 }
 
 void RotationBasic(vpImage<uchar> I, vpImage<uchar> &D, float alpha) {
+    // Si l'image de destination est plus grande que celle d'origine on décale le centre avec offseti et offsetj
+    int offseti = (D.getHeight() - I.getHeight()) / 2;
+    int offsetj = (D.getWidth() - I.getWidth()) / 2;
+    int a = I.getHeight() / 2;
+    int b = I.getWidth() /2;
     for (int i=0; i<I.getHeight(); i++)
         for (int j=0; j<I.getWidth(); j++) {
-            int ti = i * cos(alpha) - j * sin(alpha) - (I.getHeight()/2*cos(alpha) - sin(alpha)*I.getWidth()/2) + I.getHeight();
-            int tj = i * sin(alpha) + j * cos(alpha) - (I.getWidth()/2*cos(alpha) + sin(alpha)*I.getHeight()/2) + I.getWidth();
+            int ti = (i-a) * cos(alpha) - (j-b) * sin(alpha) + a;
+            int tj = (i-a) * sin(alpha) + (j-b) * cos(alpha) + b;
+            ti+=offseti;
+            tj+=offsetj;
             if((tj>0) && (ti>0) && (ti<D.getHeight()) && (ti<D.getWidth())) D[ti][tj] = I[i][j];
         }
 }
 
 void RotationInvertedBasic(vpImage<uchar> I, vpImage<uchar> &D, float alpha) {
-    for (int i=0; i<D.getHeight(); i++)
-        for (int j=0; j<D.getWidth(); j++) {
-            int ti = i * cos(alpha) + j * sin(alpha);// - (I.getHeight()/2*cos(alpha) - sin(alpha)*I.getWidth()/2) ;
-            int tj = - i * sin(alpha) + j * cos(alpha);// - (I.getWidth()/2*cos(alpha) + sin(alpha)*I.getHeight()/2) + 3 * I.getWidth();
-            if((tj>0) && (ti>0) && (ti<I.getHeight()) && (ti<I.getWidth())) D[i][j] = I[ti][tj];
+    // Si l'image de destination est plus grande que celle d'origine on décale le centre avec offseti et offsetj
+    int offseti = (D.getHeight() - I.getHeight()) / 2;
+    int offsetj = (D.getWidth() - I.getWidth()) / 2;
+    int a = I.getHeight() / 2;
+    int b = I.getWidth() /2;
+    for (int fi=0; fi<D.getHeight(); fi++)
+        for (int fj=0; fj<D.getWidth(); fj++) {
+            int i = fi - offseti;
+            int j = fj - offsetj;
+            int ti = (i-a) * cos(alpha) + (j-b) * sin(alpha) + a;
+            int tj = - (i-a) * sin(alpha) + (j-b) * cos(alpha) + b;
+            if((tj>0) && (ti>0) && (ti<I.getHeight()) && (tj<I.getWidth())) D[i+offseti][j+offsetj] = I[ti][tj];
         }
 
 }
 
 void RotationInvertedInterpolated(vpImage<uchar> I, vpImage<uchar> &D, float alpha) {
-    for (int i=0; i<D.getHeight(); i++)
-        for (int j=0; j<D.getWidth(); j++) {
-            float ti = i * cos(alpha) + j * sin(alpha);// - (I.getHeight()/2*cos(alpha) - sin(alpha)*I.getWidth()/2) ;
-            float tj = - i * sin(alpha) + j * cos(alpha);// - (I.getWidth()/2*cos(alpha) + sin(alpha)*I.getHeight()/2) + 3 * I.getWidth();
-            if((tj>0) && (ti>0) && (ti<I.getHeight()) && (ti<I.getWidth())) D[i][j] = interpole(I,ti,tj);
+    // Si l'image de destination est plus grande que celle d'origine on décale le centre avec offseti et offsetj
+    int offseti = (D.getHeight() - I.getHeight()) / 2;
+    int offsetj = (D.getWidth() - I.getWidth()) / 2;
+    int a = I.getHeight() / 2;
+    int b = I.getWidth() /2;
+    for (int fi=0; fi<D.getHeight(); fi++)
+        for (int fj=0; fj<D.getWidth(); fj++) {
+            int i = fi - offseti;
+            int j = fj - offsetj;
+            float ti = (i-a) * cos(alpha) + (j-b) * sin(alpha) + a;
+            float tj = - (i-a) * sin(alpha) + (j-b) * cos(alpha) + b;
+            if((tj>0) && (ti>0) && (ti<I.getHeight()) && (tj<I.getWidth())) D[i+offseti][j+offsetj] = interpole(I,ti,tj);
         }
-
-}
-void RotationInvertedBasicB(vpImage<uchar> I, vpImage<uchar> &D, float alpha) {
-    vpDisplayX d1(D,400,100) ;
-    vpDisplay::setTitle(D, "Image decimee bilineaire");
-   while (true) 
-    for (float x=0; x<6.28; x+=.01) {
-        alpha = x;
-        for (int i=0; i<D.getHeight(); i++)
-            for (int j=0; j<D.getWidth(); j++) {
-                int ti = i * cos(alpha) + j * sin(alpha) - (I.getHeight()/2*cos(alpha) - sin(alpha)*I.getWidth()/2) ;
-                int tj = - i * sin(alpha) + j * cos(alpha) - (I.getWidth()/2*cos(alpha) + sin(alpha)*I.getHeight()/2) + 3 * I.getWidth();
-                if((tj>0) && (ti>0) && (ti<I.getHeight()) && (ti<I.getWidth())) D[i][j] = I[ti][tj];
-            }
-
-        vpDisplay::display(D);
-        vpDisplay::flush(D) ;	
-    }
 }
 
 void testRotationBasic() {
@@ -113,12 +116,15 @@ void testRotationBasic() {
 	vpDisplay::display(I);
 	vpDisplay::flush(I) ;	
 
-    RotationBasic(I,D,3*3.141592654/4);
+    for (int i=0; i<1000; i++)
+    RotationBasic(I,D,1*3.141592654/4);
 	vpDisplayX d1(D,400,100) ;
-	vpDisplay::setTitle(D, "Image decimee bilineaire");
+	vpDisplay::setTitle(D, "Rotation basique");
 	vpDisplay::display(D);
 	vpDisplay::flush(D) ;	
     vpDisplay::getClick(D);
+
+    vpImageIo::write(D,"./rb.pgm");
 }
 
 void testRotationInvertedBasic() {
@@ -130,12 +136,15 @@ void testRotationInvertedBasic() {
 	vpDisplay::display(I);
 	vpDisplay::flush(I) ;	
 
-    RotationInvertedBasicB(I,D,3.141592654/4);
+    for (int i=0; i<1000; i++)
+    RotationInvertedBasic(I,D,3.141592654/4);
 	vpDisplayX d1(D,400,100) ;
-	vpDisplay::setTitle(D, "Image decimee bilineaire");
+	vpDisplay::setTitle(D, "Rotation inverse basique");
 	vpDisplay::display(D);
 	vpDisplay::flush(D) ;	
     vpDisplay::getClick(D);
+
+    vpImageIo::write(D,"./rib.pgm");
 }
 
 void testRotationInvertedInterpolated() {
@@ -147,12 +156,15 @@ void testRotationInvertedInterpolated() {
 	vpDisplay::display(I);
 	vpDisplay::flush(I) ;	
 
+    for (int i=0; i<1000; i++)
     RotationInvertedInterpolated(I,D,3.141592654/4);
 	vpDisplayX d1(D,400,100) ;
-	vpDisplay::setTitle(D, "Image decimee bilineaire");
+	vpDisplay::setTitle(D, "Rotation inverse interpolee");
 	vpDisplay::display(D);
 	vpDisplay::flush(D) ;	
     vpDisplay::getClick(D);
+
+    vpImageIo::write(D,"./rii.pgm");
 }
 int main(int argc, char **argv)
 {
@@ -162,11 +174,35 @@ int main(int argc, char **argv)
 
 
 	// creation du menu
-    test();
-    testRotationInvertedInterpolated();
-
-
-
+    //test();
+	
+	int choix=0;
+	while(choix<4)
+	{
+		cout << "\n-------------------------------------" << endl;
+		cout<<"1. Rotation basique"<<endl;
+		cout<<"2. Rotation inverse basique"<<endl;
+		cout<<"3. Rotation inverse interpolée"<<endl;
+		cout<<"4. Quitter"<<endl;
+		
+		cin>>choix;
+		cout << "-------------------------------------" << endl;
+		
+		switch(choix)
+		{
+			case 1 :
+                testRotationBasic();
+                break;
+            case 2 :
+                testRotationInvertedBasic();
+                break;
+            case 3 :
+                testRotationInvertedInterpolated();
+                break;
+			default :
+				break;
+		}
+    }
 
   cout << "Fin du programme " << endl ;
   return(0);
