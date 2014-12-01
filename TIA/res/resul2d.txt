@@ -1,0 +1,42 @@
+donnees initiales 
+       1        1        1        1 
+       1        1        1        1 
+       1        1        1        1 
+       1        1        1        1 
+
+fft: partie reelle 
+       4        0        0        0 
+       0        0        0        0 
+       0        0        0        0 
+       0        0        0        0 
+
+fft: partie immaginaire 
+       0        0        0        0 
+       0        0        0        0 
+       0        0        0        0 
+       0        0        0        0 
+
+fft: module 
+       4        0        0        0 
+       0        0        0        0 
+       0        0        0        0 
+       0        0        0        0 
+
+fft: module avec origine au centre
+       0        0        0        0 
+       0        0        0        0 
+       0        0        4        0 
+       0        0        0        0 
+
+fft_inverse : partie reelle 
+       1        1        1        1 
+       1        1        1        1 
+       1        1        1        1 
+       1        1        1        1 
+
+fft_inverse : partie immaginaire 
+       0       -0       -0       -0 
+      -0       -0       -0       -0 
+      -0       -0       -0       -0 
+      -0       -0       -0       -0 
+

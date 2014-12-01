@@ -1,0 +1,25 @@
+/********************************************************************************/
+void sauve_pgm
+	(char *nom,			/* IN : nom du fichier image 	  	*/
+	 unsigned char *data,		/* IN : pointeur zone image		*/
+	 int w,			        /* IN : nb de colonnes 			*/
+	 int h				/* IN : nb de lignes			*/
+	)
+{
+ FILE *f;
+
+ printf("Ecriture %s : ",nom);
+
+ if( (f=fopen(nom,"w")) == NULL)
+      {printf("-- impossible\n");			exit(-1);}
+ else {printf("%dx%d ...\n",w,h); }		/* affiche resolution image	*/
+
+
+ fprintf(f,"P5\n%s\n%d %d\n%d\n",
+	"# Created by IO_PGM (Y.R. / Irisa)",
+	w,h,255);				/* ecriture de l'entete PGM	*/
+ if( w*h != fwrite(data,1, w*h, f) )		/* ecriture des pixels image	*/
+   {printf("-- probleme ecriture\n");			exit(-1); }
+
+ fclose(f);
+}
