@@ -24,7 +24,7 @@ int main(int argc,char **argv)
     mire_sinus (64,3);
     FFT_IM();
     */
-    FFT_IM();
+   FFT_IM();
 
   return (0);
 }

@@ -1,0 +1,739 @@
+<html><head>
+<title>ESIR 2 IN : Synthese d'images - TP 3 </title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="gl3.2_fichiers/glMatrix-0.js"></script>
+<script type="text/javascript" src="gl3.2_fichiers/webgl-utils.js"></script>
+
+<script id="per-vertex-lighting-fs" type="x-shader/x-fragment">
+	// diffus par sommet
+	// fragment shader
+    #ifdef GL_ES
+    precision highp float;
+    #endif
+
+	// entrée
+    varying vec3 vLightWeighting;
+
+	// main
+    void main(void) {
+        vec4 fragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
+        gl_FragColor = vec4(fragmentColor.rgb * vLightWeighting, fragmentColor.a);
+    }
+</script>
+
+<script id="per-vertex-lighting-vs" type="x-shader/x-vertex">
+	// diffus par sommet
+	// vertex shader
+	
+	// attributes (vertex buffer)
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+
+	// uniforms
+	// matrices de transformation
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+	
+	// couleur ambiante
+    uniform vec3 uAmbientColor;
+	
+	// lampes position couleur
+    uniform vec3 uPointLightingLocation;
+    uniform vec3 uPointLightingColor;
+	
+	// material : color, Kd, spec
+	uniform vec3 uMatColor ;
+	uniform float uKd ;
+	uniform float uSpec ;
+
+	// speculaire vs metal
+    uniform bool uSpeculaire;
+
+	// sortie vers le fragment shader
+    varying vec3 vLightWeighting;
+
+    void main(void) {
+		// vertex in view space
+        vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+		// light direction
+		vec3 lightDirection = normalize(uPointLightingLocation - mvPosition.xyz);
+		// normal in viewspace
+        vec3 transformedNormal = normalize(uNMatrix * aVertexNormal);
+		// eye direction
+		vec3 eyeDirection = normalize(-mvPosition.xyz);
+		// direction de reflexion
+        vec3 reflectionDirection = reflect(-lightDirection, transformedNormal);
+      
+		// terme diffus
+		float diffuLightWeighting = max(dot(transformedNormal, lightDirection), 0.0);
+		
+		// terme speculaire
+		float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uSpec);
+		
+		// terme metallique
+		float metalLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0),uSpec*1.5);
+		
+        if (!uSpeculaire) {
+			// metal
+            vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * diffuLightWeighting*uKd + uPointLightingColor *clamp(5.0*(specularLightWeighting-metalLightWeighting),0.0,1.0)*max(uKd,(1.0-uKd));
+			} else {
+			// speculaire
+            vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * diffuLightWeighting*uKd  + uPointLightingColor * specularLightWeighting*(1.0-uKd) ;
+        }
+		
+		// outputs
+	    gl_Position = uPMatrix * mvPosition;
+	
+    }
+</script>
+
+<script id="per-fragment-lighting-fs" type="x-shader/x-fragment">
+	// diffus par fragment
+	// fragment shader
+    #ifdef GL_ES
+    precision highp float;
+    #endif
+
+	// input from vertex shader
+    varying vec3 vTransformedNormal;
+    varying vec4 vPosition;
+
+	// speculaire vs Metal
+    uniform bool uSpeculaire;
+
+	// lights
+	// ambient
+    uniform vec3 uAmbientColor;
+
+	//point light :  location, color
+    uniform vec3 uPointLightingLocation;
+    uniform vec3 uPointLightingColor;
+	
+	// material : color, Kd, spec
+	uniform vec3 uMatColor ;
+	uniform float uKd ;
+	uniform float uSpec ;
+	
+    void main(void) {
+		vec3 vLightWeighting ;
+		// light direction
+		vec3 lightDirection = normalize(uPointLightingLocation - vPosition.xyz);
+		// eye direction
+		vec3 eyeDirection = normalize(-vPosition.xyz);
+		// direction de reflexion
+        vec3 reflectionDirection = reflect(-lightDirection, vTransformedNormal);
+      
+		// terme diffus
+		float diffuLightWeighting = max(dot(vTransformedNormal, lightDirection), 0.0);
+		
+		// terme speculaire
+		float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uSpec);
+		
+		// terme metallique
+		float metalLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0),uSpec*1.5);
+		
+        if (!uSpeculaire) {
+			// metal
+            vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * diffuLightWeighting*uKd + uPointLightingColor *clamp(5.0*(specularLightWeighting-metalLightWeighting),0.0,1.0)*max(uKd,(1.0-uKd));
+			} else {
+			// speculaire
+            vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * diffuLightWeighting*uKd  + uPointLightingColor * specularLightWeighting*(1.0-uKd) ;
+        }
+        gl_FragColor = vec4(vLightWeighting,1.0);
+    }
+</script>
+
+<script id="per-fragment-lighting-vs" type="x-shader/x-vertex">
+	// diffus par fragment
+	// vertex shader
+
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+
+    varying vec3 vTransformedNormal;
+    varying vec4 vPosition;
+
+
+    void main(void) {
+        vPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+        gl_Position = uPMatrix * vPosition;
+        vTransformedNormal = uNMatrix * aVertexNormal;
+    }
+</script>
+
+<script type="text/javascript">
+
+    // contexte openGL
+	var gl;
+	
+	// program et shaders
+	var currentProgram;
+    var perVertexProgram;
+    var perFragmentProgram;
+	
+	// vertex arrays
+	// cube
+	var cubeVertexPositionBuffer;
+    var cubeVertexNormalBuffer;
+    var cubeVertexIndexBuffer;
+
+	// sphere
+    var sphereVertexPositionBuffer;
+    var sphereVertexNormalBuffer;
+    var sphereVertexIndexBuffer;
+	
+	// piles de transformation
+    var mvMatrix = mat4.create();
+    var mvMatrixStack = [];
+    var pMatrix = mat4.create();
+	
+	// pour l'animation
+	var lastTime = 0;
+	var sphereAngle = 180;
+    var cubeAngle = 0;
+	// -----------------------------------------------------------------------------------
+    function initGL(canvas) {
+        try {
+            gl = canvas.getContext("experimental-webgl");
+            gl.viewportWidth = canvas.width;
+            gl.viewportHeight = canvas.height;
+        } catch (e) {
+        }
+        if (!gl) {
+            alert("Could not initialise WebGL, sorry :-(");
+        }
+    }
+	// -----------------------------------------------------------------------------------
+    function getShader(gl, id) {
+        var shaderScript = document.getElementById(id);
+        if (!shaderScript) {
+            return null;
+        }
+
+        var str = "";
+        var k = shaderScript.firstChild;
+        while (k) {
+            if (k.nodeType == 3) {
+                str += k.textContent;
+            }
+            k = k.nextSibling;
+        }
+
+        var shader;
+        if (shaderScript.type == "x-shader/x-fragment") {
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        } else if (shaderScript.type == "x-shader/x-vertex") {
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        } else {
+            return null;
+        }
+
+        gl.shaderSource(shader, str);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(shader));
+            return null;
+        }
+
+        return shader;
+    }
+	// -----------------------------------------------------------------------------------
+    function createProgram(fragmentShaderID, vertexShaderID) {
+        var fragmentShader = getShader(gl, fragmentShaderID);
+        var vertexShader = getShader(gl, vertexShaderID);
+
+        var program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            alert("Could not initialise shaders");
+        }
+
+		// arrayBuffer -> attributes
+        program.vertexPositionAttribute = gl.getAttribLocation(program, "aVertexPosition");
+        gl.enableVertexAttribArray(program.vertexPositionAttribute);
+
+        program.vertexNormalAttribute = gl.getAttribLocation(program, "aVertexNormal");
+        gl.enableVertexAttribArray(program.vertexNormalAttribute);
+
+		// uniforms
+        program.pMatrixUniform = gl.getUniformLocation(program, "uPMatrix");
+        program.mvMatrixUniform = gl.getUniformLocation(program, "uMVMatrix");
+        program.nMatrixUniform = gl.getUniformLocation(program, "uNMatrix");
+
+        program.specMetalUniform = gl.getUniformLocation(program, "uSpeculaire");
+        program.ambientColorUniform = gl.getUniformLocation(program, "uAmbientColor");
+        program.pointLightingLocationUniform = gl.getUniformLocation(program, "uPointLightingLocation");
+        program.pointLightingColorUniform = gl.getUniformLocation(program, "uPointLightingColor");
+
+        program.matColorUniform = gl.getUniformLocation(program, "uMatColor");
+        program.matKdUniform = gl.getUniformLocation(program, "uKd");
+        program.matSpecUniform = gl.getUniformLocation(program, "uSpec");
+
+
+        return program;
+    }
+	// -----------------------------------------------------------------------------------
+    function initShaders() {
+        perVertexProgram = createProgram("per-vertex-lighting-fs", "per-vertex-lighting-vs");
+        perFragmentProgram = createProgram("per-fragment-lighting-fs", "per-fragment-lighting-vs");
+    }
+	// -----------------------------------------------------------------------------------
+    function mvPushMatrix() {
+        var copy = mat4.create();
+        mat4.set(mvMatrix, copy);
+        mvMatrixStack.push(copy);
+    }
+	// -----------------------------------------------------------------------------------
+    function mvPopMatrix() {
+        if (mvMatrixStack.length == 0) {
+            throw "Invalid popMatrix!";
+        }
+        mvMatrix = mvMatrixStack.pop();
+    }
+	// -----------------------------------------------------------------------------------
+    function setMatrixUniforms() {
+        gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
+        gl.uniformMatrix4fv(currentProgram.mvMatrixUniform, false, mvMatrix);
+
+        var normalMatrix = mat3.create();
+        mat4.toInverseMat3(mvMatrix, normalMatrix);
+        mat3.transpose(normalMatrix);
+        gl.uniformMatrix3fv(currentProgram.nMatrixUniform, false, normalMatrix);
+    }
+	// -----------------------------------------------------------------------------------
+    function degToRad(degrees) {
+        return degrees * Math.PI / 180;
+    }
+	// -----------------------------------------------------------------------------------
+    function initBuffers() {
+		// vertexbuffer
+        cubeVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+        vertices = [
+            // Front face
+            -1.0, -1.0,  1.0,
+             1.0, -1.0,  1.0,
+             1.0,  1.0,  1.0,
+            -1.0,  1.0,  1.0,
+
+            // Back face
+            -1.0, -1.0, -1.0,
+            -1.0,  1.0, -1.0,
+             1.0,  1.0, -1.0,
+             1.0, -1.0, -1.0,
+
+            // Top face
+            -1.0,  1.0, -1.0,
+            -1.0,  1.0,  1.0,
+             1.0,  1.0,  1.0,
+             1.0,  1.0, -1.0,
+
+            // Bottom face
+            -1.0, -1.0, -1.0,
+             1.0, -1.0, -1.0,
+             1.0, -1.0,  1.0,
+            -1.0, -1.0,  1.0,
+
+            // Right face
+             1.0, -1.0, -1.0,
+             1.0,  1.0, -1.0,
+             1.0,  1.0,  1.0,
+             1.0, -1.0,  1.0,
+
+            // Left face
+            -1.0, -1.0, -1.0,
+            -1.0, -1.0,  1.0,
+            -1.0,  1.0,  1.0,
+            -1.0,  1.0, -1.0,
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        cubeVertexPositionBuffer.itemSize = 3;
+        cubeVertexPositionBuffer.numItems = 24;
+
+		// normalbuffer
+        cubeVertexNormalBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+        var vertexNormals = [
+            // Front face
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+
+            // Back face
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+
+            // Top face
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+
+            // Bottom face
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+
+            // Right face
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+
+            // Left face
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+        cubeVertexNormalBuffer.itemSize = 3;
+        cubeVertexNormalBuffer.numItems = 24;
+
+		// indexbuffer
+        cubeVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+        var cubeVertexIndices = [
+            0, 1, 2,      0, 2, 3,    // Front face
+            4, 5, 6,      4, 6, 7,    // Back face
+            8, 9, 10,     8, 10, 11,  // Top face
+            12, 13, 14,   12, 14, 15, // Bottom face
+            16, 17, 18,   16, 18, 19, // Right face
+            20, 21, 22,   20, 22, 23  // Left face
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer.itemSize = 1;
+        cubeVertexIndexBuffer.numItems = 36;
+
+		// sphere
+        var latitudeBands =64;
+        var longitudeBands =64;
+        var radius = 1;
+
+		// vertex, normal and index
+        var vertexPositionData = [];
+        var normalData = [];
+		var indexData = [];
+
+        for (var latNumber=0; latNumber <= latitudeBands; latNumber++) {
+            var theta = latNumber * Math.PI / latitudeBands;
+            var sinTheta = Math.sin(theta);
+            var cosTheta = Math.cos(theta);
+
+            for (var longNumber = 0; longNumber <= longitudeBands; longNumber++) {
+                var phi = longNumber * 2 * Math.PI / longitudeBands;
+                var sinPhi = Math.sin(phi);
+                var cosPhi = Math.cos(phi);
+
+                var x = cosPhi * sinTheta;
+                var y = cosTheta;
+                var z = sinPhi * sinTheta;
+
+                normalData.push(x);
+                normalData.push(y);
+                normalData.push(z);
+
+                vertexPositionData.push(radius * x);
+                vertexPositionData.push(radius * y);
+                vertexPositionData.push(radius * z);
+            }
+        }
+
+ 
+        for (var latNumber = 0; latNumber < latitudeBands; latNumber++) {
+            for (var longNumber = 0; longNumber < longitudeBands; longNumber++) {
+                var first = (latNumber * (longitudeBands + 1)) + longNumber;
+                var second = first + longitudeBands + 1;
+                indexData.push(first);
+                indexData.push(second);
+                indexData.push(first + 1);
+
+                indexData.push(second);
+                indexData.push(second + 1);
+                indexData.push(first + 1);
+            }
+        }
+
+        sphereVertexNormalBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalData), gl.STATIC_DRAW);
+        sphereVertexNormalBuffer.itemSize = 3;
+        sphereVertexNormalBuffer.numItems = normalData.length / 3;
+
+        sphereVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexPositionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPositionData), gl.STATIC_DRAW);
+        sphereVertexPositionBuffer.itemSize = 3;
+        sphereVertexPositionBuffer.numItems = vertexPositionData.length / 3;
+
+        sphereVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereVertexIndexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexData), gl.STREAM_DRAW);
+        sphereVertexIndexBuffer.itemSize = 1;
+        sphereVertexIndexBuffer.numItems = indexData.length;
+    }
+	// -----------------------------------------------------------------------------------
+    function drawScene() {
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+
+        var perFragmentLighting = document.getElementById("per-fragment").checked;
+        if (perFragmentLighting) {
+            currentProgram = perFragmentProgram;
+        } else {
+            currentProgram = perVertexProgram;
+        }
+        gl.useProgram(currentProgram);
+
+        var speculaire = document.getElementById("speculaire").checked;
+        gl.uniform1i(currentProgram.specMetalUniform, speculaire);
+        gl.uniform3f(
+            currentProgram.ambientColorUniform,
+            parseFloat(document.getElementById("ambientR").value),
+            parseFloat(document.getElementById("ambientG").value),
+            parseFloat(document.getElementById("ambientB").value)
+        );
+        gl.uniform3f(
+            currentProgram.pointLightingLocationUniform,
+            parseFloat(document.getElementById("lightPositionX").value),
+            parseFloat(document.getElementById("lightPositionY").value),
+            parseFloat(document.getElementById("lightPositionZ").value)
+        );
+        gl.uniform3f(
+            currentProgram.pointLightingColorUniform,
+            parseFloat(document.getElementById("pointR").value),
+            parseFloat(document.getElementById("pointG").value),
+            parseFloat(document.getElementById("pointB").value)
+        );
+        gl.uniform3f(
+            currentProgram.matColorUniform,
+            parseFloat(document.getElementById("mR").value),
+            parseFloat(document.getElementById("mG").value),
+            parseFloat(document.getElementById("mB").value)
+        );
+        gl.uniform1f(currentProgram.matKdUniform,parseFloat(document.getElementById("Kd").value));
+        gl.uniform1f(currentProgram.matSpecUniform,parseFloat(document.getElementById("spec").value));
+
+
+        var textures = false ;
+        gl.uniform1i(currentProgram.useTexturesUniform, textures);
+
+        mat4.identity(mvMatrix);
+
+        mat4.translate(mvMatrix, [0, 0, -5]);
+
+        mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
+
+        mvPushMatrix();
+        mat4.rotate(mvMatrix, degToRad(sphereAngle), [0, 1, 0]);
+        mat4.translate(mvMatrix, [2, 0, 0]);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexPositionBuffer);
+        gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, sphereVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, sphereVertexNormalBuffer);
+        gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, sphereVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, sphereVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+        mvPopMatrix();
+
+
+        mvPushMatrix();
+        mat4.rotate(mvMatrix, degToRad(cubeAngle), [0, 1, 0]);
+        mat4.translate(mvMatrix, [1.25, 0, 0]);
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+        gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+        gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+        mvPopMatrix();
+    }
+	// -----------------------------------------------------------------------------------
+    function animate() {
+        var timeNow = new Date().getTime();
+        if (lastTime != 0) {
+            var elapsed = timeNow - lastTime;
+
+            sphereAngle += 0.05 * elapsed;
+            cubeAngle += 0.05 * elapsed;
+        }
+        lastTime = timeNow;
+    }
+	// -----------------------------------------------------------------------------------
+    function tick() {
+        requestAnimFrame(tick);
+        drawScene();
+        animate();
+    }
+	// -----------------------------------------------------------------------------------
+    function webGLStart() {
+        var canvas = document.getElementById("shaderDemo");
+        initGL(canvas);
+        initShaders();
+        initBuffers();
+		// init GL
+        gl.clearColor(0.0, 0.0, 0.2, 1.0);
+        gl.enable(gl.DEPTH_TEST);
+		// lancement de l'animation
+        tick();
+    }
+	// -----------------------------------------------------------------------------------
+</script>
+</head>
+
+<body onload="webGLStart();">
+
+<TABLE BORDER=0 width="100%">
+<TR>
+	<TD><IMG SRC="gl3.2_fichiers/univ_rennes1_h256.jpg"></TD>
+	<TD><h3>ESIR 2 IN : Synhtese d'Images </h3><br> TP Shader : illumination par sommet / par pixel / diffus / spéculaire / metallique</TD>
+	<TD><IMG SRC="gl3.2_fichiers/esir_v131.jpg"></TD></TR>
+<TR>
+	<TD><i>auteur :</i> Rémi Cozot  </TD>
+	<TD><i>date :</i> octobre 2012</TD>
+	<TD><i>durée :</i>  2 heures</TD>
+</TR>
+<TR>
+	<TD><i>date limite :</i> jeudi 15 novembre - 23h</TD>	
+	<TD></TD>
+	<TD><a href="mailto:cozot@irisa.fr?Subject=[ESIR2IN]%20SI%20TP3">(Envoyer compte rendu)</a></TD> 
+</TR>
+</TABLE>
+    <H2>Sujet</H2>
+    <H4> Résumé </H4>
+    Le but du TP est le développement de différents shaders :
+    <ul>
+	<li>Matériau spéculaire : shader de Phong</li>
+	<li>Matériau métallique : shader métal</li>
+	</ul>
+
+	Le code fourni correspond à un matériaux parfaitement diffus.
+
+	<H3>Question 1 : Calcul de l'éclairement par pixel</H3>
+
+	Le code fourni effecte le calcul de l'éclairement/la couleur dans le vertex shader. Le fragment shader ne faisont pas de calcul supplémentaire.Transformez le code
+	afin que le calcul de l'éclairement s'effectue dans le fragment shader à partir de la position et de la normale calculées dans le vertex shader. Faites en sorte de 
+	pouvoir passer d'une version à l'autre via une <i>checkbox</i>:<br>
+    <code>
+	 <span style="color:blue">&lt; input </span>
+	 <span style="color:red">id </span>=
+	 <span style="color:indigo">"per-fragment"</span> 
+	 <span style="color:red">checked</span>=
+	 <span style="color:indigo">"checked"</span> 
+	 <span style="color:red">type</span>=
+	 <span style="color:indigo">"checkbox"</span>
+	 <span style="color:blue">&gt; </span> 
+	 Eclairage par pixel (fragment) (/ par sommet (vertex)) 
+	 </code><br> 	
+	<br> 
+	
+    <H3>Question 2 : Shader Phong</H3>
+	A partir du code fourni, vous ajoutez la composante spéculaire du matériau (Cf. <i>Figure 1</i>).<br><br> 
+	
+	<IMG SRC="gl3.2_fichiers/speculaire.png"><br>
+	<small><i>Figure 1</i>: Matériau spéculaire.</small>
+	<br><br>
+	Pour cela, vous ajouterez des <i>uniform</i> aux shaders : un coefficient de diffusion 
+	<b>uKd</b> et un indice de spécularité <b>uSpec</b>.<br>
+
+	<br><code>
+	<span style="color:green">
+	// material : color, Kd, spec <br>
+	</span>
+	uniform vec3 uMatColor ; <br>
+	uniform float <b>uKd</b> ; <br>
+	uniform float <b>uSpec</b> ; <br>
+	</code><br>
+	Le terme spéculaire est donné par :<br> 
+	Is = K<sub>s</sub> . I<sub>source</sub> . cos<sup>n</sup>(r,v)
+	<br>
+	avec :<br>
+		<dd> K<sub>s</sub> = 1-K<sub>d</sub> (K<sub>d</sub>: coefficient de diffusion),<br>
+		<dd> n : indice de spécularité, <br>
+		<dd> r : vecteur donnant la direction de réflexion de la lumière,<br>
+		<dd> v: vecteur donnant la direction de la vue.<br>
+
+	<br><b><i>Rappel</i></b><br>
+	<code> r = 	<span style="color:blue">reflect</span>(p,n)</code> donne la direction de reflexion de <code>p</code> selon le vecteur <code>n</code>.
+	
+    <H3>Question 3 : Shader métal</H3>
+	Imaginez une modofication du matériau spéculaire pour mieux imiter les métaux : pour cela vous ferez apparaître une tache plus sombre au centre de la tache spéculaire (Cf. <i>Figure 2</i>).
+	<br><br>
+	<IMG SRC="gl3.2_fichiers/metal.png"><br>
+	<small><i>Figure 2</i>: Matériau métallique.</small>
+	<br>
+	<H3>Remarque</H3>
+    Le tp est à rendre sous la forme d'un fichier "zip" dont le nom est 
+    si_tp3_nom1_nom2.zip. le fichier "zip" contient la page html correspondant à la 
+    question 3 (et les ressources nécessaires au fonctionnement du TP).
+	
+	<h3>Exécutable</h3>
+	<br>
+    <canvas id="shaderDemo" style="border: none;" width="960" height="540"></canvas>
+    <br>
+    <input id="speculaire" checked="checked" type="checkbox"> Spéculaire(/Métal)<br>
+    <input id="per-fragment" checked="checked" type="checkbox"> Eclairage par pixel (fragment) (/ par sommet (vertex)) <br>
+    <br>
+		<b><i>Materiaux :</i></b><br>
+     <table style="border: 0pt none; padding: 10px;">
+        <tbody><tr>
+            <td><i>Kd :</i> 
+            </td><td><input id="Kd" value="0.33" type="text">
+            </td><td><i>Spécularité :</i> 
+            </td><td><input id="spec" value="16.0" type="text">
+        </td></tr>
+        <tr>
+            <td><i>Couleur:</i>
+            </td><td>R: <input id="mR" value="1.0" type="text">
+            </td><td>G: <input id="mG" value="0.8" type="text">
+            </td><td>B: <input id="mB" value="0.2" type="text">
+        </td></tr>
+    </tbody></table>
+	<b><i>Lumière ponctuelle :</i></b><br>
+    <table style="border: 0pt none; padding: 10px;">
+        <tbody><tr>
+            <td><i>Position :</i>
+            </td><td>X: <input id="lightPositionX" value="0.0" type="text">
+            </td><td>Y: <input id="lightPositionY" value="2.0" type="text">
+            </td><td>Z: <input id="lightPositionZ" value="-5.0" type="text">
+        </td></tr>
+        <tr>
+            <td><i>Couleur:</i>
+            </td><td>R: <input id="pointR" value="1.0" type="text">
+            </td><td>G: <input id="pointG" value="1.0" type="text">
+            </td><td>B: <input id="pointB" value="1.0" type="text">
+        </td></tr>
+    </tbody></table>
+    <b><i>Lumière ambiante :</i></b><br>
+    <table style="border: 0pt none; padding: 10px;">
+        <tbody><tr>
+            <td><i>Couleur:</i>
+            </td><td>R: <input id="ambientR" value="0.1" type="text">
+            </td><td>G: <input id="ambientG" value="0.1" type="text">
+            </td><td>B: <input id="ambientB" value="0.1" type="text">
+        </td></tr>
+    </tbody></table>
+    <br>
+</body></html>

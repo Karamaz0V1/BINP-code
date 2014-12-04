@@ -417,6 +417,17 @@ void debruit_local(int n, double* imx, double* imy, int x1, int y1, int x2, int 
         }
 }
 
+int distance(int x1, int y1, int x2, int y2) {
+    return sqrt(pow(x2-x1,2)+pow(y2-y1,2));
+}
+
+float eqm(int n, unsigned char *I1, unsigned char *I2){
+    float EQM=0;   
+    for (int i=0 ; i< n; i++)
+        for (int j=0; j < n; j++)
+            EQM+=pow(I1[i*n+j] - I2[i*n+j],2)/(n*n);
+    return EQM;
+}
 
 /******************* procedure FFT_IM  ***************************************
 
@@ -440,7 +451,7 @@ void FFT_IM()
   /* lecture d'une image en format pgm */
   char fileName[250];
   //strcpy(fileName, "./test.pgm");
-  strcpy(fileName, "./images/lenabruitee.pgm");
+  strcpy(fileName, "./save.pgm");
   int n = 512 ;
   im1 = new unsigned char [n*n];
 
@@ -484,8 +495,8 @@ void FFT_IM()
 //  for (int i=0; i<n; i++)
 //      for (int j=0; j<n ; j++) {
 //          if (j>0&&j<63) {
-//              imx[i*n+j] = 0;//= 500 ;
-//              imy[i*n+j] =0;//= 500;
+//              imx[i*n+j] = 0;
+//              imy[i*n+j] = 0;
 //          }
 //  }
 
@@ -515,6 +526,59 @@ void FFT_IM()
   debruit_local(n,imx,imy,344,118,351,121);
   debruit_local(n,imx,imy,377,64,385,68);
 
+  /* Filtrage dans le domaine fréquentiel */
+
+  /* Filtre Idéal */
+//  int D = 130;
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+//  for (int i=0; i<n; i++)
+//      for (int j=0; j<n ; j++) {
+//          if (distance(i-n/2,j-n/2,0,0)<D) continue;
+//          imx[i*n+j] = 0;
+//          imy[i*n+j] = 0;
+//      }
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+    
+  /* Filtre de Butterworth */
+//  int D = 10;
+//  int N = 1;
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+//  for (int i=0; i<n; i++)
+//      for (int j=0; j<n ; j++) {
+//          imx[i*n+j] *= 1/(1+pow((distance(i-n/2,j-n/2,0,0)/D),2*N));
+//          imy[i*n+j] *= 1/(1+pow((distance(i-n/2,j-n/2,0,0)/D),2*N));
+//      }
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+
+  /* Filtre Gaussien */
+//  int D = 50;
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+//  for (int i=0; i<n; i++)
+//      for (int j=0; j<n ; j++) {
+//          imx[i*n+j] *= exp(-pow(distance(i-n/2,j-n/2,0,0),2)/(2*pow(D,2)));
+//          imy[i*n+j] *= exp(-pow(distance(i-n/2,j-n/2,0,0),2)/(2*pow(D,2)));
+//      }
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+
+  /* Filtre Gaussien anisotrope */
+//  int D = 100;
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+//  for (int i=0; i<n; i++)
+//      for (int j=0; j<n ; j++) {
+//          imx[i*n+j] *= exp(-pow(i-n/2,2)/(2*pow(D,2))) * exp(-pow(j-n/2,2)/(2*pow(D,2)));
+//          imy[i*n+j] *= exp(-pow(i-n/2,2)/(2*pow(D,2))) * exp(-pow(j-n/2,2)/(2*pow(D,2)));
+//      }
+//  decal_origine(imx,n);
+//  decal_origine(imy,n);
+
+
   /* sauvegarde dans un fichier */
   printf("\n Sauvegardez l'image de la FFT sous fft-im.pgm ");
   strcpy(fileName, "fft_im.pgm");
@@ -534,6 +598,16 @@ void FFT_IM()
   printf("\n Sauvegardez l'image de la FFT inverse sous fft-im-inv.pgm ");  
   strcpy(fileName, "fft_im_inv.pgm");
   writePGM_Picture(fileName, im2, n, n);
+
+  /* EQM */
+  unsigned char *imo = new unsigned char [n*n];
+  unsigned char *imf = new unsigned char [n*n];
+  strcpy(fileName, "./images/lena.pgm");
+  readPGM_Picture(fileName, imo, n, n);
+  strcpy(fileName, "./fft_im_inv.pgm");
+  readPGM_Picture(fileName, imf, n, n);
+
+  printf("\n EQM : %f\n",eqm(512,imo,imf));
 
 
   delete [] imx;
