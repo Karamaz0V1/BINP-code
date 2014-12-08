@@ -57,27 +57,51 @@
     // vertex shader
     attribute vec3 aVertexPosition;
     attribute vec2 aTextureCoord;
+    attribute vec3 aVertexNormal;
 
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+
+    varying vec3 vTransformedNormal;
+    varying vec4 vPosition;
 
     // sortie vers le fragment shader
     varying vec2 vTextureCoord;
 
     void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+        gl_Position = uPMatrix * vPosition;
         vTextureCoord = aTextureCoord;
+        vTransformedNormal = uNMatrix * aVertexNormal;
     }
 </script>
 
 <script id="shader-fs" type="x-shader/x-fragment">
     // fragment shader
-    precision mediump float;
+    #ifdef GL_ES
+    precision highp float;
+    #endif
 
     // coordonnées de texture
     // calculée dans le vertex shader
 
     varying vec2 vTextureCoord;
+    varying vec3 vTransformedNormal;
+    varying vec4 vPosition;
+
+    // lights
+    // ambient
+    uniform vec3 uAmbientColor;
+
+	//point light :  location, color
+    uniform vec3 uPointLightingLocation;
+    uniform vec3 uPointLightingColor;
+	
+	// material : color, Kd, spec
+	uniform vec3 uMatColor ;
+	uniform float uKd ;
+	uniform float uSpec ;
 
     // sampleer (unité de texture)
     // 32 unté de textures disponible
@@ -86,6 +110,7 @@
     uniform sampler2D sSampler;
 
     void main(void) {
+        /* Sans phong 
         // texture2D : texel aux coordonnées u,v de l'unité de texture uSampler
         //gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
         if (texture2D(sSampler,vec2(vTextureCoord.s, vTextureCoord.t)) == vec4(1)) {
@@ -94,6 +119,29 @@
         gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));// * (vec4(1) - texture2D(sSampler,
         //vec2(vTextureCoord.s, vTextureCoord.t)));
         }
+        */
+		vec3 vLightWeighting ;
+		// light direction
+		vec3 lightDirection = normalize(uPointLightingLocation - vPosition.xyz);
+		// eye direction
+		vec3 eyeDirection = normalize(-vPosition.xyz);
+		// direction de reflexion
+        vec3 reflectionDirection = reflect(-lightDirection, vTransformedNormal);
+      
+		// terme diffus
+		float diffuLightWeighting = max(dot(vTransformedNormal, lightDirection), 0.0);
+		
+		// terme speculaire
+		float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uSpec);
+		
+		// terme metallique
+		float metalLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0),uSpec*1.5);
+
+        // texture2D : texel aux coordonnées u,v de l'unité de texture uSampler
+        //gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * diffuLightWeighting*uKd  + uPointLightingColor * specularLightWeighting*(1.0-uKd) ;
+        //gl_FragColor = vec4(vLightWeighting,1.0);
+        gl_FragColor = vec4(uPointLightingLocation,1.0);
     }
 </script>
 

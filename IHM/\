@@ -1,0 +1,92 @@
+/***************************************************************************
+ *
+ * TODO: Project Title
+ *
+ * Author: Florent Guiotte <guiotte.florent@gmail.com>
+ *
+ **************************************************************************/
+
+#include "MainWindow.h"
+#include <QMenuBar>
+#include <QMenu>
+#include <QBoxLayout>
+#include <QGraphicsView>
+#include <QFileDialog>
+#include <iostream>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
+
+MainWindow::MainWindow(QMainWindow * parent): QMainWindow(parent) {
+    QMenuBar *menuBar = new QMenuBar;
+    QMenu *fileMenu = new QMenu("File", menuBar);
+    QMenu *settingsMenu = new QMenu("Settings", menuBar);
+
+    QAction *openAction = fileMenu->addAction("Open");
+    menuBar->addMenu(fileMenu);
+    menuBar->addMenu(settingsMenu);
+    this->setMenuBar(menuBar);
+
+    // FileDialog
+    connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
+
+
+    QBoxLayout * vlayout = new QBoxLayout(QBoxLayout::LeftToRight);
+
+    tab = new QTabWidget();
+
+    QBoxLayout * graphicsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    QGraphicsView * view1 = new QGraphicsView();
+    QGraphicsView * view2 = new QGraphicsView();
+//    view1->setBackgroundBrush(QImage(":/home/florent/TMPDOC/ESIRINGAME/gp1.jpg"));
+//    view1->setCacheMode(QGraphicsView::CacheBackground);
+
+    QGraphicsScene * scene = new QGraphicsScene(this);
+    QGraphicsEllipseItem *ellipse;
+    QGraphicsRectItem *rectangle;
+    QGraphicsTextItem *text;
+
+    //QPixmap * gp = new QPixmap("/home/florent/TMPDOC/ESIRINGAME/gp1.jpg");
+
+    //scene->addPixmap(gp);
+ 
+
+    QBrush greenBrush(Qt::green);
+    QBrush blueBrush(Qt::blue);
+    QPen outlinePen(Qt::black);
+    outlinePen.setWidth(2);
+
+    rectangle = scene->addRect(100, 0, 80, 100, outlinePen, blueBrush);
+
+    // addEllipse(x,y,w,h,pen,brush)
+    ellipse = scene->addEllipse(0, -100, 300, 60, outlinePen, greenBrush);
+
+    text = scene->addText("esir in game", QFont("Arial", 20) );
+    // movable text
+    text->setFlag(QGraphicsItem::ItemIsMovable);
+    ellipse->setFlag(QGraphicsItem::ItemIsMovable);
+    rectangle->setFlag(QGraphicsItem::ItemIsMovable);
+
+    graphicsLayout->addWidget(view1);
+    graphicsLayout->addWidget(view2);
+    vlayout->addWidget(tab);
+    vlayout->addLayout(graphicsLayout);
+
+    QWidget * centralWidget = new QWidget();
+    centralWidget->setLayout(vlayout);
+    this->setCentralWidget(centralWidget);
+
+
+}
+
+QString MainWindow::openFile() {
+    std::cout<<"Open File"<<std::endl;
+    QFileDialog *filedialog = new QFileDialog();
+    filedialog->setNameFilter(tr("Images (*.png *.xpm *.jpg *.tiff *.pgm *.pnm *.ppm)"));
+    //filedialog->show();
+    QString file = filedialog->getOpenFileName();//this, tr("Images (*.png *.xpm *.jpg *.tiff *.pgm *.pnm *.ppm)"));
+    std::cout<<"File : "<<file.toUtf8().constData()<<std::endl;
+    return file;
+}
+
+
+
