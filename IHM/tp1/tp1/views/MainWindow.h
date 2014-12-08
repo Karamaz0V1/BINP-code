@@ -6,8 +6,8 @@
 #include <QLabel>
 #include <QMenuBar>
 #include <QHBoxLayout>
-#include "graphicsimagescene.h"
-#include "graphicsimageview.h"
+#include "GraphicsImageScene.h"
+#include "GraphicsImageView.h"
 
 namespace Ui {
 class MainWindow;

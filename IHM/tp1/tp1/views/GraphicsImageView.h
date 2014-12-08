@@ -2,7 +2,7 @@
 #define GRAPHICSIMAGEVIEW_H
 
 #include <QGraphicsView>
-#include "graphicsimagescene.h"
+#include "views/GraphicsImageScene.h"
 #include <QWheelEvent>
 
 class GraphicsImageView : public QGraphicsView

@@ -1,11 +1,9 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "MainWindow.h"
+//#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent)//,
 {
-    ui->setupUi(this);
     m_menuBar=new QMenuBar(this);
     m_fileMenu = new QMenu("File",m_menuBar);
     m_openAction = m_fileMenu->addAction("&Open");
@@ -37,5 +35,4 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
 }

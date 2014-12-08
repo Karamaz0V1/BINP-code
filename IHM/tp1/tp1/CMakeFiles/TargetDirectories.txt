@@ -1,2 +1,0 @@
-/home/zokta/IHM/tp1/tp1/CMakeFiles/ihm.dir
-/home/zokta/IHM/tp1/tp1/CMakeFiles/ihm_automoc.dir

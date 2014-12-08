@@ -1,4 +1,4 @@
-#include "graphicsimagescene.h"
+#include "views/GraphicsImageScene.h"
 
 GraphicsImageScene::GraphicsImageScene(QWidget *window, QObject *parent) :
     QGraphicsScene(parent)

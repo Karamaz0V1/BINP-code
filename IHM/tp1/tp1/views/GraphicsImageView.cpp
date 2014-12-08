@@ -1,4 +1,4 @@
-#include "graphicsimageview.h"
+#include "GraphicsImageView.h"
 
 GraphicsImageView::GraphicsImageView(GraphicsImageScene *scene) :
     QGraphicsView(scene)

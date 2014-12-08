@@ -21,16 +21,16 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(${PROJECT_NAME}_CPP
     main.cpp
-    #views/MainWindow.cpp
-    #views/GraphicsImageScene.cpp
-    #views/GraphicsImageView.cpp
+    views/MainWindow.cpp
+    views/GraphicsImageScene.cpp
+    views/GraphicsImageView.cpp
     )
 
 set(${PROJECT_NAME}_H
     ImageConverter.h
-    #views/MainWindow.h
-    #views/GraphicsImageScene.h
-    #views/GraphicsImageView.h
+    views/MainWindow.h
+    views/GraphicsImageScene.h
+    views/GraphicsImageView.h
     )
 
 add_executable(${PROJECT_NAME}
