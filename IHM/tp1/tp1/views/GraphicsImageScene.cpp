@@ -26,7 +26,7 @@ void GraphicsImageScene::printImage() {
     QWidget *window = m_window;
     QString title = "Ouvrir";
     QString dir = "~";
-    QString filters = tr("Images (*.png *.xpm *.jpg *.bnp)");
+    QString filters = tr("Images (*.png *.xpm *.jpg *.bnp *.pnm *.pbm *.pgm)");
     QFileDialog *file = new QFileDialog(window,title,dir,filters);
     QStringList chosenFile;
     file->setFileMode(QFileDialog::ExistingFile);

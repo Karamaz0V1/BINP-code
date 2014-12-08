@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QMenuBar>
 #include <QHBoxLayout>
+#include <QWidget>
 #include "GraphicsImageScene.h"
 #include "GraphicsImageView.h"
 
@@ -20,6 +21,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void addParameterWidget(QWidget *widget);
     
 private:
     QMenuBar* m_menuBar;
@@ -35,9 +37,6 @@ private:
     QHBoxLayout* m_layout;
     QVBoxLayout* m_layout2;
     QWidget* m_central;
-    //QLabel m_label;
-    //Q
-    //QPushButton m_button;
     Ui::MainWindow *ui;
 };
 

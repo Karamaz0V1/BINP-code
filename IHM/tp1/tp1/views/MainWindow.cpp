@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "views/MainWindow.h"
 //#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -28,11 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(m_openAction,SIGNAL(triggered()),m_graphicsSceneUp,SLOT(printImage()));
     QObject::connect(m_saveAction,SIGNAL(triggered()),m_graphicsSceneDown,SLOT(saveImage()));
     QObject::connect(m_quitAction,SIGNAL(triggered()),this,SLOT(close()));
-    //m_label=new QLabel("Scale factor");
-    //m_
-    //m_button=new QPushButton("Run",m_tabWidget);
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::addParameterWidget(QWidget *widget) {
+    m_tabWidget->addTab(widget,"Onglet");
 }
