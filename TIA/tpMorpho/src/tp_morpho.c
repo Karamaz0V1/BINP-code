@@ -100,7 +100,7 @@ int main( int argc, char ** argv )
 	
 	
 	// lecture image
-	imat im = imat_pgm_read("../images/barbara.pgm");
+	imat im=imat_pgm_read("../images/test_operateur_bin.pgm");
 	if(im==NULL) {
 		perror("imat_pgm_read");
 		return(EXIT_FAILURE);
@@ -109,7 +109,7 @@ int main( int argc, char ** argv )
 	printf("\n Taille image  chargee : height(im) = %d\twidth(im) = %d\n", imat_height (im), imat_width (im));	 
 	
 	
-	
+	im=fermeture(im,masque);
 	// A COMPLETER
 	
 	

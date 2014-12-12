@@ -15,7 +15,7 @@ i_m = [[0 0 0][0 1 0][0 0 0]]
 # Exemples d'élements structurants que vous pouvez utiliser
 
 # Disque de rayon 1
-masque = 
+#masque = 
 [[0 1 0]
  [1 1 1]
  [0 1 0]]
@@ -29,7 +29,7 @@ masque =
  [0 0 1 0 0]]
 
 # Disque de rayon 4
-# masque = 
+ masque = 
 [[0 0 1 1 1 0 0]
  [0 1 1 1 1 1 0]
  [1 1 1 1 1 1 1]

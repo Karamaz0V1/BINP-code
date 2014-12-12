@@ -13,19 +13,33 @@
 // Vous pourrez considérer que le centre de masque est son centre géométrique.
 
 int applique_masque_dilatation( imat im, imat masque, int i, int j ){
-
-  // A COMPLETER
+  int a,b;
+  int deltaH=imat_height(masque)/2;
+  int deltaW=imat_width(masque)/2;
+  for(a=-deltaH;a<=deltaH;a++){
+        for(b=-deltaW;b<=deltaW;b++){
+		if(pasDepassement(im,i+a,j+b)) {	
+			if(1==masque[a+deltaH][b+deltaW] && im[i+a][j+b]>=1)
+				return 1;
+		}
+	}
+  }
 
   return 0;
 }
 
+
 // Cette fonction calcule la dilatation de l'image im par l'element structurant
 // "masque". 
 imat dilatation( imat im, imat masque ){
-
-  // A COMPLETER
-
-  return imat_new_zeros(1,1);
+  imat res = imat_clone(im);
+  int i,j;
+	for(i=0;i<imat_height(im);i++) {
+		for(j=0;j<imat_width(im);j++) {
+			res[i][j]=applique_masque_dilatation(im, masque, i, j)*255;
+		}
+	}
+  return res;
 }
 
 
@@ -34,11 +48,18 @@ imat dilatation( imat im, imat masque ){
 // Vous pourrez considérer que le centre de masque est son centre géométrique.
 
 int applique_masque_erosion( imat im, imat masque, int i, int j ){
-
-
-  // A COMPLETER
-
-  return 0;
+  int a,b;
+  int deltaH=imat_height(masque)/2;
+  int deltaW=imat_width(masque)/2;
+  for(a=-deltaH;a<=deltaH;a++){
+        for(b=-deltaW;b<=deltaW;b++){
+		if(pasDepassement(im,i+a,j+b)) {
+			if(im[i+a][j+b]==0 && masque[a+deltaH][b+deltaW]==1)
+				return 0;
+		}
+	}
+  }
+  return 1;
 }
 
 
@@ -46,10 +67,14 @@ int applique_masque_erosion( imat im, imat masque, int i, int j ){
 // masque.
 
 imat erosion( imat im, imat masque ){
-
-  // A COMPLETER
-
-  return imat_new_zeros(1,1);
+  imat res = imat_clone(im);
+  int i,j;
+	for(i=0;i<imat_height(im);i++) {
+		for(j=0;j<imat_width(im);j++) {
+			res[i][j]=applique_masque_erosion(im, masque, i, j)*255;
+		}
+	}
+  return res;
 }
 
 
@@ -83,19 +108,14 @@ imat erosion_dual( imat im, imat masque ){
 // masque.
 
 imat ouverture( imat im, imat masque ){
-
-  // A COMPLETER
-  return imat_new_zeros(1,1);
-
+  return dilatation(erosion(im,masque),masque);
 }
 
 
 // Cette fonction calcule la fermeture de l'image im par l'element structurant
 // masque.
 imat fermeture( imat im, imat masque ){
-
-  // A COMPLETER
-  return imat_new_zeros(1,1);
+  return erosion(dilatation(im,masque),masque);
 
 }
 
@@ -117,4 +137,14 @@ imat fermeture_dual( imat im, imat masque ){
 	// A COMPLETER
 	return imat_new_zeros(1,1);
 	
+}
+
+//Cette fonction renvoie 1 si les coordonnées ne sortent pas de l'image
+
+int pasDepassement(imat im, int i, int j) {
+	int h = imat_height(im);
+	int w = imat_width(im);
+	if(i>=0 && i<h && j>=0 && j<w)
+		return 1;
+	return 0;
 }

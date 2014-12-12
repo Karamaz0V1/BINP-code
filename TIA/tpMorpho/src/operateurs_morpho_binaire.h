@@ -12,3 +12,6 @@ imat ouverture( imat im, imat masque );
 imat fermeture( imat im, imat masque );
 imat ouverture_dual( imat im, imat masque );
 imat fermeture_dual( imat im, imat masque );
+
+// Annexes
+int pasDepassement(imat im, int i, int j);
