@@ -1,0 +1,17 @@
+void imat_copy(mat dest, mat orgie) : copie image "orgie" dans "dest" sans allocation mémoire
+
+imat imat_clone(mat im) : renvoie une copie de l'image "im" avec allocation mémoire
+
+int imat_eq(imat im1, imat im2) : renvoie 1 si im1=im2 (composantes par composantes), 0 sinon
+
+void imat_sub(imat im1, imat im2); soustrait élément par élément im2 à im1 (im1-im2) et met le résultat dans im1
+
+void imat_elem_mul(imat im1, imat im2) :  multiplie élément par élément im1 et im2 (im1xim2) et met le résultat dans im1	
+
+void imat_div_by (imat im, int a) : divise tous les éléments de im par a
+
+imat imat_new_transpose (imat im) : renvoie la transposée de im avec allocation mémoire
+
+mat imat_transpose(mat im) : renvoie la transposée de im sans allocation mémoire
+
+int imat_max (imat  im) : retourne la valeur d'intensité max d'une image 

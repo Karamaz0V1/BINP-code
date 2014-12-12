@@ -1,0 +1,56 @@
+# Pour utiliser une de ces matrices  decommenter la. Un parser
+# est mis dans le main  il lit et stocke dans une imat la variable i_m
+# Pareil pour masque 
+
+
+i_m = [[0 0 0][0 1 0][0 0 0]]
+
+#i_m = [[1 0 0 1 0 1 1][1 0 1 1 0 1 0][0 0 0 1 0 1 1]]
+
+#i_m = [[125 100 87 240 168][125 100 87 240 168][125 100 87 240 168]]
+
+
+
+
+# Exemples d'élements structurants que vous pouvez utiliser
+
+# Disque de rayon 1
+masque = 
+[[0 1 0]
+ [1 1 1]
+ [0 1 0]]
+
+# Disque de rayon 2
+# masque = 
+[[0 0 1 0 0]
+ [0 1 1 1 0]
+ [1 1 1 1 1]
+ [0 1 1 1 0]
+ [0 0 1 0 0]]
+
+# Disque de rayon 4
+# masque = 
+[[0 0 1 1 1 0 0]
+ [0 1 1 1 1 1 0]
+ [1 1 1 1 1 1 1]
+ [1 1 1 1 1 1 1]
+ [1 1 1 1 1 1 1]
+ [0 1 1 1 1 1 0]
+ [0 0 1 1 1 0 0]]
+
+# Ligne horizontale taille 5
+# masque = [[1 1 1 1 1]]
+
+# Ligne verticale taille 5
+# masque = [[1][1][1][1][1]]
+
+
+# Alphabet de Golay
+ es1 =[[255 255 255][128 255 128][0 0 0]];
+ es2 =[[0 128 255][0 255 255][0 128 255]];
+ es3 =[[0 0 0 ][128 255 128][255 255 255]];
+ es4 =[[255 128 0][255 255 0][255 128 0]];
+ es5 =[[255 255 128][255 255 0][128 0 128]];
+ es6 =[[128 255 255][0 255 255][128 0 128]];
+ es7 =[[128 0 128][0 255 255][128 255 255]];
+ es8 =[[128 0 128][255 255 0][255 255 128]];
