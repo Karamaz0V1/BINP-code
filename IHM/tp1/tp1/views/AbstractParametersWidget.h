@@ -9,6 +9,7 @@
 #pragma once
 
 #include <QObject>
+#include <QWidget>
 
 class AbstractParametersWidget: public QWidget {
     Q_OBJECT

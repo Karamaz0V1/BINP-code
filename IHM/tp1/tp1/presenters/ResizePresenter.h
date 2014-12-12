@@ -6,13 +6,17 @@
  *
  **************************************************************************/
 
-#ifndef __RESIZEPRESENTER_H__
-#define __RESIZEPRESENTER_H__
+#pragma once
+
+#include "presenters/AbstractPresenter.h"
+#include "models/AbstractModel.h"
 
 class ResizePresenter: public AbstractPresenter {
    public:
-        AbstractPresenter(MainWindow *parent, AbstractModel *model, AbstractParametersWidget *parametersWidget);
-        virtual ~AbstractPresenter();
+        //TODO ResizeModel && Widget
+        ResizePresenter(MainWindow *parent, AbstractModel *model, AbstractParametersWidget *parametersWidget);
+        //TODO implementer dans cpp
+        virtual ~ResizePresenter();
 
     private:
 
@@ -20,9 +24,3 @@ class ResizePresenter: public AbstractPresenter {
         virtual void runModel();
         virtual void presentModelResults();
 };
-
-
-#endif /* __RESIZEPRESENTER_H__ */
-
-
-
