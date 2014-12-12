@@ -13,10 +13,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     graphicsimagescene.cpp \
-    graphicsimageview.cpp
+    graphicsimageview.cpp \
+    models/ResizeModel.cpp \
+    views/ResizeImageParametersWidget.cpp \
+    views/MainWindow.cpp \
+    views/GraphicsImageView.cpp \
+    views/GraphicsImageScene.cpp
 
 HEADERS  += mainwindow.h \
     graphicsimagescene.h \
-    graphicsimageview.h
+    graphicsimageview.h \
+    models/ResizeModel.h \
+    views/ResizeImageParametersWidget.h \
+    views/MainWindow.h \
+    views/GraphicsImageView.h \
+    views/GraphicsImageScene.h
 
 FORMS    += mainwindow.ui

@@ -25,6 +25,7 @@ set(${PROJECT_NAME}_CPP
     views/GraphicsImageScene.cpp
     views/GraphicsImageView.cpp
     views/ResizeImageParametersWidget.cpp
+    models/ResizeModel.cpp
     )
 
 set(${PROJECT_NAME}_H
@@ -33,6 +34,7 @@ set(${PROJECT_NAME}_H
     views/GraphicsImageScene.h
     views/GraphicsImageView.h
     views/ResizeImageParametersWidget.h
+    models/ResizeModel.h
     )
 
 add_executable(${PROJECT_NAME}

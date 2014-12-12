@@ -24,7 +24,7 @@
   //---------------------------------------------------//
 
 
-// La fonction rectangle cree une matrice binaire de taille n_l*n_c ˆ fond noir (0) avec un rectangle
+// La fonction rectangle cree une matrice binaire de taille n_l*n_c Âˆ fond noir (0) avec un rectangle
 // blanc (255) dont le coin haut gauche est donne par les coordonnees i et j, et de
 // largeur et longueur respectives lx et ly
 
@@ -109,7 +109,7 @@ int main( int argc, char ** argv )
 	printf("\n Taille image  chargee : height(im) = %d\twidth(im) = %d\n", imat_height (im), imat_width (im));	 
 	
 	
-	im=fermeture(im,masque);
+	im=squelette(im,masques);
 	// A COMPLETER
 	
 	

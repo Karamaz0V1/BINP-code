@@ -9,8 +9,22 @@
 // peut etre "placé" au pixel (i,j).
 int ttourien(imat im, int i, int j, imat masque){
 
-  // A COMPLETER
-  return 0;
+  int a,b;
+  int deltaH=imat_height(masque)/2;
+  int deltaW=imat_width(masque)/2;
+  for(a=-deltaH;a<=deltaH;a++){
+        for(b=-deltaW;b<=deltaW;b++){
+		if(pasDepassement(im,i+a,j+b)) {
+		    if(masque[a+deltaH][b+deltaW]==-1)
+		        continue;	
+			if(masque[a+deltaH][b+deltaW]==0 && im[i+a][j+b]>=1)
+			    return 0;
+			if(masque[a+deltaH][b+deltaW]==1 && im[i+a][j+b]==0)
+			    return 0;
+		}
+	}
+  }
+  return 1;
 }
 
 
@@ -18,10 +32,15 @@ int ttourien(imat im, int i, int j, imat masque){
 // masque.
 
 imat toutourien( imat im, imat masque ){
-	
-	// A COMPLETER
-	
-	return imat_new_zeros(1,1);
+
+  imat res = imat_clone(im);
+  int i,j;
+	for(i=0;i<imat_height(im);i++) {
+		for(j=0;j<imat_width(im);j++) {
+			res[i][j]=ttourien(im,i,j,masque)*255;
+		}
+	}
+  return res;
 }
 
 
@@ -29,9 +48,20 @@ imat toutourien( imat im, imat masque ){
 // Squelettisation
 imat squelette(imat im, imat * masques)
 {
-  // A COMPLETER
-
-	return imat_new_zeros(1,1);
+  imat res = imat_clone(im);
+  imat tmp = imat_clone(im);
+  int i;
+  int nbIter=0;
+  do {
+    nbIter++;
+    printf("%d \n",nbIter);
+    tmp = res;
+    for(i=0;i<8;i++) {
+        res = toutourien(res,masques[i]);
+    }
+   } while(res!=tmp);
+  printf("Nb iter : %d",nbIter);
+  return res;
 }
 
 
@@ -42,9 +72,6 @@ imat squelette(imat im, imat * masques)
 
 int nbCarres(imat im){
 	
-	// A COMPLETER
-	
 	return 0;
 }
-
 
