@@ -15,11 +15,11 @@ int ttourien(imat im, int i, int j, imat masque){
   for(a=-deltaH;a<=deltaH;a++){
         for(b=-deltaW;b<=deltaW;b++){
 		if(pasDepassement(im,i+a,j+b)) {
-		    if(masque[a+deltaH][b+deltaW]==-1)
+		    if(masque[a+deltaH][b+deltaW]==128)
 		        continue;	
 			if(masque[a+deltaH][b+deltaW]==0 && im[i+a][j+b]>=1)
 			    return 0;
-			if(masque[a+deltaH][b+deltaW]==1 && im[i+a][j+b]==0)
+			if(masque[a+deltaH][b+deltaW]==255 && im[i+a][j+b]==0)
 			    return 0;
 		}
 	}
@@ -55,12 +55,13 @@ imat squelette(imat im, imat * masques)
   do {
     nbIter++;
     printf("%d \n",nbIter);
-    tmp = res;
+    imat_copy(tmp,res);
     for(i=0;i<8;i++) {
         res = toutourien(res,masques[i]);
     }
-   } while(res!=tmp);
+   } while(!imat_eq(res,tmp) && nbIter<1);
   printf("Nb iter : %d",nbIter);
+  imat_delete(tmp);
   return res;
 }
 
