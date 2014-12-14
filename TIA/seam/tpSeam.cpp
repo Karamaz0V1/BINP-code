@@ -93,6 +93,41 @@ void min_path(unsigned char *imgIn, int *seam, int sizeX, int sizeY)
         seam[j] = addr_score[seam[j+1]*sizeX+j];
 }
 
+// Recherche du chemin d'energie minimale dans imgIn avec un masque
+void min_path(unsigned char *imgIn, unsigned char *mask, int *seam, int sizeX, int sizeY) 
+{
+    double score[sizeX*sizeY];
+    int addr_score[sizeX*sizeY];
+
+    // Initialisation des scores (aux bords)
+    for (int i=0; i<sizeY; i+=sizeY-1) 
+        for (int j=0; j<sizeX; j++)
+            score[i*sizeX+j] = std::numeric_limits<double>::max();
+
+    // Initialisation de la première colonne du score
+    for (int i=0; i<sizeY; i++)
+        score[i*sizeX] = imgIn[i*sizeX];
+
+    // Calcul des scores
+    for (int j=1; j<sizeX; j++)
+        for (int i=1; i<sizeY-1; i++) {
+            min_previous(score,score[i*sizeX+j],addr_score[i*sizeX+j],sizeX,i,j);
+            score[i*sizeX+j]+=imgIn[i*sizeX+j]+mask[i*sizeX+j]*100;
+        }
+
+    // Repère la sortie de la couture la plus faible
+    double min = score[1*sizeX+sizeX-1];
+    for (int i=2; i<sizeY-1; i++)
+        if (score[i*sizeX+sizeX-1]<min) {
+            min = score[i*sizeX+sizeX-1];
+            seam[sizeX-1] = addr_score[i*sizeX+sizeX-1];
+        }
+
+    // Relève la couture la plus faible
+    for (int j=sizeX-2; j>=0; j--)
+        seam[j] = addr_score[seam[j+1]*sizeX+j];
+}
+
 // Copie la colone de 'im1' dans 'im2' en enlevant le pixel 'pixi' 'pixj'
 void cp_col(unsigned char * im1, unsigned char * im2, int pixi, int pixj, int sizeX, int sizeY) {
     for (int i=0; i<sizeY; i++)
@@ -137,18 +172,92 @@ void reduceS(unsigned char *im1, int n, int sizeX, int &sizeY) {
     }
 }
 
+// Reduit de n pixels la hauteurs de l'image avec un masque
+void reduceS(unsigned char *im1, unsigned char *mask, int n, int sizeX, int &sizeY) {
+    int seam[sizeX];
+    unsigned char tmp[sizeX*sizeY];
+    unsigned char tmp_mask[sizeX*sizeY];
+    unsigned char ime[sizeX*sizeY];
+
+    for (int i=0; i<n; i++) {
+        IMgradient(im1,ime,sizeX,sizeY);
+        min_path(ime, mask, seam, sizeX, sizeY);
+        del_seam(im1,tmp,seam,sizeX,sizeY);
+        del_seam(mask,tmp_mask,seam,sizeX,sizeY);
+        sizeY--;
+        for (int i=0; i<sizeY*sizeX; i++) {
+            im1[i] = tmp[i];
+            mask[i] = tmp_mask[i];
+        }
+    }
+}
+
+void rotate(unsigned char * im1, unsigned char * im2, int &sizeX, int &sizeY) {
+  for (int i=0; i<sizeY; i++)
+      for (int j=0; j<sizeX; j++)
+          im2[j*sizeY+i] = im1[i*sizeX+j];
+
+  int tmp = sizeX;
+  sizeX = sizeY;
+  sizeY = tmp;
+}
+
+void rotate_inv(unsigned char * im1, unsigned char * im2, int &sizeX, int &sizeY) {
+  int tmp = sizeX;
+  sizeX = sizeY;
+  sizeY = tmp;
+  
+  for (int i=0; i<sizeY; i++)
+      for (int j=0; j<sizeX; j++)
+          im2[i*sizeX+j] = im1[j*sizeY+i];
+}
+
 int main(int argc, char **argv)
 {
  
   // Lecture de l'image à redimensionner
   char fileName[250];
-  //strcpy(fileName, "./test.pgm");
+
+  // LOUP
   strcpy(fileName, "./images/loup.pgm");
   int sizeY = 425;
   int sizeX = 290;
-  unsigned char * im1 = new unsigned char [sizeX*sizeY];
+  unsigned char * iml = new unsigned char [sizeX*sizeY];
   printf("\n Ouverture de %s de taille [%d,%d]", fileName, sizeY, sizeX);
-  readPGM_Picture(fileName, im1, sizeX, sizeY);
+  readPGM_Picture(fileName, iml, sizeX, sizeY);
+
+  reduceS(iml,90,sizeX,sizeY);
+
+  strcpy(fileName, "loup_reduced.pgm");
+  writePGM_Picture(fileName, iml, sizeX, sizeY);
+  // FIN LOUP
+  
+  // MER
+  sizeY = 353;
+  sizeX = 500;
+  int sizeY_m = sizeY;
+  int sizeX_m = sizeX;
+  unsigned char * imm = new unsigned char [sizeX*sizeY];
+  unsigned char * imt = new unsigned char [sizeX*sizeY];
+  unsigned char * imm_masque = new unsigned char [sizeX*sizeY];
+  unsigned char * imt_masque = new unsigned char [sizeX*sizeY];
+  strcpy(fileName, "./images/mer.pgm");
+  printf("\n Ouverture de %s de taille [%d,%d]", fileName, sizeY, sizeX);
+  readPGM_Picture(fileName, imm, sizeX, sizeY);
+  strcpy(fileName, "./images/mer_mask.pgm");
+  printf("\n Ouverture de %s de taille [%d,%d]", fileName, sizeY, sizeX);
+  readPGM_Picture(fileName, imm_masque, sizeX, sizeY);
+
+  rotate(imm, imt, sizeX, sizeY);
+  rotate(imm_masque, imt_masque, sizeX_m, sizeY_m);
+
+  reduceS(imt,imt_masque,90,sizeX,sizeY);
+
+  rotate_inv(imt, imm, sizeX, sizeY);
+
+  strcpy(fileName, "mer_reduced.pgm");
+  writePGM_Picture(fileName, imm, sizeX, sizeY);
+  // FIN MER
   
   // Lecture d'un masque si besoin
 
@@ -168,12 +277,7 @@ int main(int argc, char **argv)
   // 3) L'enlever de l'image 
   del_seam(im1,im2,seam,sizeX,sizeY);
   //*/
-  //reduce(&im1,99,sizeX,sizeY);
 
-  reduceS(im1,90,sizeX,sizeY);
-
-  strcpy(fileName, "reduced.pgm");
-  writePGM_Picture(fileName, im1, sizeX, sizeY);
 
 
     return 0;
