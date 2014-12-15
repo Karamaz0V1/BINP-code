@@ -10,8 +10,6 @@
 
 #include "AbstractPresenter.h"
 
-
-
 class ResizeModel;
 class ResizeImageParametersWidget;
 

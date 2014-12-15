@@ -11,7 +11,6 @@
 #include <QObject>
 #include <visp/vpImage.h>
 
-
 class AbstractModel: public QObject {
     Q_OBJECT
     public:

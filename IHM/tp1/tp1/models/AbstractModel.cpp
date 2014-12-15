@@ -15,5 +15,4 @@ AbstractModel::~AbstractModel() {
 }
 
 vpImage<vpRGBa> AbstractModel::output() {
-
 }
