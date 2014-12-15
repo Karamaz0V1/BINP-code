@@ -18,7 +18,10 @@ SOURCES += main.cpp\
     views/ResizeImageParametersWidget.cpp \
     views/MainWindow.cpp \
     views/GraphicsImageView.cpp \
-    views/GraphicsImageScene.cpp
+    views/GraphicsImageScene.cpp \
+    presenters/ResizePresenter.cpp \
+    presenters/AbstractPresenter.cpp \
+    models/AbstractModel.cpp
 
 HEADERS  += mainwindow.h \
     graphicsimagescene.h \
@@ -27,6 +30,10 @@ HEADERS  += mainwindow.h \
     views/ResizeImageParametersWidget.h \
     views/MainWindow.h \
     views/GraphicsImageView.h \
-    views/GraphicsImageScene.h
+    views/GraphicsImageScene.h \
+    models/AbstractModel.h \
+    views/AbstractParametersWidget.h \
+    presenters/ResizePresenter.h \
+    presenters/AbstractPresenter.h
 
 FORMS    += mainwindow.ui

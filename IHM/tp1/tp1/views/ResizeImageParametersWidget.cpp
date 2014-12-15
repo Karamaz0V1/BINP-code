@@ -1,7 +1,7 @@
 #include "views/ResizeImageParametersWidget.h"
 
 ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
-    QWidget(parent)
+    AbstractParametersWidget(parent)
 {
     m_sbxScale=new QSpinBox(this);
     m_sbxScale->setRange(-1,1);
@@ -17,4 +17,8 @@ ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
     layoutMain->addLayout(layoutSpin);
     layoutMain->addLayout(layoutBtn);
     this->setLayout(layoutMain);
+}
+
+QString ResizeImageParametersWidget::title() const {
+
 }

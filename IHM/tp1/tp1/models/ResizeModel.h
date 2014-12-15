@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include "ImageConverter.h"
+#include "AbstractModel.h"
 #include <visp/vpImage.h>
 #include <visp/vpImageIo.h>
 #include <visp/vpDisplayX.h>
 
-class ResizeModel
+class ResizeModel : public AbstractModel
 {
 public:
     ResizeModel();
