@@ -1,12 +1,9 @@
 #ifndef RESIZEMODEL_H
 #define RESIZEMODEL_H
 
-#include <iostream>
-#include "ImageConverter.h"
 #include "AbstractModel.h"
+
 #include <visp/vpImage.h>
-#include <visp/vpImageIo.h>
-#include <visp/vpDisplayX.h>
 
 class ResizeModel : public AbstractModel
 {
