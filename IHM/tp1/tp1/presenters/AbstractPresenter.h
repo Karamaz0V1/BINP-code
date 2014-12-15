@@ -85,6 +85,7 @@ protected:
 //     ou depuis une classe heritant de AbstractPresenter.
 
 
+    MainWindow *mainWindow;
     AbstractModel * model;
     AbstractParametersWidget * parametersWidget;
 

@@ -22,6 +22,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void addParameterWidget(QWidget *widget);
+    GraphicsImageScene * getSceneDown();
     
 private:
     QMenuBar* m_menuBar;

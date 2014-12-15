@@ -22,5 +22,5 @@ void ResizePresenter::runModel() {
 }
 
 void ResizePresenter::presentModelResults() {
-
+        parent->getSceneDown()->setImage(model->output());
 }

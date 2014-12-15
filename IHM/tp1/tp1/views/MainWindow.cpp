@@ -34,6 +34,11 @@ MainWindow::~MainWindow()
 {
 }
 
+
+GraphicsImageScene * MainWindow::getSceneDown() {
+    return m_graphicsSceneDown;
+}
+
 void MainWindow::addParameterWidget(QWidget *widget) {
     m_tabWidget->addTab(widget,"Onglet");
 }
