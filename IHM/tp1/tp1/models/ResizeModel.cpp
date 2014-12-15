@@ -1,5 +1,7 @@
 #include "models/ResizeModel.h"
 
+#include "ImageConverter.h"
+
 ResizeModel::ResizeModel()
 {
 }

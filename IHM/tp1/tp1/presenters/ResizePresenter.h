@@ -7,15 +7,18 @@
  **************************************************************************/
 
 #pragma once
-#include "views/MainWindow.h"
-#include "presenters/AbstractPresenter.h"
-#include "models/AbstractModel.h"
+
+#include "AbstractPresenter.h"
+
 
 
 class ResizeModel;
 class ResizeImageParametersWidget;
 
-class ResizePresenter: public AbstractPresenter {
+class ResizePresenter: public AbstractPresenter
+{
+    Q_OBJECT
+
    public:
         ResizePresenter(MainWindow *parent, ResizeModel *model, ResizeImageParametersWidget *parametersWidget);
         virtual ~ResizePresenter();

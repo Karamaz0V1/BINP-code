@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -10,17 +9,15 @@
 #include "GraphicsImageScene.h"
 #include "GraphicsImageView.h"
 
-namespace Ui {
-class MainWindow;
-}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    MainWindow(QWidget *parent = 0);
+    virtual ~MainWindow();
+
     void addParameterWidget(QWidget *widget);
     GraphicsImageScene * getSceneDown();
     GraphicsImageScene * getSceneUp();
@@ -39,7 +36,4 @@ private:
     QHBoxLayout* m_layout;
     QVBoxLayout* m_layout2;
     QWidget* m_central;
-    Ui::MainWindow *ui;
 };
-
-#endif // MAINWINDOW_H

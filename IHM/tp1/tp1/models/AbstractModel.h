@@ -10,7 +10,6 @@
 
 #include <QObject>
 #include <visp/vpImage.h>
-#include <visp/vpImageIo.h>
 
 
 class AbstractModel: public QObject {
