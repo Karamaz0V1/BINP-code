@@ -10,12 +10,15 @@
 
 #include "presenters/AbstractPresenter.h"
 #include "models/AbstractModel.h"
+//#include "views/ResizeImageParametersWidget.h"
+
+class ResizeModel;
+class ResizeImageParametersWidget;
 
 class ResizePresenter: public AbstractPresenter {
    public:
         //TODO ResizeModel && Widget
-        ResizePresenter(MainWindow *parent, AbstractModel *model, AbstractParametersWidget *parametersWidget);
-        //TODO implementer dans cpp
+        ResizePresenter(MainWindow *parent, ResizeModel *model, ResizeImageParametersWidget *parametersWidget);
         virtual ~ResizePresenter();
 
     private:

@@ -8,7 +8,7 @@
 
 #include "ResizePresenter.h"
 
-ResizePresenter::ResizePresenter(MainWindow *parent, AbstractModel *model, AbstractParametersWidget *parametersWidget) : AbstractPresenter(parent, model, parametersWidget) {
+ResizePresenter::ResizePresenter(MainWindow *parent, ResizeModel *model, ResizeImageParametersWidget *parametersWidget) : AbstractPresenter(parent, model, parametersWidget) {
 
 }
 
