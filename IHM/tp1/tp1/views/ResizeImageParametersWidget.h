@@ -6,8 +6,9 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLabel>
+#include "AbstractParametersWidget.h"
 
-class ResizeImageParametersWidget : public QWidget
+class ResizeImageParametersWidget : public AbstractParametersWidget
 {
     Q_OBJECT
 private:
@@ -15,7 +16,8 @@ private:
     QPushButton *m_btnRun;
 public:
     explicit ResizeImageParametersWidget(QWidget *parent = 0);
-    
+    QString title() const;
+
 signals:
     
 public slots:
