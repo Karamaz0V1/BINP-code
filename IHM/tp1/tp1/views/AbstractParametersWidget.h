@@ -18,9 +18,10 @@ class AbstractParametersWidget: public QWidget {
         virtual ~AbstractParametersWidget();
 
         virtual QString title() const = 0;
+        virtual double getFactor() const =0;
 
     signals:
-        void runRequest();
+        virtual void runRequest();
 
     protected:
         //TODO

@@ -6,15 +6,13 @@
 #include "AbstractModel.h"
 #include <visp/vpImage.h>
 #include <visp/vpImageIo.h>
-#include <visp/vpDisplayX.h>
-
 class ResizeModel : public AbstractModel
 {
 public:
     ResizeModel();
     void setScaleFactor(const double & factor);
     void setInput(const vpImage<vpRGBa> &img);
-    void run();
+    void run(vpImage<vpRGBa> image,double factor);
     vpImage<vpRGBa> output();
 private:
     void decimation_simple(vpImage<vpRGBa> & I);

@@ -18,9 +18,11 @@ ResizePresenter::~ResizePresenter() {
 }
 
 void ResizePresenter::runModel() {
-    model->run();
+    double factor = parametersWidget->getFactor();
+    vpImage<vpRGBa> image = ImageConverter::qImageToVpImageRGBA(mainWindow->getSceneUp()->image());
+    model->run(image,factor);
 }
 
 void ResizePresenter::presentModelResults() {
-        parent->getSceneDown()->setImage(model->output());
+        mainWindow->getSceneDown()->setImage(ImageConverter::vpImageRGBAToQImage(model->output()));
 }

@@ -34,6 +34,7 @@ HEADERS  += mainwindow.h \
     models/AbstractModel.h \
     views/AbstractParametersWidget.h \
     presenters/ResizePresenter.h \
-    presenters/AbstractPresenter.h
+    presenters/AbstractPresenter.h \
+    ImageConverter.h
 
 FORMS    += mainwindow.ui

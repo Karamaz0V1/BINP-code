@@ -7,9 +7,10 @@
  **************************************************************************/
 
 #pragma once
-
+#include "views/MainWindow.h"
 #include "presenters/AbstractPresenter.h"
 #include "models/AbstractModel.h"
+
 
 class ResizeModel;
 class ResizeImageParametersWidget;

@@ -17,9 +17,10 @@ private:
 public:
     explicit ResizeImageParametersWidget(QWidget *parent = 0);
     QString title() const;
+    double getFactor() const;
 
 signals:
-    
+    void runRequest();
 public slots:
     
 };
