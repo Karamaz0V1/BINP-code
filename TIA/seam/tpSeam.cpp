@@ -251,7 +251,8 @@ int main(int argc, char **argv)
   rotate(imm, imt, sizeX, sizeY);
   rotate(imm_masque, imt_masque, sizeX_m, sizeY_m);
 
-  reduceS(imt,imt_masque,90,sizeX,sizeY);
+//reduceS(imt,imt_masque,90,sizeX,sizeY);
+  reduceS(imt,90,sizeX,sizeY);
 
   rotate_inv(imt, imm, sizeX, sizeY);
 
