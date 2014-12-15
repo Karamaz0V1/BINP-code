@@ -12,6 +12,9 @@ ResizePresenter::ResizePresenter(MainWindow *parent, AbstractModel *model, Abstr
 
 }
 
+ResizePresenter::~ResizePresenter() {
+}
+
 void ResizePresenter::runModel() {
     model->run();
 }

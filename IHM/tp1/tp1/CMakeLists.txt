@@ -25,7 +25,9 @@ set(${PROJECT_NAME}_CPP
     views/GraphicsImageScene.cpp
     views/GraphicsImageView.cpp
     views/ResizeImageParametersWidget.cpp
+    views/AbstractParametersWidget.cpp
     models/ResizeModel.cpp
+    models/AbstractModel.cpp
     presenters/AbstractPresenter.cpp
     presenters/ResizePresenter.cpp
     )
