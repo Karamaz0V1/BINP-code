@@ -2,10 +2,14 @@
 # Un parser est mis dans le main : il lit et stocke dans une imat la variable i_m
 # Pareil pour filtre 
 
+gaussien = [[1 2 1]]
+
 i_m = [[125 100 87 240 168]
 	[125 100 87 240 168]
 	[125 100 87 240 168]
 	[125 100 87 240 168]]
+
+
 
 
 # Exemples de filtres
