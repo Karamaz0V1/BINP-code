@@ -3,6 +3,16 @@
 #include <it/parser.h>
 
 
+void filtrage_monodimensionnel(imat & image, const imat & filtre) {
+    imat tmp = imat_clone(image);
+    for (int i=0; i<imat_height(image); i++)
+        for (int j=0; j<imat_width(image); j++) {
+            int value = 0;
+            for (int j_f=0; j_f<imat_width(filtre); j_f++)
+                value+=tmp[i][j+j_f-(imat_width(filtre)/2)] * filtre[0][j_f];
+            image[i][j] = value;
+        }
+}
 
 int main( int argc, char ** argv )
 {

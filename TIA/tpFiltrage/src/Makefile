@@ -1,6 +1,6 @@
-FLAGS=-g -Wall -O2 `libit-config --cflags`
+FLAGS=-g -Wall -O2 `libit-config --cflags` -I/share/esir2/tia/libit/include -L/share/esir2/tia/libit/lib -lit
 LIBS=`libit-config --libs` -lm # -lefence
-CC=gcc
+CC=g++
 
 EXE=tp_filtrage
 
