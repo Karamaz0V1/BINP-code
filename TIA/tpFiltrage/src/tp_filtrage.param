@@ -1,0 +1,55 @@
+# Pour utiliser une de ces matrices  decommenter la. 
+# Un parser est mis dans le main : il lit et stocke dans une imat la variable i_m
+# Pareil pour filtre 
+
+i_m = [[125 100 87 240 168]
+	[125 100 87 240 168]
+	[125 100 87 240 168]
+	[125 100 87 240 168]]
+
+
+# Exemples de filtres
+
+# Filtre monodimensionnel
+ filtre = 
+[[-1 1]]
+
+
+# Filtre binomial gaussien
+
+
+# Filtre moyenneur
+
+
+# Filtre rehaussement contour
+# filtre = 
+[[0 -1 0]
+[-1 5 -1]
+[0 -1 0]]
+
+
+# Filtre de Sobel
+# filtre = 
+[[1 2 1]
+[0 0 0]
+[-1 -2 -1]]
+
+# filtre = 
+[[-1 0 1]
+[-2 0 2]
+[-1 0 1]]
+
+
+# Filtre Laplacien non sparable
+# filtre = 
+[[-1 -1 -1]
+[-1 8 -1]
+[-1 -1 -1]]
+
+
+# Filtre Laplacien sparable
+# filtre = 
+[[-0.25 0.125 -0.25]
+[0.125 0.5 0.125]
+[-0.25 0.125 -0.25]]
+
