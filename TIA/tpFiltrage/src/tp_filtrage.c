@@ -66,18 +66,20 @@ int main( int argc, char ** argv )
   //---------------------------------------------------//
   // filtrage bidimensionnel d'une image avec un filtre separable
   //---------------------------------------------------//
-
-  imat gauss          = parser_get_imat( parser, "gaussien" );
-
-  imat res = filtrage_monodimensionnel(im,gauss);
-
-
-  imat_pgm_write("gaussien.pgm",res);
+  imat gauss = parser_get_imat( parser, "gaussien" );
+  imat resg = filtrage_bidimensionnel(im,gauss);
+  imat_pgm_write("gaussien.pgm",resg);
+  imat_delete(resg);
+  imat_delete(gauss);
 
   //---------------------------------------------------//
   // filtrage d'une image avec un filtre moyenneur
   //---------------------------------------------------//
-
+  imat moy = parser_get_imat( parser, "moyenneur" );
+  imat resm = filtrage_bidimensionnel(im,moy);
+  imat_pgm_write("moyenne.pgm",resm);
+  imat_delete(resm);
+  imat_delete(moy);
 
   //---------------------------------------------------//
   // accentuation des contours d'une image par simple filtrage
@@ -108,8 +110,6 @@ int main( int argc, char ** argv )
   imat_delete(im);
   imat_delete(imtest);
   imat_delete(filtre);
-  imat_delete(res);
-  imat_delete(gauss);
 
   return 0;
 }

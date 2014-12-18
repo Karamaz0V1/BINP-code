@@ -3,6 +3,7 @@
 # Pareil pour filtre 
 
 gaussien = [[1 2 1]]
+moyenneur = [[1 1 1]]
 
 i_m = [[125 100 87 240 168]
 	[125 100 87 240 168]
