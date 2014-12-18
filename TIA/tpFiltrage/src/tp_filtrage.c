@@ -3,33 +3,35 @@
 #include <it/parser.h>
 
 
-void filtrage_monodimensionnel(imat * image, const imat * filtre) {
+imat filtrage_monodimensionnel(imat image, imat filtre) {
     int i, j, j_f;
-    imat tmp = imat_clone(*image);
-    int offset = imat_width(*filtre)/2;
+    imat tmp = imat_clone(image);
+    int offset = imat_width(filtre)/2;
 
     int coeff = 0;
-    for (j=0; j<imat_width(*filtre); j++)
-        coeff+=*filtre[0][j];
+    for (j=0; j<imat_width(filtre); j++)
+        coeff+=filtre[0][j];
 
-    for (i=0; i<imat_height(*image); i++)
-        for (j=offset; j<imat_width(*image)-offset; j++) {
+    for (i=0; i<imat_height(image); i++)
+        for (j=offset; j<imat_width(image)-offset; j++) {
             int value = 0;
-            for (j_f=0; j_f<imat_width(*filtre); j_f++) {
-                value+=tmp[i][j+j_f-offset] * *filtre[0][j_f];
+            for (j_f=0; j_f<imat_width(filtre); j_f++) {
+                value+=image[i][j+j_f-offset] * filtre[0][j_f];
             }
-            *image[i][j] = value / coeff;
+            tmp[i][j] = value / coeff;
         }
 
-    imat_delete(tmp);
+    return tmp;
 }
 
-void filtrage_bidimensionnel(imat * image, const imat * filtre) {
-    filtrage_monodimensionnel(image, filtre);
-    imat transpose = imat_new_transpose(*image);
-    filtrage_monodimensionnel(&transpose, filtre);
-    *image = imat_new_transpose(transpose);
+imat filtrage_bidimensionnel(imat image, imat filtre) {
+    imat tmp = filtrage_monodimensionnel(image, filtre);
+    imat transpose = imat_new_transpose(tmp);
+    filtrage_monodimensionnel(transpose, filtre);
+    imat res = imat_new_transpose(transpose);
     imat_delete(transpose);
+    imat_delete(tmp);
+    return res;
 }
 
 int main( int argc, char ** argv )
@@ -65,13 +67,12 @@ int main( int argc, char ** argv )
   // filtrage bidimensionnel d'une image avec un filtre separable
   //---------------------------------------------------//
 
-  mat gauss          = parser_get_imat( parser, "gaussien" );
-  imat res = imat_clone(im);
+  imat gauss          = parser_get_imat( parser, "gaussien" );
 
-  filtrage_bidimensionnel(&res,&gauss);
+  imat res = filtrage_monodimensionnel(im,gauss);
 
 
-  imat_pgm_write("gaussien.pgm",im);
+  imat_pgm_write("gaussien.pgm",res);
 
   //---------------------------------------------------//
   // filtrage d'une image avec un filtre moyenneur
@@ -107,6 +108,8 @@ int main( int argc, char ** argv )
   imat_delete(im);
   imat_delete(imtest);
   imat_delete(filtre);
+  imat_delete(res);
+  imat_delete(gauss);
 
   return 0;
 }
