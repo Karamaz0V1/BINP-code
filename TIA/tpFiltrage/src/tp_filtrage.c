@@ -49,6 +49,7 @@ imat filtrage_bidimensionnel_inseparable(imat image, imat filtre) {
     for (i=0; i<imat_height(filtre); i++)
         for (j=0; j<imat_width(filtre); j++)
             coeff+=filtre[i][j];
+    if (coeff==0) coeff = 1;
 
     for (i=offset; i<imat_height(image)-offset; i++)
         for (j=offset; j<imat_width(image)-offset; j++) {
@@ -59,6 +60,45 @@ imat filtrage_bidimensionnel_inseparable(imat image, imat filtre) {
             tmp[i][j] = clamp(value / coeff);
         }
 
+    return tmp;
+}
+
+imat imat_coeff(imat image, float coeff) {
+    int i, j;
+    imat tmp = imat_clone(image);
+    for (i=0; i<imat_height(image); i++)
+        for (j=0; j<imat_width(image); j++)
+            tmp[i][j] = image[i][j] * coeff;
+    return tmp;
+}
+
+imat imat_abs(imat image) {
+    int i, j;
+    imat tmp = imat_clone(image);
+    for (i=0; i<imat_height(image); i++)
+        for (j=0; j<imat_width(image); j++)
+            tmp[i][j] = abs(image[i][j]);
+    return tmp;
+}
+
+imat imat_add_clamp(imat image1, imat image2) {
+    int i, j;
+    imat tmp = imat_clone(image1);
+    for (i=0; i<imat_height(image1); i++)
+        for (j=0; j<imat_width(image1); j++)
+            tmp[i][j] = clamp(image1[i][j] + image2[i][j]);
+    return tmp;
+}
+
+imat imat_rescale_value(imat image) {
+    //TODO
+    int i, j;
+    int min = imat_min(image);
+    int max = imat_max(image);
+    imat tmp = imat_clone(image);
+    for (i=0; i<imat_height(image); i++)
+        for (j=0; j<imat_width(image); j++)
+            tmp[i][j] = abs(image[i][j]);
     return tmp;
 }
 
@@ -133,14 +173,38 @@ int main( int argc, char ** argv )
   //  CONTOURS
   //---------------------------------------------------//
 
-	//---------------------------------------------------//
-   // Filtre de Sobel 
-   //---------------------------------------------------//  
+  //---------------------------------------------------//
+  // Filtre de Sobel 
+  //---------------------------------------------------//  
+  imat sobelh = parser_get_imat( parser, "sobelh" );
+  imat sobelv = parser_get_imat( parser, "sobelv" );
+  imat ressh = filtrage_bidimensionnel_inseparable(im,sobelh);
+  imat ressv = filtrage_bidimensionnel_inseparable(im,sobelv);
+  imat ressha = imat_abs(ressh);
+  imat ressva = imat_abs(ressv);
+  imat sobel = imat_add_clamp(ressha,ressva);
+  imat_pgm_write("sobelh.pgm",ressha);
+  imat_pgm_write("sobelv.pgm",ressva);
+  imat_pgm_write("sobel.pgm",sobel);
+
+  imat_delete(sobel);
+  imat_delete(ressha);
+  imat_delete(ressva);
+  imat_delete(ressh);
+  imat_delete(ressv);
+  imat_delete(sobelv);
+  imat_delete(sobelh);
 
   //---------------------------------------------------//
   // Filtre Laplacien
   //---------------------------------------------------//
+  imat laplacien = parser_get_imat( parser, "laplacien" );
+  imat resl = filtrage_bidimensionnel_inseparable(im,laplacien);
+  imat reslc = imat_coeff(resl,1.0/8);
+  imat_pgm_write("laplacien.pgm",reslc);
 
+  imat_delete(resl);
+  imat_delete(laplacien);
 
 
 
