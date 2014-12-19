@@ -15,9 +15,8 @@ imat filtrage_monodimensionnel(imat image, imat filtre) {
     for (i=0; i<imat_height(image); i++)
         for (j=offset; j<imat_width(image)-offset; j++) {
             int value = 0;
-            for (j_f=0; j_f<imat_width(filtre); j_f++) {
+            for (j_f=0; j_f<imat_width(filtre); j_f++)
                 value+=image[i][j+j_f-offset] * filtre[0][j_f];
-            }
             tmp[i][j] = value / coeff;
         }
 
@@ -34,6 +33,35 @@ imat filtrage_bidimensionnel(imat image, imat filtre) {
     return res;
 }
 
+int clamp(int val) {
+    if (val > 255)
+        return 255;
+    else
+        return val;
+}
+
+imat filtrage_bidimensionnel_inseparable(imat image, imat filtre) {
+    int i, j, i_f, j_f;
+    imat tmp = imat_clone(image);
+    int offset = imat_width(filtre)/2;
+
+    int coeff = 0;
+    for (i=0; i<imat_height(filtre); i++)
+        for (j=0; j<imat_width(filtre); j++)
+            coeff+=filtre[i][j];
+
+    for (i=offset; i<imat_height(image)-offset; i++)
+        for (j=offset; j<imat_width(image)-offset; j++) {
+            int value = 0;
+            for (i_f=0; i_f<imat_height(filtre); i_f++)
+                for (j_f=0; j_f<imat_width(filtre); j_f++)
+                    value+=image[i+i_f-offset][j+j_f-offset] * filtre[i_f][j_f];
+            tmp[i][j] = clamp(value / coeff);
+        }
+
+    return tmp;
+}
+
 int main( int argc, char ** argv )
 {
 	parser_t * parser = parser_init( argc, argv,  /* Command line arguments */
@@ -47,7 +75,7 @@ int main( int argc, char ** argv )
 	int i,j;
 	
 	// lecture image
-	imat im = imat_pgm_read("../images/alpes.pgm");
+	imat im = imat_pgm_read("../images/journal1_394.pgm");
 	if(im==NULL) {
 		perror("imat_pgm_read");
 		return(EXIT_FAILURE);
@@ -70,7 +98,6 @@ int main( int argc, char ** argv )
   imat resg = filtrage_bidimensionnel(im,gauss);
   imat_pgm_write("gaussien.pgm",resg);
   imat_delete(resg);
-  imat_delete(gauss);
 
   //---------------------------------------------------//
   // filtrage d'une image avec un filtre moyenneur
@@ -84,12 +111,23 @@ int main( int argc, char ** argv )
   //---------------------------------------------------//
   // accentuation des contours d'une image par simple filtrage
   //---------------------------------------------------//
-
+  imat rehauss = parser_get_imat( parser, "rehauss" );
+  imat resr = filtrage_bidimensionnel_inseparable(im,rehauss);
+  imat_pgm_write("rehaussement.pgm",resr);
 
   //---------------------------------------------------//
   // accentuation des contours d'une image pretraitee
   //---------------------------------------------------//
 
+  resg = filtrage_bidimensionnel(im,gauss);
+  imat resrg = filtrage_bidimensionnel_inseparable(resg,rehauss);
+  imat_pgm_write("passsebas_rehaussement.pgm",resrg);
+
+  imat_delete(resr);
+  imat_delete(resrg);
+  imat_delete(resg);
+  imat_delete(rehauss);
+  imat_delete(gauss);
 
   //////////////////////////////////////////////////////
   //  CONTOURS

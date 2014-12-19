@@ -1,6 +1,6 @@
 FLAGS=-g -Wall `libit-config --cflags`
 LIBS=`libit-config --libs` -lm # -lefence
-CC=clang
+CC=gcc
 
 EXE=tp_filtrage
 

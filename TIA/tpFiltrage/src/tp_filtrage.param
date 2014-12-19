@@ -27,7 +27,7 @@ i_m = [[125 100 87 240 168]
 
 
 # Filtre rehaussement contour
-# filtre = 
+rehauss = 
 [[0 -1 0]
 [-1 5 -1]
 [0 -1 0]]
