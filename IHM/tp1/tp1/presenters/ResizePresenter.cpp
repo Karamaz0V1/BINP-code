@@ -9,6 +9,8 @@
 #include "ResizePresenter.h"
 #include "views/ResizeImageParametersWidget.h"
 #include "models/ResizeModel.h"
+#include "views/MainWindow.h"
+
 
 ResizePresenter::ResizePresenter(MainWindow *parent, ResizeModel *model, ResizeImageParametersWidget *parametersWidget) : AbstractPresenter(parent, model, parametersWidget) {
 
@@ -22,5 +24,6 @@ void ResizePresenter::runModel() {
 }
 
 void ResizePresenter::presentModelResults() {
-        parent->getSceneDown()->setImage(model->output());
+        //mainWindow = NULL;//->getSceneDown()->setImage(model->output());
+        //mainWindow->getSceneDown();
 }

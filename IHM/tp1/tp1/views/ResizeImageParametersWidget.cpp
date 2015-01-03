@@ -20,5 +20,6 @@ ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
 }
 
 QString ResizeImageParametersWidget::title() const {
+    //TODO Mettr le titre de la fenetre
 
 }
