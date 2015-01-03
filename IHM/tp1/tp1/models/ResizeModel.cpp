@@ -1,5 +1,7 @@
 #include "models/ResizeModel.h"
 
+#include "ImageConverter.h"
+
 ResizeModel::ResizeModel()
 {
 }
@@ -12,7 +14,9 @@ void ResizeModel::setInput(const vpImage<vpRGBa> &img) {
     m_img = img;
 }
 
-void ResizeModel::run() {
+void ResizeModel::run(vpImage<vpRGBa> image,double factor) {
+    setScaleFactor(factor);
+    setInput(image);
     if(m_factor>0) {
         agrandissement_lineaire(m_img);
     }

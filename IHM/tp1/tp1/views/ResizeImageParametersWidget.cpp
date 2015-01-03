@@ -17,9 +17,14 @@ ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
     layoutMain->addLayout(layoutSpin);
     layoutMain->addLayout(layoutBtn);
     this->setLayout(layoutMain);
+    QObject::connect(m_btnRun,SIGNAL(clicked()),this,SIGNAL(runRequest()));
 }
 
 QString ResizeImageParametersWidget::title() const {
     //TODO Mettr le titre de la fenetre
 
+}
+
+double ResizeImageParametersWidget::getFactor() const {
+    return m_sbxScale->value();
 }

@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_central=new QWidget(this);
     m_central->setLayout(m_layout);
     this->setCentralWidget(m_central);
+
     QObject::connect(m_openAction,SIGNAL(triggered()),m_graphicsSceneUp,SLOT(printImage()));
     QObject::connect(m_saveAction,SIGNAL(triggered()),m_graphicsSceneDown,SLOT(saveImage()));
     QObject::connect(m_quitAction,SIGNAL(triggered()),this,SLOT(close()));
@@ -37,6 +38,10 @@ MainWindow::~MainWindow()
 
 GraphicsImageScene * MainWindow::getSceneDown() {
     return m_graphicsSceneDown;
+}
+
+GraphicsImageScene * MainWindow::getSceneUp() {
+    return m_graphicsSceneUp;
 }
 
 void MainWindow::addParameterWidget(QWidget *widget) {

@@ -100,21 +100,25 @@ int main( int argc, char ** argv )
 	
 	
 	// lecture image
-	imat im=imat_pgm_read("../images/test_operateur_bin.pgm");
+	imat im=imat_pgm_read("../images/image1_bin.pgm");//("../images/test_operateur_bin.pgm");
 	if(im==NULL) {
 		perror("imat_pgm_read");
 		return(EXIT_FAILURE);
 	}
 	
+	//imat im=rectangle(500,500,100,100,300,300);
+	
 	printf("\n Taille image  chargee : height(im) = %d\twidth(im) = %d\n", imat_height (im), imat_width (im));	 
 	
 	
-	im=squelette(im,masques);
+	//im=squelette(im,masques);
+	nbCarres(im);
+	printf("Je suis là");
 	// A COMPLETER
 	
 	
 	// sauvegarde
-	imat_pgm_write("../results/out.pgm",im);
+	//imat_pgm_write("../results/out.pgm",im);
 	
 	
 	// liberation memoire

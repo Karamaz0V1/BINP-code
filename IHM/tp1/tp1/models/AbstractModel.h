@@ -9,6 +9,7 @@
 #pragma once
 
 #include <QObject>
+#include <visp/vpImage.h>
 
 class AbstractModel: public QObject {
     Q_OBJECT
@@ -16,7 +17,9 @@ class AbstractModel: public QObject {
         AbstractModel(QObject *parent = NULL);
         virtual ~AbstractModel();
 
-        virtual void run() = 0;
+        virtual void run(vpImage<vpRGBa> image,double factor) = 0;
+
+        virtual vpImage<vpRGBa> output();
 
     signals:
         void success();

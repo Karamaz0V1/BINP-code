@@ -13,7 +13,9 @@ include(${VISP_USE_FILE})
 
 # Find includes in corresponding build directories
 include_directories(
- #views
+    views
+    presenters
+    models
     )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

@@ -7,10 +7,10 @@
  **************************************************************************/
 
 #include "ResizePresenter.h"
-#include "views/ResizeImageParametersWidget.h"
-#include "models/ResizeModel.h"
-#include "views/MainWindow.h"
-
+#include "ResizeImageParametersWidget.h"
+#include "ResizeModel.h"
+#include "MainWindow.h"
+#include "ImageConverter.h"
 
 ResizePresenter::ResizePresenter(MainWindow *parent, ResizeModel *model, ResizeImageParametersWidget *parametersWidget) : AbstractPresenter(parent, model, parametersWidget) {
 
@@ -20,10 +20,11 @@ ResizePresenter::~ResizePresenter() {
 }
 
 void ResizePresenter::runModel() {
-    model->run();
+    double factor = parametersWidget->getFactor();
+    vpImage<vpRGBa> image = ImageConverter::qImageToVpImageRGBA(mainWindow->getSceneUp()->image());
+    model->run(image,factor);
 }
 
 void ResizePresenter::presentModelResults() {
-        //mainWindow = NULL;//->getSceneDown()->setImage(model->output());
-        //mainWindow->getSceneDown();
+        mainWindow->getSceneDown()->setImage(ImageConverter::vpImageRGBAToQImage(model->output()));
 }
