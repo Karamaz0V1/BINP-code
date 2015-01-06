@@ -3,16 +3,16 @@
 # Pareil pour masque 
 
 
-i_m = [[0 0 0][0 1 0][0 0 0]]
+#i_m = [[0 0 0][0 1 0][0 0 0]]
 
 #i_m = [[1 0 0 1 0 1 1][1 0 1 1 0 1 0][0 0 0 1 0 1 1]]
 
-#i_m = [[125 100 87 240 168][125 100 87 240 168][125 100 87 240 168]]
+i_m = [[125 100 87 240 168][125 100 87 240 168][125 100 87 240 168]]
 
 
 
 
-# Exemples d'élements structurants que vous pouvez utiliser
+# Exemples d'Ã©lements structurants que vous pouvez utiliser
 
 # Disque de rayon 1
 #masque = 

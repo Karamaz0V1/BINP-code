@@ -37,7 +37,7 @@ imat dilatation_NDG( imat im, imat masque ){
   int i,j;
 	for(i=0;i<imat_height(im);i++) {
 		for(j=0;j<imat_width(im);j++) {
-			res[i][j]=applique_masque_dilatation_NDG(im, masque, i, j)*255;
+			res[i][j]=applique_masque_dilatation_NDG(im, masque, i, j);
 		}
 	}
   return res;
@@ -73,9 +73,8 @@ imat erosion_NDG( imat im, imat masque ){
   int i,j;
 	for(i=0;i<imat_height(im);i++) {
 		for(j=0;j<imat_width(im);j++) {
-			res[i][j]=applique_masque_erosion_NDG(im, masque, i, j)*255;
+			res[i][j]=applique_masque_erosion_NDG(im, masque, i, j);
 		}
 	}
   return res;
 }
-
