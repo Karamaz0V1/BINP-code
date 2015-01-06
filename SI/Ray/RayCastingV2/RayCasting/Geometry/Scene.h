@@ -100,18 +100,21 @@ namespace Geometry
 		}
 
 		const Triangle & getGeometryTriangle(const Geometry & geo, const Ray & ray) {
-			Triangle * top;
+			const Triangle * top = NULL;
 			::std::deque<Triangle,aligned_allocator<Triangle,16U>>::const_iterator it = geo.getTriangles().begin();
-			RayTriangleIntersection inter(*it, ray);
+			const Triangle* triangle = &*it;
+			top = triangle;
+			RayTriangleIntersection inter(triangle, &ray);
 			while (it != geo.getTriangles().end()) {
-				if (it->intersection(CastedRay(ray))) {
-					if ( (! inter.valid()) || (RayTriangleIntersection(*it, ray) < inter) ) {
-						top = *it;
-						inter = RayTriangleIntersection(*it, ray);
+				//if (it->intersection(CastedRay(ray))) {
+					if ( (! inter.valid()) || (RayTriangleIntersection(triangle, &ray) < inter) ) {
+						top = &*it;
+						inter = RayTriangleIntersection(triangle, &ray);
 					}
-				}
+				//}
+				it++;
 			}
-			return top;
+			return *top;
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,19 +137,42 @@ namespace Geometry
 			Triangle top;
 			::std::deque<::std::pair<BoundingBox, Geometry> >::iterator it;
 			it = m_geometries.begin();
-			
+			RGBColor color = RGBColor(0.0,0.0,0.0);
+			Math::Vector3 pInter;
+			Math::Vector3 vision = ray.direction().normalized();
 			while(it != m_geometries.end()) {							// Parcours des géométries
 				if (it->second.intersection(CastedRay(ray))) {			// Intersection avec ray
 					intersect = true;
-		
+					top = *it->second.getTriangles().begin();
+					RayTriangleIntersection inter(&*it->second.getTriangles().begin(),&ray);
+					if ( (! inter.valid()) || (RayTriangleIntersection(&top, &ray) < inter) ) {
+						top = getGeometryTriangle(it->second, ray);
+						inter = RayTriangleIntersection(&top, &ray);
+						pInter = inter.intersection();
+					}						
 				}
 				it++;
 			}
-
-			if (intersect)
-				return RGBColor(1.0,0.0,0.0);
+			
+			if (intersect) {
+				Math::Vector3 normale = top.normal(vision).normalized();
+				std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
+				while(itLights != m_lights.end()) {
+					Math::Vector3 dirLight = (itLights->position()-pInter).normalized();
+					Math::Vector3 dirRefl = top.reflectionDirection(ray).normalized();
+					float rv = dirRefl*vision;
+					float nv = normale*vision;
+					float np = normale*dirLight;
+					float n = top.material()->specularExponent();
+					if(nv*np>0) {
+						color=color+(top.material()->diffuseColor()*np/*+top.material()->specularColor()*std::pow(rv,n)*/)/distCarree(pInter,itLights->position()); //TODO WTF PK C NOIR ?
+					}
+					itLights++;
+				}
+			}
 			else
-				return RGBColor(0.0,0.0,0.0);
+				color=RGBColor(0.0,0.0,1.0);
+			return color;
 			//::std::cout<<"Scene::sendRay not implemented!"<<::std::endl ;
 			//if(depth>maxDepth)
 			//	return RGBColor(0.0,0.0,0.0);

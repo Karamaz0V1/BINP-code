@@ -1,42 +1,209 @@
-﻿Build started 16/12/2014 10:01:08.
-     1>Project "H:\SI\Ray\RayCastingV2\RayCasting\RayCasting.vcxproj" on node 2 (build target(s)).
+﻿Build started 06/01/2015 09:32:46.
+     1>Project "H:\tpIN\SI\Ray\RayCastingV2\RayCasting\RayCasting.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Creating "H:\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Creating "H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"H:\SI\Ray\RayCastingV2\Visual C 8\\..\RayCasting" /I"H:\SI\Ray\RayCastingV2\Visual C 8\\..\DIIC_INC\include" /Zi /nologo /W4 /WX- /O2 /Oi /Ot /Oy /GT /GL /D SSE_OPT /D WIN32 /D NDEBUG /D _CONSOLE /D NOMINMAX /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /EHsc /MD /GS- /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /GR /openmp /Fo"H:\SI\Ray\RayCastingV2\Visual C 8\\Release\\" /Fd"H:\SI\Ray\RayCastingV2\Visual C 8\\Release\vc100.pdb" /Gd /TP /FISpecificVisual.h /analyze- /errorReport:prompt main.cpp
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\..\RayCasting" /I"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\..\DIIC_INC\include" /Zi /nologo /W4 /WX- /O2 /Oi /Ot /Oy /GT /GL /D SSE_OPT /D WIN32 /D NDEBUG /D _CONSOLE /D NOMINMAX /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /EHsc /MD /GS- /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /GR /openmp /Fo"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\\" /Fd"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\vc100.pdb" /Gd /TP /FISpecificVisual.h /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Spy/Spy.h(32): warning C4100: 'message' : unreferenced formal parameter
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Spy/Spy.h(32): warning C4100: 'value' : unreferenced formal parameter
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/CastedRay.h(39): warning C4355: 'this' : used in base member initializer list
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/CastedRay.h(43): warning C4355: 'this' : used in base member initializer list
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/PointLight.h(79): warning C4100: 'intersection' : unreferenced formal parameter
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Geometry.h(195): warning C4189: 'index' : local variable is initialized but not referenced
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Cone.h(40): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Visualizer/Visualizer.h(170): warning C4244: 'initializing' : conversion from 'float' to 'unsigned char', possible loss of data
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Visualizer/Visualizer.h(171): warning C4244: 'initializing' : conversion from 'float' to 'unsigned char', possible loss of data
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Visualizer/Visualizer.h(172): warning C4244: 'initializing' : conversion from 'float' to 'unsigned char', possible loss of data
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Math/RandomDirection.h(40): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(105): error C2664: 'Geometry::RayTriangleIntersection::RayTriangleIntersection(const Geometry::Triangle *,const Geometry::Ray *)' : cannot convert parameter 1 from 'const Geometry::Triangle' to 'const Geometry::Triangle *'
-                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(107): error C2660: 'Geometry::Triangle::intersection' : function does not take 1 arguments
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(108): error C2665: 'Geometry::RayTriangleIntersection::RayTriangleIntersection' : none of the 3 overloads could convert all the argument types
-                 H:\SI\Ray\RayCastingV2\RayCasting\Geometry/RayTriangleIntersection.h(48): could be 'Geometry::RayTriangleIntersection::RayTriangleIntersection(const Geometry::Triangle *,const Geometry::Ray *)'
-                 while trying to match the argument list '(const Geometry::Triangle, const Geometry::Ray)'
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(109): error C2440: '=' : cannot convert from 'const Geometry::Triangle' to 'Geometry::Triangle *'
-                 No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(110): error C2665: 'Geometry::RayTriangleIntersection::RayTriangleIntersection' : none of the 3 overloads could convert all the argument types
-                 H:\SI\Ray\RayCastingV2\RayCasting\Geometry/RayTriangleIntersection.h(48): could be 'Geometry::RayTriangleIntersection::RayTriangleIntersection(const Geometry::Triangle *,const Geometry::Ray *)'
-                 while trying to match the argument list '(const Geometry::Triangle, const Geometry::Ray)'
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(114): error C2440: 'return' : cannot convert from 'Geometry::Triangle *' to 'const Geometry::Triangle &'
-                 Reason: cannot convert from 'Geometry::Triangle *' to 'const Geometry::Triangle'
-                 No constructor could take the source type, or constructor overload resolution was ambiguous
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(139): warning C4239: nonstandard extension used : 'argument' : conversion from 'Geometry::CastedRay' to 'Geometry::CastedRay &'
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Spy/Spy.h(32): warning C4100: 'message' : unreferenced formal parameter
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Spy/Spy.h(32): warning C4100: 'value' : unreferenced formal parameter
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/CastedRay.h(39): warning C4355: 'this' : used in base member initializer list
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/CastedRay.h(43): warning C4355: 'this' : used in base member initializer list
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/PointLight.h(79): warning C4100: 'intersection' : unreferenced formal parameter
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Geometry.h(195): warning C4189: 'index' : local variable is initialized but not referenced
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Cone.h(40): warning C4244: 'argument' : conversion from 'int' to 'const float', possible loss of data
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Visualizer/Visualizer.h(170): warning C4244: 'initializing' : conversion from 'float' to 'unsigned char', possible loss of data
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Visualizer/Visualizer.h(171): warning C4244: 'initializing' : conversion from 'float' to 'unsigned char', possible loss of data
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Visualizer/Visualizer.h(172): warning C4244: 'initializing' : conversion from 'float' to 'unsigned char', possible loss of data
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Math/RandomDirection.h(40): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(144): warning C4239: nonstandard extension used : 'argument' : conversion from 'Geometry::CastedRay' to 'Geometry::CastedRay &'
                  A non-const reference may only be bound to an lvalue
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(220): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(254): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>H:\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(267): warning C4244: '=' : conversion from 'LONGLONG' to 'double', possible loss of data
-     1>Done Building Project "H:\SI\Ray\RayCastingV2\RayCasting\RayCasting.vcxproj" (build target(s)) -- FAILED.
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(134): warning C4100: 'maxDepth' : unreferenced formal parameter
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(134): warning C4100: 'depth' : unreferenced formal parameter
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(166): warning C4189: 'n' : local variable is initialized but not referenced
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(163): warning C4189: 'rv' : local variable is initialized but not referenced
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(164): warning C4189: 'nv' : local variable is initialized but not referenced
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(246): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(280): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(293): warning C4244: '=' : conversion from 'LONGLONG' to 'double', possible loss of data
+     1>main.cpp(37): warning C4189: 'material' : local variable is initialized but not referenced
+     1>main.cpp(68): warning C4189: 'material2' : local variable is initialized but not referenced
+     1>main.cpp(163): warning C4100: 'argv' : unreferenced formal parameter
+     1>main.cpp(163): warning C4100: 'argc' : unreferenced formal parameter
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(121): warning C4100: 'n' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(122) : while compiling class template member function 'void aligned_allocator<T,Alignment>::deallocate(T *const ,const size_t) const'
+                 with
+                 [
+                     T=Math::Vector3,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(721) : see reference to class template instantiation 'aligned_allocator<T,Alignment>' being compiled
+                 with
+                 [
+                     T=Math::Vector3,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(773) : see reference to class template instantiation 'std::_Deque_val<_Ty,_Alloc>' being compiled
+                 with
+                 [
+                     _Ty=Math::Vector3,
+                     _Alloc=aligned_allocator<Math::Vector3,16>
+                 ]
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Geometry.h(26) : see reference to class template instantiation 'std::deque<_Ty,_Ax>' being compiled
+                 with
+                 [
+                     _Ty=Math::Vector3,
+                     _Ax=aligned_allocator<Math::Vector3,16>
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(121): warning C4100: 'n' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(122) : while compiling class template member function 'void aligned_allocator<T,Alignment>::deallocate(T *const ,const size_t) const'
+                 with
+                 [
+                     T=Math::Vector3 *,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(724) : see reference to class template instantiation 'aligned_allocator<T,Alignment>' being compiled
+                 with
+                 [
+                     T=Math::Vector3 *,
+                     Alignment=16
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(121): warning C4100: 'n' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(122) : while compiling class template member function 'void aligned_allocator<T,Alignment>::deallocate(T *const ,const size_t) const'
+                 with
+                 [
+                     T=Geometry::Triangle,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(721) : see reference to class template instantiation 'aligned_allocator<T,Alignment>' being compiled
+                 with
+                 [
+                     T=Geometry::Triangle,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(773) : see reference to class template instantiation 'std::_Deque_val<_Ty,_Alloc>' being compiled
+                 with
+                 [
+                     _Ty=Geometry::Triangle,
+                     _Alloc=aligned_allocator<Geometry::Triangle,16>
+                 ]
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Geometry.h(28) : see reference to class template instantiation 'std::deque<_Ty,_Ax>' being compiled
+                 with
+                 [
+                     _Ty=Geometry::Triangle,
+                     _Ax=aligned_allocator<Geometry::Triangle,16>
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(121): warning C4100: 'n' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(122) : while compiling class template member function 'void aligned_allocator<T,Alignment>::deallocate(T *const ,const size_t) const'
+                 with
+                 [
+                     T=Geometry::Triangle *,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(724) : see reference to class template instantiation 'aligned_allocator<T,Alignment>' being compiled
+                 with
+                 [
+                     T=Geometry::Triangle *,
+                     Alignment=16
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(121): warning C4100: 'n' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(122) : while compiling class template member function 'void aligned_allocator<T,Alignment>::deallocate(T *const ,const size_t) const'
+                 with
+                 [
+                     T=Geometry::PointLight,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(721) : see reference to class template instantiation 'aligned_allocator<T,Alignment>' being compiled
+                 with
+                 [
+                     T=Geometry::PointLight,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(773) : see reference to class template instantiation 'std::_Deque_val<_Ty,_Alloc>' being compiled
+                 with
+                 [
+                     _Ty=Geometry::PointLight,
+                     _Alloc=aligned_allocator<Geometry::PointLight,16>
+                 ]
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\Geometry/Scene.h(35) : see reference to class template instantiation 'std::deque<_Ty,_Ax>' being compiled
+                 with
+                 [
+                     _Ty=Geometry::PointLight,
+                     _Ax=aligned_allocator<Geometry::PointLight,16>
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(121): warning C4100: 'n' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(122) : while compiling class template member function 'void aligned_allocator<T,Alignment>::deallocate(T *const ,const size_t) const'
+                 with
+                 [
+                     T=Geometry::PointLight *,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(724) : see reference to class template instantiation 'aligned_allocator<T,Alignment>' being compiled
+                 with
+                 [
+                     T=Geometry::PointLight *,
+                     Alignment=16
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(121): warning C4100: 'n' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(122) : while compiling class template member function 'void aligned_allocator<T,Alignment>::deallocate(T *const ,const size_t) const'
+                 with
+                 [
+                     T=std::_Container_proxy,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(730) : see reference to class template instantiation 'aligned_allocator<T,Alignment>' being compiled
+                 with
+                 [
+                     T=std::_Container_proxy,
+                     Alignment=16
+                 ]
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\deque(726) : while compiling class template member function 'std::_Deque_val<_Ty,_Alloc>::_Deque_val(_Alloc)'
+                 with
+                 [
+                     _Ty=Math::Vector3,
+                     _Alloc=aligned_allocator<Math::Vector3,16>
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(63): warning C4100: 'p' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(64) : while compiling class template member function 'void aligned_allocator<T,Alignment>::destroy(T *const ) const'
+                 with
+                 [
+                     T=Math::Vector3,
+                     Alignment=16
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(63): warning C4100: 'p' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(64) : while compiling class template member function 'void aligned_allocator<T,Alignment>::destroy(T *const ) const'
+                 with
+                 [
+                     T=Geometry::Triangle,
+                     Alignment=16
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(63): warning C4100: 'p' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(64) : while compiling class template member function 'void aligned_allocator<T,Alignment>::destroy(T *const ) const'
+                 with
+                 [
+                     T=Geometry::PointLight,
+                     Alignment=16
+                 ]
+     1>H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(63): warning C4100: 'p' : unreferenced formal parameter
+                 H:\tpIN\SI\Ray\RayCastingV2\RayCasting\System/aligned_allocator.h(64) : while compiling class template member function 'void aligned_allocator<T,Alignment>::destroy(T *const ) const'
+                 with
+                 [
+                     T=std::_Container_proxy,
+                     Alignment=16
+                 ]
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release/RayCasting.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\DIIC INC\lib" /LIBPATH:"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\..\DIIC_INC\lib" SDL.lib SDL_draw.lib SDLmain.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:libcmt /MANIFEST /ManifestFile:"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\Release\RayCasting.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.lib" /MACHINE:X86 "H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\main.obj"
+            Creating library H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.lib and object H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.exp
+         Generating code
+         Finished generating code
+         RayCasting.vcxproj -> H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release/RayCasting.exe;#1" /manifest "H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.exe.intermediate.manifest"
+       FinalizeBuildStatus:
+         Deleting file "H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.unsuccessfulbuild".
+         Touching "H:\tpIN\SI\Ray\RayCastingV2\Visual C 8\\Release\RayCasting.lastbuildstate".
+     1>Done Building Project "H:\tpIN\SI\Ray\RayCastingV2\RayCasting\RayCasting.vcxproj" (build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:05.52
+Time Elapsed 00:00:04.88
