@@ -70,7 +70,11 @@ Le resulat du filtre gaussien est visible figure \ref{gauss:init} page \pageref{
 \end{figure}
 
 Nous avons fait la même manipulation avec le filtre moyenneur. Par comparaison des résultat sur les images, le filtre gaussien conserve mieux les
-contours.
+contours. Les fonctions de transfert respectives sont les suivantes :
+\[ H(\omega_1,\omega_2) = 4 + 2*\cos(\omega_1+\omega_2) + 2*\cos(\omega_1-\omega_2) + 4*\cos(\omega_1) + 4*\cos(\omega_2) \]
+et
+\[ H(\omega_1,\omega_2) = 1 + 2*\cos(\omega_1+\omega_2) + 2*\cos(\omega_1-\omega_2) + 2*\cos(\omega_1) + 2*\cos(\omega_2) \]
+On remarque que les deux fonctions de transfert ne sont composées que de cosinus, on en déduit dont qu'il s'agit de filtres passe-bas.
 
 \subsection{Rehaussement de contours}
 
