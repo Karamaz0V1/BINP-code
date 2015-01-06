@@ -49,6 +49,15 @@ int clamp(int val) {
         return val;
 }
 
+imat imat_clamp(imat image) {
+    int i, j;
+    imat tmp = imat_clone(image);
+    for (i=0; i<imat_height(image); i++)
+        for (j=0; j<imat_width(image); j++)
+            tmp[i][j] = clamp(image[i][j]);
+    return tmp;
+}
+
 imat filtrage_bidimensionnel_inseparable(imat image, imat filtre) {
     int i, j, i_f, j_f;
     imat tmp = imat_clone(image);
@@ -65,6 +74,29 @@ imat filtrage_bidimensionnel_inseparable(imat image, imat filtre) {
             int value = 0;
             for (i_f=0; i_f<imat_height(filtre); i_f++)
                 for (j_f=0; j_f<imat_width(filtre); j_f++)
+                    value+=image[i+i_f-offset][j+j_f-offset] * filtre[i_f][j_f];
+            tmp[i][j] = clamp(value / coeff);
+        }
+
+    return tmp;
+}
+
+imat fltrage_bidimensionnel_inseparable(imat image, mat filtre) {
+    int i, j, i_f, j_f;
+    imat tmp = imat_clone(image);
+    int offset = mat_width(filtre)/2;
+
+    int coeff = 0;
+    for (i=0; i<mat_height(filtre); i++)
+        for (j=0; j<mat_width(filtre); j++)
+            coeff+=filtre[i][j];
+    if (coeff==0) coeff = 1;
+
+    for (i=offset; i<imat_height(image)-offset; i++)
+        for (j=offset; j<imat_width(image)-offset; j++) {
+            int value = 0;
+            for (i_f=0; i_f<mat_height(filtre); i_f++)
+                for (j_f=0; j_f<mat_width(filtre); j_f++)
                     value+=image[i+i_f-offset][j+j_f-offset] * filtre[i_f][j_f];
             tmp[i][j] = clamp(value / coeff);
         }

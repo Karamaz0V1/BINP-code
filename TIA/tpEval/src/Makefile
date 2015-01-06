@@ -1,4 +1,4 @@
-FLAGS=-g -Wall -O2 `libit-config --cflags`
+FLAGS=-g -Wall `libit-config --cflags`
 LIBS=`libit-config --libs` -lm # -lefence
 CC=gcc
 

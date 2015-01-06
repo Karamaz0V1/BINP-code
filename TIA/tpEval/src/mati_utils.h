@@ -22,8 +22,14 @@ imat filtrage_bidimensionnel(imat image, imat filtre);
 /** avec un filtre 2D **/
 imat filtrage_bidimensionnel_inseparable(imat image, imat filtre);
 
+/** avec un filtre reel 2D **/
+imat fltrage_bidimensionnel_inseparable(imat image, mat filtre);
+
 /** Limite la valeur max de l'image à 255 **/
 int clamp(int val);
+
+/** Clamp image **/
+imat imat_clamp(imat image);
 
 /** Multiplie l'image par coeff **/
 imat imat_coeff(imat image, float coeff);
