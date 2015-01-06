@@ -78,4 +78,3 @@ imat erosion_NDG( imat im, imat masque ){
 	}
   return res;
 }
-
