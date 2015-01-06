@@ -1,6 +1,7 @@
 FLAGS=-g -Wall `libit-config --cflags`
 LIBS=`libit-config --libs` -lm # -lefence
-CC=gcc
+#CC=gcc
+CC=clang
 
 EXE=tp_filtrage
 
@@ -12,4 +13,5 @@ $(EXE): $(EXE).c
 exe:
 	./$(EXE)
 
-
+clean:
+	rm tp_filtrage *.pgm
