@@ -19,7 +19,7 @@ class AbstractModel: public QObject {
 
         virtual void run(vpImage<vpRGBa> image,double factor) = 0;
 
-        virtual vpImage<vpRGBa> output();
+        virtual vpImage<vpRGBa> output() = 0;
 
     signals:
         void success();

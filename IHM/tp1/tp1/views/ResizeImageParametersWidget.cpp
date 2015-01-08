@@ -1,4 +1,4 @@
-#include "views/ResizeImageParametersWidget.h"
+#include "ResizeImageParametersWidget.h"
 
 ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
     AbstractParametersWidget(parent)
@@ -21,8 +21,7 @@ ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
 }
 
 QString ResizeImageParametersWidget::title() const {
-    //TODO Mettr le titre de la fenetre
-
+    return "Resize Image";
 }
 
 double ResizeImageParametersWidget::getFactor() const {
