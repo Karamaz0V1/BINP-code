@@ -1,13 +1,14 @@
 #ifndef GRAPHICSIMAGESCENE_H
 #define GRAPHICSIMAGESCENE_H
 
-#include <QGraphicsScene>
+//#include <QGraphicsScene>
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 #include <QImage>
+#include "DrawableGraphicsScene.h"
 
-class GraphicsImageScene : public QGraphicsScene
+class GraphicsImageScene : public DrawableGraphicsScene
 {
     Q_OBJECT
 public:
@@ -20,8 +21,8 @@ private:
     QWidget *m_window;
 
 public:
-    void setImage(const QImage &image);
-    QImage image() const;
+    //void setImage(const QImage &image);
+    //QImage image() const;
     
 signals:
     

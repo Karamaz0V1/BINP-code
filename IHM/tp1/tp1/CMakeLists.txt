@@ -28,6 +28,7 @@ set(${PROJECT_NAME}_CPP
     views/GraphicsImageView.cpp
     views/ResizeImageParametersWidget.cpp
     views/AbstractParametersWidget.cpp
+    views/DrawableGraphicsScene.cpp
     models/ResizeModel.cpp
     models/AbstractModel.cpp
     presenters/AbstractPresenter.cpp
@@ -40,6 +41,7 @@ set(${PROJECT_NAME}_H
     views/GraphicsImageScene.h
     views/GraphicsImageView.h
     views/ResizeImageParametersWidget.h
+    views/DrawableGraphicsScene.h
     models/ResizeModel.h
     models/AbstractModel.h
     views/AbstractParametersWidget.h

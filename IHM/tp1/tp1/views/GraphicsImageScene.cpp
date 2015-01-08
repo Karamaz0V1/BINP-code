@@ -1,7 +1,8 @@
 #include "views/GraphicsImageScene.h"
+#include "DrawableGraphicsScene.h"
 
 GraphicsImageScene::GraphicsImageScene(QWidget *window, QObject *parent) :
-    QGraphicsScene(parent)
+    DrawableGraphicsScene(parent)
 {
     m_window=window;
 }
@@ -10,6 +11,7 @@ GraphicsImageScene::~GraphicsImageScene() {
 
 }
 
+/* MAJ DrawableGraphicScene *
 void GraphicsImageScene::setImage(const QImage &image) {
     m_image=image;
     QGraphicsPixmapItem* pixmapItem = new QGraphicsPixmapItem();
@@ -21,6 +23,7 @@ void GraphicsImageScene::setImage(const QImage &image) {
 QImage GraphicsImageScene::image() const {
     return m_image;
 }
+*/
 
 void GraphicsImageScene::printImage() {
     QWidget *window = m_window;
