@@ -8,6 +8,7 @@
 #include <QWidget>
 #include "GraphicsImageScene.h"
 #include "GraphicsImageView.h"
+#include "AbstractParametersWidget.h"
 
 
 class MainWindow : public QMainWindow
@@ -18,7 +19,7 @@ public:
     MainWindow(QWidget *parent = 0);
     virtual ~MainWindow();
 
-    void addParameterWidget(QWidget *widget);
+    void addParameterWidget(AbstractParametersWidget *widget);
     GraphicsImageScene * getSceneDown();
     GraphicsImageScene * getSceneUp();
     

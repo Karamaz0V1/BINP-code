@@ -11,8 +11,8 @@
 #include "models/AbstractModel.h"
 
 AbstractPresenter::AbstractPresenter(MainWindow *parent, AbstractModel *model, AbstractParametersWidget *parametersWidget) : mainWindow(parent), model(model), parametersWidget(parametersWidget) {
-    QObject::connect(model,SIGNAL(model->success()), this,SLOT(this->presentModelResults()));
-    QObject::connect(parametersWidget,SIGNAL(parametersWidget->runRequest()), this,SLOT(this->runModel()));
+    QObject::connect(model,SIGNAL(success()), this,SLOT(presentModelResults()));
+    QObject::connect(parametersWidget,SIGNAL(runRequest()), this,SLOT(runModel()));
 }
 
 AbstractPresenter::~AbstractPresenter() {
