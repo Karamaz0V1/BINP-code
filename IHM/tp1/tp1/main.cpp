@@ -1,6 +1,5 @@
 #include <QtGui/QApplication>
 #include "MainWindow.h"
-//#include "views/ResizeImageParametersWidget.h"
 #include "ResizePresenter.h"
 #include "ResizeImageParametersWidget.h"
 #include "ResizeModel.h"
@@ -18,11 +17,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     w = new MainWindow(0);
-    //ResizeImageParametersWidget* view = new ResizeImageParametersWidget(&w);
-    //w.addParameterWidget(view);
     addResize();
     w->show();
 
-    delete w;
     return a.exec();
+    delete w;
 }
