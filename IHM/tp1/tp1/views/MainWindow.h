@@ -22,6 +22,7 @@ public:
     void addParameterWidget(AbstractParametersWidget *widget);
     GraphicsImageScene * getSceneDown();
     GraphicsImageScene * getSceneUp();
+    void setInteractive(bool intercative);
     
 private:
     QMenuBar* m_menuBar;

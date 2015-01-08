@@ -1,6 +1,8 @@
 #include "views/GraphicsImageScene.h"
 #include "DrawableGraphicsScene.h"
 
+#include <iostream>
+
 GraphicsImageScene::GraphicsImageScene(QWidget *window, QObject *parent) :
     DrawableGraphicsScene(parent)
 {
@@ -10,20 +12,6 @@ GraphicsImageScene::GraphicsImageScene(QWidget *window, QObject *parent) :
 GraphicsImageScene::~GraphicsImageScene() {
 
 }
-
-/* MAJ DrawableGraphicScene *
-void GraphicsImageScene::setImage(const QImage &image) {
-    m_image=image;
-    QGraphicsPixmapItem* pixmapItem = new QGraphicsPixmapItem();
-    QPixmap pixmap = QPixmap::fromImage(m_image);
-    pixmapItem->setPixmap(pixmap);
-    this->addItem(pixmapItem);
-}
-
-QImage GraphicsImageScene::image() const {
-    return m_image;
-}
-*/
 
 void GraphicsImageScene::printImage() {
     QWidget *window = m_window;
@@ -39,6 +27,15 @@ void GraphicsImageScene::printImage() {
     QString fileName=chosenFile.first();
     QImage* image = new QImage(fileName);
     setImage(*image);
+}
+
+void GraphicsImageScene::paint(const QPointF &position) {
+    DrawableGraphicsScene::paint(position);
+    DrawableGraphicsScene::redrawBrush(position);
+}
+
+void GraphicsImageScene::setInteractive(bool intercative) {
+    DrawableGraphicsScene::setInteractive(intercative);
 }
 
 void GraphicsImageScene::saveImage() {

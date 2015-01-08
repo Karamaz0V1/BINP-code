@@ -15,7 +15,9 @@ protected:
     GraphicsImageScene * m_scene;
 public :
     virtual GraphicsImageScene* scene() const;
+    void mousePressEvent(QMouseEvent *e);
     void wheelEvent(QWheelEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
     
 signals:
     

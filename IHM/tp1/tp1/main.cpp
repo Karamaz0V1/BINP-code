@@ -11,6 +11,7 @@ void addResize() {
     w->addParameterWidget(view);
     ResizeModel* model = new ResizeModel();
     ResizePresenter* presenter = new ResizePresenter(w,model,view);
+    w->setInteractive(true);
 }
 
 int main(int argc, char *argv[])

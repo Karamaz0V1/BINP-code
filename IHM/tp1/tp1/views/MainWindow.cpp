@@ -36,6 +36,9 @@ MainWindow::~MainWindow()
 {
 }
 
+void MainWindow::setInteractive(bool intercative) {
+    m_graphicsSceneUp->setInteractive(intercative);
+}
 
 GraphicsImageScene * MainWindow::getSceneDown() {
     return m_graphicsSceneDown;

@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 #include <QImage>
+#include <QMouseEvent>
 #include "DrawableGraphicsScene.h"
 
 class GraphicsImageScene : public DrawableGraphicsScene
@@ -21,8 +22,8 @@ private:
     QWidget *m_window;
 
 public:
-    //void setImage(const QImage &image);
-    //QImage image() const;
+    void paint(const QPointF &position);
+    void setInteractive(bool intercative);
     
 signals:
     
