@@ -11,8 +11,8 @@ public:
     ResizeModel();
     void setScaleFactor(const double & factor);
     void setInput(const vpImage<vpRGBa> &img);
-    void run(vpImage<vpRGBa> image,double factor);
-    vpImage<vpRGBa> output();
+    void run();
+    vpImage<vpRGBa> output() const;
 private:
     void decimation_simple(vpImage<vpRGBa> & I);
     void decimation_lineaire(vpImage<vpRGBa> & I);

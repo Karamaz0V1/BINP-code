@@ -14,18 +14,17 @@ void ResizeModel::setInput(const vpImage<vpRGBa> &img) {
     m_img = img;
 }
 
-void ResizeModel::run(vpImage<vpRGBa> image,double factor) {
-    setScaleFactor(factor);
-    setInput(image);
-    if(m_factor>0) {
+void ResizeModel::run() {
+    /*if(m_factor>0) {
         agrandissement_lineaire(m_img);
     }
     else {
         decimation_lineaire(m_img);
-    }
+    }*/
+    emit success();
 }
 
-vpImage<vpRGBa> ResizeModel::output(){
+vpImage<vpRGBa> ResizeModel::output() const{
     return m_img;
 }
 
