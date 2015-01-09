@@ -11,6 +11,7 @@
 #include "ResizeModel.h"
 #include "MainWindow.h"
 #include "ImageConverter.h"
+#include <thread>
 
 ResizePresenter::ResizePresenter(MainWindow *parent, ResizeModel *model, ResizeImageParametersWidget *parametersWidget) : AbstractPresenter(parent, model, parametersWidget) {
 }
@@ -23,7 +24,9 @@ void ResizePresenter::runModel() {
     vpImage<vpRGBa> image = ImageConverter::qImageToVpImageRGBA(mainWindow->getSceneUp()->image());
     model->setScaleFactor(factor);
     model->setInput(image);
-    model->run();
+    std::thread first ([&] {model->run();} );
+    first.detach();
+    //model->run();
 }
 
 void ResizePresenter::presentModelResults() {
