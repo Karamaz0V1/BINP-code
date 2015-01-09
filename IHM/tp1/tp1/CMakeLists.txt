@@ -31,6 +31,7 @@ set(${PROJECT_NAME}_CPP
     views/DrawableGraphicsScene.cpp
     models/ResizeModel.cpp
     models/AbstractModel.cpp
+    models/InpaintingModel.cpp
     presenters/AbstractPresenter.cpp
     presenters/ResizePresenter.cpp
     )
@@ -44,6 +45,7 @@ set(${PROJECT_NAME}_H
     views/DrawableGraphicsScene.h
     models/ResizeModel.h
     models/AbstractModel.h
+    models/InpaintingModel.h
     views/AbstractParametersWidget.h
     presenters/AbstractPresenter.h
     presenters/ResizePresenter.h
