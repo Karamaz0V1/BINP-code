@@ -30,6 +30,9 @@ void GraphicsImageScene::printImage() {
 }
 
 void GraphicsImageScene::paint(const QPointF &position) {
+    DrawableGraphicsScene::setBrushSize(10);
+    DrawableGraphicsScene::setBrushShape(DrawableGraphicsScene::CIRCLE);
+    DrawableGraphicsScene::setBrushVisibility(true);
     DrawableGraphicsScene::paint(position);
     DrawableGraphicsScene::redrawBrush(position);
 }
