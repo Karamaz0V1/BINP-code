@@ -23,6 +23,7 @@ private:
 
 public:
     void paint(const QPointF &position);
+    void erase(const QPointF &position);
     void setInteractive(bool intercative);
     
 signals:

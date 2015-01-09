@@ -27,3 +27,7 @@ QString ResizeImageParametersWidget::title() const {
 double ResizeImageParametersWidget::getFactor() const {
     return m_sbxScale->value();
 }
+
+double ResizeImageParametersWidget::getSize() const {
+    return 0;
+}
