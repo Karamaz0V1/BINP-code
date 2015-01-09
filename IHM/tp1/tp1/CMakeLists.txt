@@ -27,6 +27,7 @@ set(${PROJECT_NAME}_CPP
     views/GraphicsImageScene.cpp
     views/GraphicsImageView.cpp
     views/ResizeImageParametersWidget.cpp
+    views/InpaintingParameterWidget.cpp
     views/AbstractParametersWidget.cpp
     views/DrawableGraphicsScene.cpp
     models/ResizeModel.cpp
@@ -41,6 +42,7 @@ set(${PROJECT_NAME}_H
     views/GraphicsImageScene.h
     views/GraphicsImageView.h
     views/ResizeImageParametersWidget.h
+    views/InpaintingParameterWidget.h
     views/DrawableGraphicsScene.h
     models/ResizeModel.h
     models/AbstractModel.h

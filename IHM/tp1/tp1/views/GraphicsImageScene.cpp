@@ -37,6 +37,14 @@ void GraphicsImageScene::paint(const QPointF &position) {
     DrawableGraphicsScene::redrawBrush(position);
 }
 
+void GraphicsImageScene::erase(const QPointF &position) {
+    DrawableGraphicsScene::setBrushSize(10);
+    DrawableGraphicsScene::setBrushShape(DrawableGraphicsScene::CIRCLE);
+    DrawableGraphicsScene::setBrushVisibility(true);
+    DrawableGraphicsScene::erase(position);
+    DrawableGraphicsScene::redrawBrush(position);
+}
+
 void GraphicsImageScene::setInteractive(bool intercative) {
     DrawableGraphicsScene::setInteractive(intercative);
 }
@@ -50,16 +58,20 @@ void GraphicsImageScene::saveImage() {
     QStringList chosenFile;
     file->setFileMode(QFileDialog::AnyFile);
     file->show();
-    if(file->exec())
-        chosenFile=file->selectedFiles();
-    QString fileName=chosenFile.first();
-
+    QString fileName;
     QMessageBox* error = new QMessageBox();
     QString text;
-    if(!image().save(fileName))
-        text="L'image n'a pas été sauvegardée";
+    if(file->exec()) {
+        chosenFile=file->selectedFiles();
+        fileName=chosenFile.first();
+        if(!image().save(fileName))
+            text="L'image n'a pas ete sauvegardee";
+        else
+            text="L'image a bien ete sauvegardee";
+    }
     else
-        text="L'image a bien été sauvegardée";
+        text="L'image n'a pas ete sauvegardee";
+
     error->setText(text);
     error->show();
 }
