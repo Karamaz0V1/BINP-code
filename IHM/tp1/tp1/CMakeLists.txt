@@ -11,6 +11,9 @@ set(CMAKE_AUTOMOC ON)
 find_package(VISP REQUIRED)
 include(${VISP_USE_FILE})
 
+# C++11
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g")
+
 # Find includes in corresponding build directories
 include_directories(
     views
