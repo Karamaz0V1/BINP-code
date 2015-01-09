@@ -8,10 +8,10 @@ ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
     m_sbxScale->setSingleStep(1);
     m_sbxScale->setValue(1);
     m_btnRun=new QPushButton("Run",this);
-    QHBoxLayout *layoutSpin=new QHBoxLayout(this);
+    QHBoxLayout *layoutSpin=new QHBoxLayout();
     layoutSpin->addWidget(new QLabel("Facteur d'echelle : "));
     layoutSpin->addWidget(m_sbxScale);
-    QHBoxLayout *layoutBtn=new QHBoxLayout(this);
+    QHBoxLayout *layoutBtn=new QHBoxLayout();
     layoutBtn->addWidget(m_btnRun);
     QVBoxLayout *layoutMain=new QVBoxLayout(this);
     layoutMain->addLayout(layoutSpin);

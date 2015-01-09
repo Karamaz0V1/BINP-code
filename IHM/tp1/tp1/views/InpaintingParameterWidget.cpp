@@ -8,10 +8,11 @@ InpaintingParameterWidget::InpaintingParameterWidget(QWidget *parent) :
     m_btnRun=new QPushButton("RUN",this);
     m_sldTailleBrush=new QSlider(this);
     m_sldTailleBrush->setValue(0);
-    QVBoxLayout *layoutSlider=new QVBoxLayout(this);
+    m_sldTailleBrush->setOrientation(Qt::Horizontal);
+    QVBoxLayout *layoutSlider=new QVBoxLayout();
     layoutSlider->addWidget(new QLabel("Taille de la brosse : "));
     layoutSlider->addWidget(m_sldTailleBrush);
-    QHBoxLayout *layoutBtnShape=new QHBoxLayout(this);
+    QHBoxLayout *layoutBtnShape=new QHBoxLayout();
     layoutBtnShape->addWidget(m_btnCercle);
     layoutBtnShape->addWidget(m_btnCarre);
     QVBoxLayout *layoutMain=new QVBoxLayout(this);
