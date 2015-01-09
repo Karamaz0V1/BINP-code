@@ -4,8 +4,8 @@ ResizeImageParametersWidget::ResizeImageParametersWidget(QWidget *parent) :
     AbstractParametersWidget(parent)
 {
     m_sbxScale=new QSpinBox(this);
-    m_sbxScale->setRange(-1,1);
-    m_sbxScale->setSingleStep(2);
+    m_sbxScale->setRange(-10,10);
+    m_sbxScale->setSingleStep(1);
     m_sbxScale->setValue(1);
     m_btnRun=new QPushButton("Run",this);
     QHBoxLayout *layoutSpin=new QHBoxLayout(this);
