@@ -3,7 +3,9 @@
 #include "InpaintingModel.h"
 #include "MainWindow.h"
 #include "ImageConverter.h"
-InpaintingPresenter::InpaintingPresenter(MainWindow *parent, ResizeModel *model, ResizeImageParametersWidget *parametersWidget): AbstractPresenter(parent, model, parametersWidget)
+#include <thread>
+
+InpaintingPresenter::InpaintingPresenter(MainWindow *parent, InpaintingModel *model, InpaintingParametersWidget *parametersWidget): AbstractPresenter(parent, model, parametersWidget)
 {
 }
 
@@ -15,8 +17,9 @@ void InpaintingPresenter::runModel() {
     vpImage<vpRGBa> image = ImageConverter::qImageToVpImageRGBA(mainWindow->getSceneUp()->image());
     QImage mask = mainWindow->getSceneUp()->mask();
     model->setInput(image);
-    model->setMask(mask);
-    model->run();
+    model->setMask(ImageConverter::qImageToVpImageUCHAR(mask));
+    std::thread first ([&] {model->run();} );
+    first.detach();
 }
 
 void InpaintingPresenter::presentModelResults() {

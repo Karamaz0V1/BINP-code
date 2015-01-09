@@ -3,7 +3,9 @@
 #include "ResizePresenter.h"
 #include "ResizeImageParametersWidget.h"
 #include "ResizeModel.h"
-#include "InpaintingParameterWidget.h"
+#include "InpaintingParametersWidget.h"
+#include "InpaintingModel.h"
+#include "InpaintingPresenter.h"
 
 MainWindow *w = NULL;
 
@@ -16,10 +18,10 @@ void addResize() {
 }
 
 void addInpainting() {
-    InpaintingParameterWidget* view = new InpaintingParameterWidget(w);
+    InpaintingParametersWidget* view = new InpaintingParametersWidget(w);
     w->addParameterWidget(view);
-    //InpaintingModel* model = new InpaintingModel();
-    //InpaintingPresenter* presenter = new InpaintingPresenter(w,model,view);
+    InpaintingModel* model = new InpaintingModel();
+    InpaintingPresenter* presenter = new InpaintingPresenter(w,model,view);
     w->setInteractive(true);
 }
 

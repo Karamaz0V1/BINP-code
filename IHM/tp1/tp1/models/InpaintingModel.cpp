@@ -322,3 +322,5 @@ void InpaintingModelPrivate::filterY(const vpImage<double> &I, vpImage<double>& 
     for (unsigned int j=0 ; j < I.getWidth() ; j++)
       dIy[i][j]=InpaintingModelPrivate::filterYBottomBorder(I,i,j,filter,size);
 }
+
+void InpaintingModel::setScaleFactor(const double & factor) {}

@@ -8,7 +8,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include "AbstractParametersWidget.h"
-class InpaintingParameterWidget : public AbstractParametersWidget
+class InpaintingParametersWidget : public AbstractParametersWidget
 {
     Q_OBJECT
 private:
@@ -17,7 +17,7 @@ private:
     QSlider *m_sldTailleBrush;
     QPushButton *m_btnRun;
 public:
-    explicit InpaintingParameterWidget(QWidget *parent = 0);
+    explicit InpaintingParametersWidget(QWidget *parent = 0);
     QString title() const;
     double getFactor() const;
     double getSize() const;

@@ -14,6 +14,8 @@ void ResizeModel::setInput(const vpImage<vpRGBa> &img) {
     m_img = img;
 }
 
+void ResizeModel::setMask(const vpImage<unsigned char> &img) {}
+
 void ResizeModel::run() {
     if(m_factor>0) {
         for(int i=m_factor;i>0;i--)

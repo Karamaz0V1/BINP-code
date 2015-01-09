@@ -13,6 +13,8 @@ public:
     void setInput(const vpImage<vpRGBa> &img);
     void run();
     vpImage<vpRGBa> output() const;
+
+    void setMask(const vpImage<unsigned char> &img);
 private:
     void decimation_simple(vpImage<vpRGBa> & I);
     void decimation_lineaire(vpImage<vpRGBa> & I);

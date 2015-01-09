@@ -1,6 +1,6 @@
-#include "InpaintingParameterWidget.h"
+#include "InpaintingParametersWidget.h"
 
-InpaintingParameterWidget::InpaintingParameterWidget(QWidget *parent) :
+InpaintingParametersWidget::InpaintingParametersWidget(QWidget *parent) :
     AbstractParametersWidget(parent)
 {
     m_btnCercle=new QPushButton("Cercle",this);
@@ -25,14 +25,14 @@ InpaintingParameterWidget::InpaintingParameterWidget(QWidget *parent) :
 }
 
 
-QString InpaintingParameterWidget::title() const {
+QString InpaintingParametersWidget::title() const {
     return "Inpainting";
 }
 
-double InpaintingParameterWidget::getSize() const {
+double InpaintingParametersWidget::getSize() const {
     return m_sldTailleBrush->value();
 }
 
-double InpaintingParameterWidget::getFactor() const {
+double InpaintingParametersWidget::getFactor() const {
     return 0;
 }

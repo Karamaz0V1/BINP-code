@@ -34,6 +34,8 @@ public:
      */
     vpImage<vpRGBa> output() const;
 
+    void setScaleFactor(const double & factor);
+
 private:
     // Pointer to implementation:
     InpaintingModelPrivate *d;

@@ -25,6 +25,8 @@ class AbstractModel: public QObject {
 
         virtual void setScaleFactor(const double & factor) = 0;
 
+        virtual void setMask(const vpImage<unsigned char> &img) = 0;
+
     signals:
         void success();
 };

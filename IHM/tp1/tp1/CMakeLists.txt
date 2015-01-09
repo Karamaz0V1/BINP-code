@@ -30,7 +30,7 @@ set(${PROJECT_NAME}_CPP
     views/GraphicsImageScene.cpp
     views/GraphicsImageView.cpp
     views/ResizeImageParametersWidget.cpp
-    views/InpaintingParameterWidget.cpp
+    views/InpaintingParametersWidget.cpp
     views/AbstractParametersWidget.cpp
     views/DrawableGraphicsScene.cpp
     models/ResizeModel.cpp
@@ -38,6 +38,7 @@ set(${PROJECT_NAME}_CPP
     models/InpaintingModel.cpp
     presenters/AbstractPresenter.cpp
     presenters/ResizePresenter.cpp
+    presenters/InpaintingPresenter.cpp
     )
 
 set(${PROJECT_NAME}_H
@@ -46,7 +47,7 @@ set(${PROJECT_NAME}_H
     views/GraphicsImageScene.h
     views/GraphicsImageView.h
     views/ResizeImageParametersWidget.h
-    views/InpaintingParameterWidget.h
+    views/InpaintingParametersWidget.h
     views/DrawableGraphicsScene.h
     models/ResizeModel.h
     models/AbstractModel.h
@@ -54,6 +55,7 @@ set(${PROJECT_NAME}_H
     views/AbstractParametersWidget.h
     presenters/AbstractPresenter.h
     presenters/ResizePresenter.h
+    presenters/InpaintingPresenter.h
     )
 
 add_executable(${PROJECT_NAME}
