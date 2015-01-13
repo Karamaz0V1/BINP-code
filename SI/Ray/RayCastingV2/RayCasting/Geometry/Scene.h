@@ -139,9 +139,10 @@ namespace Geometry
 			float distance, distanceMin = std::numeric_limits<float>::max();
 			::std::deque<::std::pair<BoundingBox, Geometry> >::iterator itGeo;
 			itGeo=m_geometries.begin();
+
 			while(itGeo!=m_geometries.end()) {
 				::std::deque<Triangle, aligned_allocator<Triangle,16U>>::const_iterator itTri = itGeo->second.getTriangles().begin();
-				while(itTri!=itGeo->second.getTriangles().begin()) {
+				while(itTri!=itGeo->second.getTriangles().end()) {
 					RayTriangleIntersection currentInter(&*itTri,&ray);
 					if(currentInter.valid()) {
 						distance = currentInter.tRayValue();
@@ -156,23 +157,53 @@ namespace Geometry
 				itGeo++;
 			}
 
+			bool shadowIntersect=false;
+			RayTriangleIntersection interShadow = NULL;
 			if(intersect) {
 				std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
 				while(itLights != m_lights.end()) {
 					Math::Vector3 dirLight = (itLights->position()-inter.intersection()).normalized(); //vecteur L
-					RGBColor kd = inter.triangle()->material()->diffuseColor();
-					RGBColor ks = inter.triangle()->material()->specularColor();
-					float n = inter.triangle()->material()->specularExponent();
-					RGBColor isource = itLights->color();
-					Math::Vector3 normale = inter.triangle()->normal(ray.source()).normalized();
-					float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
+					Ray shadowRay(itLights->position(),-dirLight);
+					distanceMin=std::numeric_limits<float>::max();
+					itGeo=m_geometries.begin();
+					while(itGeo!=m_geometries.end()) {
+						::std::deque<Triangle, aligned_allocator<Triangle,16U>>::const_iterator itTri = itGeo->second.getTriangles().begin();
+						while(itTri!=itGeo->second.getTriangles().end()) {
+							RayTriangleIntersection currentShadowInter(&*itTri,&shadowRay);
+							if(currentShadowInter.valid()) {
+								distance = currentShadowInter.tRayValue();
+								if(distance<distanceMin) {
+									interShadow=currentShadowInter;
+									shadowIntersect=true;
+									distanceMin=distance;
+								}
+							}
+							itTri++;
+						}
+						itGeo++;
+					}
 
-					if(visible>0) {
-						color=color+kd*isource*diffus;
-						Math::Vector3 dirRefl = inter.triangle()->reflectionDirection(dirLight); //vecteur R
-						Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
-						float prdtRV = dirRefl*vision;
-						color=color+ks*isource*pow(prdtRV,n)
+					if(shadowIntersect && inter.triangle()==interShadow.triangle()) {
+						RGBColor kd = inter.triangle()->material()->diffuseColor();
+						RGBColor ks = inter.triangle()->material()->specularColor();
+						float n = inter.triangle()->material()->specularExponent();
+						RGBColor isource = itLights->color();
+						Math::Vector3 normale = inter.triangle()->normal(ray.source()).normalized();
+						float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
+
+						if(visible>0) {
+							color=color+kd*isource*visible;
+							Math::Vector3 dirRefl = inter.triangle()->reflectionDirection(dirLight); //vecteur R
+							Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
+							float prdtRV = dirRefl*vision;
+							color=color+ks*isource*pow(prdtRV,n);
+						}
+					}
+					itLights++;
+				}
+			}
+			return color;
+		}
 
 
 			
@@ -269,7 +300,7 @@ namespace Geometry
 				*/
 			//else
 				//return RGBColor(0.0,0.0,1.0);
-		}
+		
 
 		float distCarree(const Math::Vector3 & p1,const Math::Vector3 & p2) {
 			return pow((p1[0]-p2[0]),2)+pow((p1[1]-p2[1]),2)+pow((p1[2]-p2[2]),2);
