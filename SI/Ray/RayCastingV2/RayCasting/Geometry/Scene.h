@@ -133,22 +133,69 @@ namespace Geometry
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		RGBColor sendRay(Ray const & ray, int depth, int maxDepth)
 		{
+			RGBColor color = RGBColor(0.0,0.0,0.0);
+			RayTriangleIntersection inter=NULL;
+			bool intersect = false;
+			float distance, distanceMin = std::numeric_limits<float>::max();
+			::std::deque<::std::pair<BoundingBox, Geometry> >::iterator itGeo;
+			itGeo=m_geometries.begin();
+			while(itGeo!=m_geometries.end()) {
+				::std::deque<Triangle, aligned_allocator<Triangle,16U>>::const_iterator itTri = itGeo->second.getTriangles().begin();
+				while(itTri!=itGeo->second.getTriangles().begin()) {
+					RayTriangleIntersection currentInter(&*itTri,&ray);
+					if(currentInter.valid()) {
+						distance = currentInter.tRayValue();
+						if(distance<distanceMin) {
+							inter=currentInter;
+							intersect=true;
+							distanceMin=distance;
+						}
+					}
+					itTri++;
+				}
+				itGeo++;
+			}
+
+			if(intersect) {
+				std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
+				while(itLights != m_lights.end()) {
+					Math::Vector3 dirLight = (itLights->position()-inter.intersection()).normalized(); //vecteur L
+					RGBColor kd = inter.triangle()->material()->diffuseColor();
+					RGBColor ks = inter.triangle()->material()->specularColor();
+					float n = inter.triangle()->material()->specularExponent();
+					RGBColor isource = itLights->color();
+					Math::Vector3 normale = inter.triangle()->normal(ray.source()).normalized();
+					float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
+
+					if(visible>0) {
+						color=color+kd*isource*diffus;
+						Math::Vector3 dirRefl = inter.triangle()->reflectionDirection(dirLight); //vecteur R
+						Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
+						float prdtRV = dirRefl*vision;
+						color=color+ks*isource*pow(prdtRV,n)
+
+
+			
+			/*RGBColor color = RGBColor(0.0,0.0,0.0);
+			RayTriangleIntersection inter=NULL;
 			bool intersect = false;
 			Triangle top;
 			::std::deque<::std::pair<BoundingBox, Geometry> >::iterator it;
 			it = m_geometries.begin();
-			RGBColor color = RGBColor(0.0,0.0,0.0);
+			
 			Math::Vector3 pInter;
 			Math::Vector3 vision = ray.direction().normalized();
+			float d;
 			while(it != m_geometries.end()) {							// Parcours des géométries
 				if (it->second.intersection(CastedRay(ray))) {			// Intersection avec ray
 					intersect = true;
 					top = *it->second.getTriangles().begin();
-					RayTriangleIntersection inter(&*it->second.getTriangles().begin(),&ray);
+					inter=RayTriangleIntersection(&*it->second.getTriangles().begin(),&ray);
 					if ( (! inter.valid()) || (RayTriangleIntersection(&top, &ray) < inter) ) {
 						top = getGeometryTriangle(it->second, ray);
 						inter = RayTriangleIntersection(&top, &ray);
 						pInter = inter.intersection();
+						d=inter.tRayValue();
 					}						
 				}
 				it++;
@@ -165,8 +212,8 @@ namespace Geometry
 					float np = normale*dirLight;
 					float n = top.material()->specularExponent();
 					if(nv*np>0) {
-						color=color+(top.material()->diffuseColor()*np/*+top.material()->specularColor()*std::pow(rv,n)*/)/distCarree(pInter,itLights->position()); //TODO WTF PK C NOIR ?
-					}
+						color=color+(top.material()->ambientColor()+(top.material()->diffuseColor()));/*np+top.material()->specularColor()*std::pow(rv,n)*///)//(d*d)); //TODO WTF PK C NOIR ?
+					/*}
 					itLights++;
 				}
 			}
