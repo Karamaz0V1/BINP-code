@@ -1,25 +1,16 @@
 #include "views/GraphicsImageScene.h"
+#include "DrawableGraphicsScene.h"
+
+#include <iostream>
 
 GraphicsImageScene::GraphicsImageScene(QWidget *window, QObject *parent) :
-    QGraphicsScene(parent)
+    DrawableGraphicsScene(parent)
 {
     m_window=window;
 }
 
 GraphicsImageScene::~GraphicsImageScene() {
 
-}
-
-void GraphicsImageScene::setImage(const QImage &image) {
-    m_image=image;
-    QGraphicsPixmapItem* pixmapItem = new QGraphicsPixmapItem();
-    QPixmap pixmap = QPixmap::fromImage(m_image);
-    pixmapItem->setPixmap(pixmap);
-    this->addItem(pixmapItem);
-}
-
-QImage GraphicsImageScene::image() const {
-    return m_image;
 }
 
 void GraphicsImageScene::printImage() {
@@ -38,6 +29,26 @@ void GraphicsImageScene::printImage() {
     setImage(*image);
 }
 
+void GraphicsImageScene::paint(const QPointF &position) {
+    DrawableGraphicsScene::setBrushSize(10);
+    DrawableGraphicsScene::setBrushShape(DrawableGraphicsScene::CIRCLE);
+    DrawableGraphicsScene::setBrushVisibility(true);
+    DrawableGraphicsScene::paint(position);
+    DrawableGraphicsScene::redrawBrush(position);
+}
+
+void GraphicsImageScene::erase(const QPointF &position) {
+    DrawableGraphicsScene::setBrushSize(10);
+    DrawableGraphicsScene::setBrushShape(DrawableGraphicsScene::CIRCLE);
+    DrawableGraphicsScene::setBrushVisibility(true);
+    DrawableGraphicsScene::erase(position);
+    DrawableGraphicsScene::redrawBrush(position);
+}
+
+void GraphicsImageScene::setInteractive(bool intercative) {
+    DrawableGraphicsScene::setInteractive(intercative);
+}
+
 void GraphicsImageScene::saveImage() {
     QWidget *window = m_window;
     QString title = "Enregistrer";
@@ -47,16 +58,20 @@ void GraphicsImageScene::saveImage() {
     QStringList chosenFile;
     file->setFileMode(QFileDialog::AnyFile);
     file->show();
-    if(file->exec())
-        chosenFile=file->selectedFiles();
-    QString fileName=chosenFile.first();
-
+    QString fileName;
     QMessageBox* error = new QMessageBox();
     QString text;
-    if(!image().save(fileName))
-        text="L'image n'a pas été sauvegardée";
+    if(file->exec()) {
+        chosenFile=file->selectedFiles();
+        fileName=chosenFile.first();
+        if(!image().save(fileName))
+            text="L'image n'a pas ete sauvegardee";
+        else
+            text="L'image a bien ete sauvegardee";
+    }
     else
-        text="L'image a bien été sauvegardée";
+        text="L'image n'a pas ete sauvegardee";
+
     error->setText(text);
     error->show();
 }

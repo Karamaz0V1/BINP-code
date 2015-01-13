@@ -1,4 +1,5 @@
 #include "views/GraphicsImageView.h"
+#include <iostream>
 
 GraphicsImageView::GraphicsImageView(GraphicsImageScene *scene) :
     QGraphicsView(scene)
@@ -8,6 +9,20 @@ GraphicsImageView::GraphicsImageView(GraphicsImageScene *scene) :
 
 GraphicsImageScene* GraphicsImageView::scene() const {
     return m_scene;
+}
+
+void GraphicsImageView::mousePressEvent(QMouseEvent *e) {
+        if(e->buttons()==Qt::LeftButton)
+            m_scene->paint(e->pos());
+        else if(e->buttons()==Qt::RightButton)
+            m_scene->erase(e->pos());
+}
+
+void GraphicsImageView::mouseMoveEvent(QMouseEvent *e) {
+        if(e->buttons()==Qt::LeftButton)
+            m_scene->paint(e->pos());
+        else if(e->buttons()==Qt::RightButton)
+            m_scene->erase(e->pos());
 }
 
 void GraphicsImageView::wheelEvent(QWheelEvent *e) {

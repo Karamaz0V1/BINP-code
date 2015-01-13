@@ -11,6 +11,9 @@ set(CMAKE_AUTOMOC ON)
 find_package(VISP REQUIRED)
 include(${VISP_USE_FILE})
 
+# C++11
+#set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g")
+
 # Find includes in corresponding build directories
 include_directories(
     views
@@ -27,11 +30,15 @@ set(${PROJECT_NAME}_CPP
     views/GraphicsImageScene.cpp
     views/GraphicsImageView.cpp
     views/ResizeImageParametersWidget.cpp
+    views/InpaintingParametersWidget.cpp
     views/AbstractParametersWidget.cpp
+    views/DrawableGraphicsScene.cpp
     models/ResizeModel.cpp
     models/AbstractModel.cpp
+    models/InpaintingModel.cpp
     presenters/AbstractPresenter.cpp
     presenters/ResizePresenter.cpp
+    presenters/InpaintingPresenter.cpp
     )
 
 set(${PROJECT_NAME}_H
@@ -40,11 +47,15 @@ set(${PROJECT_NAME}_H
     views/GraphicsImageScene.h
     views/GraphicsImageView.h
     views/ResizeImageParametersWidget.h
+    views/InpaintingParametersWidget.h
+    views/DrawableGraphicsScene.h
     models/ResizeModel.h
     models/AbstractModel.h
+    models/InpaintingModel.h
     views/AbstractParametersWidget.h
     presenters/AbstractPresenter.h
     presenters/ResizePresenter.h
+    presenters/InpaintingPresenter.h
     )
 
 add_executable(${PROJECT_NAME}

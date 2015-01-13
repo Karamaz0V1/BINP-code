@@ -1,0 +1,43 @@
+\documentclass{article}
+%\usepackage{fullpage}
+\usepackage{fancyhdr}
+\usepackage[english,francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{subfig}
+
+%\renewcommand{\baselinestretch}{2}
+\author{Florent \textsc{Guiotte} et Frédéric \textsc{Becker}}
+\title{Filtrage}
+\pagestyle{fancy}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Questions}
+\subsection{Ouverture et fermeture}
+
+\subsection{Gradient morphologique}
+
+\subsection{Laplacien}
+
+\subsection{Contours}
+Pour detecter les contours de la première image il suffit d'appliquer le filtre Laplacien directement, puis de detecter
+les passages à zeros sur le resultat.
+
+Pour la deuxieme image, elle est bruitee par du bruit de type <<sel et poivre>>, on applique un pretraitement. La première etape est de faire une
+ouverture afin de supprimer le buit sel, puis une fermeture afin de supprimer le bruit poivre. Pour finir on fait les
+mêmes etapes que la
+premiere image.
+
+Pour la troisieme image, elle est bruitee avec du bruit blanc. Un filtre passe bas permet de l'attenuer, nous avons
+utilise le filtre moyenneur (Le resultat n'est cependant pas satisfaisant, la difference entre le bruit et les contours
+est trop faible). Pour finir avec les etapes de la premiere image.
+\subsection{Combinaison de filtres}
+
+H1 et h2 sont deux filtres gaussien d'amplitude differentes. La soustraction des deux premières images donnent les mêmes
+contour que le seul filtre 3. 
+
+\end{document}

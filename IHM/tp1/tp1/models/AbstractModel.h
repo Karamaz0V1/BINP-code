@@ -17,9 +17,15 @@ class AbstractModel: public QObject {
         AbstractModel(QObject *parent = NULL);
         virtual ~AbstractModel();
 
-        virtual void run(vpImage<vpRGBa> image,double factor) = 0;
+        virtual void run() = 0;
 
-        virtual vpImage<vpRGBa> output();
+        virtual vpImage<vpRGBa> output() const = 0;
+
+        virtual void setInput(const vpImage<vpRGBa> &img) = 0;
+
+        virtual void setScaleFactor(const double & factor) = 0;
+
+        virtual void setMask(const vpImage<unsigned char> &img) = 0;
 
     signals:
         void success();

@@ -21,7 +21,10 @@ SOURCES += main.cpp\
     views/GraphicsImageScene.cpp \
     presenters/ResizePresenter.cpp \
     presenters/AbstractPresenter.cpp \
-    models/AbstractModel.cpp
+    models/AbstractModel.cpp \
+    views/inpaintingparameterwidget.cpp \
+    views/InpaintingParameterWidget.cpp \
+    presenters/InpaintingPresenter.cpp
 
 HEADERS  += mainwindow.h \
     graphicsimagescene.h \
@@ -35,6 +38,8 @@ HEADERS  += mainwindow.h \
     views/AbstractParametersWidget.h \
     presenters/ResizePresenter.h \
     presenters/AbstractPresenter.h \
-    ImageConverter.h
+    ImageConverter.h \
+    views/InpaintingParameterWidget.h \
+    presenters/InpaintingPresenter.h
 
 FORMS    += mainwindow.ui

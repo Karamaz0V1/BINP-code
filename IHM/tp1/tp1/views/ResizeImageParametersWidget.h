@@ -18,6 +18,7 @@ public:
     explicit ResizeImageParametersWidget(QWidget *parent = 0);
     QString title() const;
     double getFactor() const;
+    double getSize() const;
 
 signals:
     void runRequest();

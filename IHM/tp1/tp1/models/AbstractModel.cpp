@@ -13,6 +13,3 @@ AbstractModel::AbstractModel(QObject *parent) {
 
 AbstractModel::~AbstractModel() {
 }
-
-vpImage<vpRGBa> AbstractModel::output() {
-}

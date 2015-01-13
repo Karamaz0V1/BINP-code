@@ -1,4 +1,5 @@
 #include "views/MainWindow.h"
+#include "AbstractParametersWidget.h"
 //#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -35,6 +36,9 @@ MainWindow::~MainWindow()
 {
 }
 
+void MainWindow::setInteractive(bool intercative) {
+    m_graphicsSceneUp->setInteractive(intercative);
+}
 
 GraphicsImageScene * MainWindow::getSceneDown() {
     return m_graphicsSceneDown;
@@ -44,6 +48,6 @@ GraphicsImageScene * MainWindow::getSceneUp() {
     return m_graphicsSceneUp;
 }
 
-void MainWindow::addParameterWidget(QWidget *widget) {
-    m_tabWidget->addTab(widget,"Onglet");
+void MainWindow::addParameterWidget(AbstractParametersWidget *widget) {
+    m_tabWidget->addTab(widget,widget->title());
 }

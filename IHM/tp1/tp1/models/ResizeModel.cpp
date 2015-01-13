@@ -14,23 +14,26 @@ void ResizeModel::setInput(const vpImage<vpRGBa> &img) {
     m_img = img;
 }
 
-void ResizeModel::run(vpImage<vpRGBa> image,double factor) {
-    setScaleFactor(factor);
-    setInput(image);
+void ResizeModel::setMask(const vpImage<unsigned char> &img) {}
+
+void ResizeModel::run() {
     if(m_factor>0) {
-        agrandissement_lineaire(m_img);
+        for(int i=m_factor;i>0;i--)
+            agrandissement_lineaire(m_img);
+        forceAlpha(m_img);
+    } else if(m_factor<0){
+        for(int i=m_factor;i<0;i++)
+            decimation_lineaire(m_img);
+        forceAlpha(m_img);
     }
-    else {
-        decimation_lineaire(m_img);
-    }
+    emit success();
 }
 
-vpImage<vpRGBa> ResizeModel::output(){
+vpImage<vpRGBa> ResizeModel::output() const{
     return m_img;
 }
 
 /** BINP **/
-
 
 /** Réduit lataille de l'image en prenant une valeur sur 2 **/
 void ResizeModel::decimation_simple(vpImage<vpRGBa> & I) {
@@ -52,6 +55,13 @@ void ResizeModel::decimation_lineaire(vpImage<vpRGBa> & I) {
         }
 
     I = Is;
+}
+
+/** Remplis le canal A **/
+void ResizeModel::forceAlpha(vpImage<vpRGBa> & I) {
+    for (int i=0; i<I.getHeight(); i++)
+        for (int j=0; j<I.getWidth(); j++)
+            I[i][j].A = 255;
 }
 
 /** Effectue un agrandissement en dupliquant les pixels de l'image d'origine **/
