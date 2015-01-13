@@ -190,13 +190,16 @@ namespace Geometry
 						RGBColor isource = itLights->color();
 						Math::Vector3 normale = inter.triangle()->normal(ray.source()).normalized();
 						float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
-
+						Math::Vector3 dirRefl = inter.triangle()->reflectionDirection(dirLight); //vecteur R
+						Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
 						if(visible>0) {
 							color=color+kd*isource*visible;
-							Math::Vector3 dirRefl = inter.triangle()->reflectionDirection(dirLight); //vecteur R
-							Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
-							float prdtRV = dirRefl*vision;
-							color=color+ks*isource*pow(prdtRV,n);
+							if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
+								
+								float prdtRV = dirRefl*vision;
+								Ray reflectionRay(inter.intersection(),inter.triangle()->reflectionDirection(ray));
+								color=color+ks*isource*pow(prdtRV,n)+sendRay(reflectionRay,depth+1,maxDepth);
+							}
 						}
 					}
 					itLights++;
@@ -300,11 +303,6 @@ namespace Geometry
 				*/
 			//else
 				//return RGBColor(0.0,0.0,1.0);
-		
-
-		float distCarree(const Math::Vector3 & p1,const Math::Vector3 & p2) {
-			return pow((p1[0]-p2[0]),2)+pow((p1[1]-p2[1]),2)+pow((p1[2]-p2[2]),2);
-		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \fn	void Scene::compute(int maxDepth)
