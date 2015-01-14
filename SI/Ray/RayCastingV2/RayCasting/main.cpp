@@ -99,7 +99,8 @@ void initSpecular(Geometry::Scene & scene)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void initDiffuseSpecular(Geometry::Scene & scene)
 {
-	Geometry::Material * material = new Geometry::Material(RGBColor(), RGBColor(0,0,0.0), RGBColor(0.7f,0.7f,0.7f), 100, RGBColor()) ;
+	Geometry::Material * material = new Geometry::Material(RGBColor(), RGBColor(0,0,0.5), RGBColor(1.0f,1.00f,1.0f), 100, RGBColor()) ;
+	//Geometry::Material * material = new Geometry::Material(RGBColor(), RGBColor(0,0,0.0), RGBColor(0.7f,0.7f,0.7f), 100, RGBColor()) ;
 	Geometry::Material * material2 = new Geometry::Material(RGBColor(), RGBColor(1,1,1.0f), RGBColor(0,0,0), 1000, RGBColor()) ;
 	Geometry::Material * cubeMat = new Geometry::Material(RGBColor(), RGBColor(1.0f,0.0,0.0), RGBColor(0.0,0.0,0.0), 20.0f, RGBColor(10.0,0,0)) ;
 	Geometry::Material * cubeMat2 = new Geometry::Material(RGBColor(), RGBColor(1.0f,0.0,0.0), RGBColor(0.0,0.0,0.0), 20.0f, RGBColor(0.0,10,0)) ;
@@ -115,6 +116,7 @@ void initDiffuseSpecular(Geometry::Scene & scene)
 	tmp.translate(Math::Vector3(1.5,-1.5,0.0)) ;
 	scene.add(tmp) ;
 
+	//Geometry::Cube tmp2(material2) ;
 	Geometry::Cube tmp2(cubeMat) ;
 	tmp2.translate(Math::Vector3(2,1,-4)) ;
 	scene.add(tmp2) ;
@@ -166,15 +168,15 @@ int main(int argc, char ** argv)
 
 	// 1 - Initializes a window for rendering
 	//Visualizer::Visualizer visu(600,600) ;
-	Visualizer::Visualizer visu(300,300) ;
+	Visualizer::Visualizer visu(600,600) ;
 	
 	// 2 - Initializes the scene
 	Geometry::Scene scene(&visu) ;
 
 	// 2.1 intializes the geometry (choose only one initialization)
-	//initDiffuseSpecular(scene) ;
+	initDiffuseSpecular(scene) ;
 	//initSpecular(scene) ;
-	initDiffuse(scene) ;
+	//initDiffuse(scene) ;
 
 	// 2.2 Adds point lights in the scene 
 	{
@@ -191,7 +193,7 @@ int main(int argc, char ** argv)
 	}
 
 	// 3 - Computes the scene
-	scene.compute(1) ;
+	scene.compute(2) ;
 
 	// 4 - waits until a key is pressed
 	waitKeyPressed() ;
