@@ -99,6 +99,18 @@ namespace Geometry
 			m_camera = cam ;
 		}
 
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		/// \fn	const RayTriangleIntersection * const Scene::firstIntersection(Ray const & ray)
+		///
+		/// \brief	Sends a ray in the geometries and return an intersection
+		/// 		
+		/// \author	F. Guiotte, ESIR
+		/// \date	12/01/2015
+		///
+		/// \param	ray	The ray.
+		///
+		/// \return	The intersection.
+		////////////////////////////////////////////////////////////////////////////////////////////////////
 		const RayTriangleIntersection * const firstIntersection(Ray const & ray) {
 			RayTriangleIntersection * intersection = new RayTriangleIntersection(&ray);
 
@@ -114,6 +126,10 @@ namespace Geometry
 			return intersection;
 		}
 
+		float mc () {
+			return (rand()%10-20)*0.001;
+		}
+		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \fn	RGBColor Scene::sendRay(Ray const & ray, float limit, int depth, int maxDepth)
 		///
@@ -130,192 +146,57 @@ namespace Geometry
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		RGBColor sendRay(Ray const & ray, int depth, int maxDepth)
 		{
-			
-
 			// Touver la face intersectée la plus proche de la caméra
 			const RayTriangleIntersection * const intersection = firstIntersection(ray);
 
 			if(!intersection->valid()) return RGBColor(0.0,0.0,0.0);
 			RGBColor color = RGBColor(0.0,0.0,0.0);
 
-			// Parcourir les lampes de la scène
-			for(std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin(); itLights != m_lights.end(); itLights++) {
+			// Si le matériau est spéculaire et si depth < maxDepth, on calcule la couleur réfléchie
+			RGBColor ks = intersection->triangle()->material()->specularColor();
+			int glossyReflection = 5;
+			if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
+				if (depth<glossyReflection) {
+					int nbRay = 4;
+					for (int i=0; i<nbRay; i++) {
+						Ray reflectionRay(intersection->intersection(),intersection->triangle()->reflectionDirection(ray) +Math::Vector3(mc(),mc(),mc()));
+						color=color+ks*sendRay(reflectionRay,depth+1,maxDepth)/nbRay;
+					}
+				} else {
+					Ray reflectionRay(intersection->intersection(),intersection->triangle()->reflectionDirection(ray));
+					color=color+ks*sendRay(reflectionRay,depth+1,maxDepth);
+				}
 
-				
+			}
+
+			// Parcourir les lampes de la scène
+			for(std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin(); itLights != m_lights.end(); itLights++) {		
 				Math::Vector3 dirLight = (itLights->position()-intersection->intersection()).normalized(); //vecteur L
-				Ray shadowRay(itLights->position(),-dirLight);
 
 				// Lancer le rayon d'ombre
+				Ray shadowRay(itLights->position(),-dirLight);
 				const RayTriangleIntersection * const shadowIntersection = firstIntersection(shadowRay);
 
 				// Si l'objet est éclairé apr la lampe, alors on applique phong
 				if(shadowIntersection->valid() && intersection->triangle()==shadowIntersection->triangle()) {
-					RGBColor kd = intersection->triangle()->material()->diffuseColor();
-					RGBColor ks = intersection->triangle()->material()->specularColor();
+					RGBColor kd = intersection->triangle()->material()->diffuseColor();					
 					float n = intersection->triangle()->material()->specularExponent();
 					RGBColor isource = itLights->color();
 					Math::Vector3 normale = intersection->triangle()->normal(ray.source()).normalized();
-					float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
-					Math::Vector3 dirRefl = intersection->triangle()->reflectionDirection(dirLight); //vecteur R
-					Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
-					if(visible>0) {
-						color=color+kd*isource*visible;
-						if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
-								
-							float prdtRV = dirRefl*vision;
-							Ray reflectionRay(intersection->intersection(),intersection->triangle()->reflectionDirection(ray));
-							color=color+ks*isource*pow(prdtRV,n)+sendRay(reflectionRay,depth+1,maxDepth);
-						}
+					float visible = normale*dirLight;													//indique si lumière éclaire le triangle (également égal au prdt scalaire)
+					Math::Vector3 dirRefl = intersection->triangle()->reflectionDirection(dirLight);	//vecteur R
+					Math::Vector3 vision = ray.direction().inv().normalized();							//vecteur V
+					if(visible) {
+						color=color+kd*isource*visible;					// calcul de la couleur diffuse
+						color=color+ks*isource*pow(dirRefl*vision,n);	// calcul de la couleur scpeculaire
 					}
 				}
-
+				delete shadowIntersection;
 			}
+		
+			delete intersection;
 			return color;
 		}
-			
-			/*
-			std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
-			while(itLights != m_lights.end()) {
-				Math::Vector3 dirLight = (itLights->position()-intersection->intersection()).normalized(); //vecteur L
-				Ray shadowRay(itLights->position(),-dirLight);
-				distanceMin=std::numeric_limits<float>::max();
-				itGeo=m_geometries.begin();
-				while(itGeo!=m_geometries.end()) {
-					::std::deque<Triangle, aligned_allocator<Triangle,16U>>::const_iterator itTri = itGeo->second.getTriangles().begin();
-					while(itTri!=itGeo->second.getTriangles().end()) {
-						RayTriangleIntersection currentShadowInter(&*itTri,&shadowRay);
-						if(currentShadowInter.valid()) {
-							distance = currentShadowInter.tRayValue();
-							if(distance<distanceMin) {
-								interShadow=currentShadowInter;
-								shadowIntersect=true;
-								distanceMin=distance;
-							}
-						}
-						itTri++;
-					}
-					itGeo++;
-				}
-
-				if(shadowIntersect && intersection->triangle()==interShadow.triangle()) {
-					RGBColor kd = intersection->triangle()->material()->diffuseColor();
-					RGBColor ks = intersection->triangle()->material()->specularColor();
-					float n = intersection->triangle()->material()->specularExponent();
-					RGBColor isource = itLights->color();
-					Math::Vector3 normale = intersection->triangle()->normal(ray.source()).normalized();
-					float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
-					Math::Vector3 dirRefl = intersection->triangle()->reflectionDirection(dirLight); //vecteur R
-					Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
-					if(visible>0) {
-						color=color+kd*isource*visible;
-						if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
-								
-							float prdtRV = dirRefl*vision;
-							Ray reflectionRay(intersection->intersection(),intersection->triangle()->reflectionDirection(ray));
-							color=color+ks*isource*pow(prdtRV,n)+sendRay(reflectionRay,depth+1,maxDepth);
-						}
-					}
-				}
-				itLights++;
-			}
-			return color;
-		}
-		*/
-
-			
-			/*RGBColor color = RGBColor(0.0,0.0,0.0);
-			RayTriangleIntersection inter=NULL;
-			bool intersect = false;
-			Triangle top;
-			::std::deque<::std::pair<BoundingBox, Geometry> >::iterator it;
-			it = m_geometries.begin();
-			
-			Math::Vector3 pInter;
-			Math::Vector3 vision = ray.direction().normalized();
-			float d;
-			while(it != m_geometries.end()) {							// Parcours des géométries
-				if (it->second.intersection(CastedRay(ray))) {			// Intersection avec ray
-					intersect = true;
-					top = *it->second.getTriangles().begin();
-					inter=RayTriangleIntersection(&*it->second.getTriangles().begin(),&ray);
-					if ( (! inter.valid()) || (RayTriangleIntersection(&top, &ray) < inter) ) {
-						top = getGeometryTriangle(it->second, ray);
-						inter = RayTriangleIntersection(&top, &ray);
-						pInter = inter.intersection();
-						d=inter.tRayValue();
-					}						
-				}
-				it++;
-			}
-			
-			if (intersect) {
-				Math::Vector3 normale = top.normal(vision).normalized();
-				std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
-				while(itLights != m_lights.end()) {
-					Math::Vector3 dirLight = (itLights->position()-pInter).normalized();
-					Math::Vector3 dirRefl = top.reflectionDirection(ray).normalized();
-					float rv = dirRefl*vision;
-					float nv = normale*vision;
-					float np = normale*dirLight;
-					float n = top.material()->specularExponent();
-					if(nv*np>0) {
-						color=color+(top.material()->ambientColor()+(top.material()->diffuseColor()));/*np+top.material()->specularColor()*std::pow(rv,n)*///)//(d*d)); //TODO WTF PK C NOIR ?
-					/*}
-					itLights++;
-				}
-			}
-			else
-				color=RGBColor(0.0,0.0,1.0);
-			return color;
-			//::std::cout<<"Scene::sendRay not implemented!"<<::std::endl ;
-			//if(depth>maxDepth)
-			//	return RGBColor(0.0,0.0,0.0);
-			/*
-			::std::deque<::std::pair<BoundingBox, Geometry> >::iterator it;
-			it = m_geometries.begin();
-			RayTriangleIntersection interMin(&ray);
-			RayTriangleIntersection interBase(interMin);
-			while(it != m_geometries.end()) {
-				::std::deque<Triangle,aligned_allocator<Triangle,16U>>::iterator itTriangles;
-				if(it->second.intersection(CastedRay(ray))) {
-					::std::deque<Triangle,aligned_allocator<Triangle,16U>> triangles=it->second.getTriangles();					
-					itTriangles = triangles.begin();
-					while(itTriangles != triangles.end()) {
-						Triangle *tri = new Triangle(*itTriangles);
-						RayTriangleIntersection inter= RayTriangleIntersection(tri,&ray);
-						if(inter<interMin)
-							interMin=inter;
-						itTriangles++;
-					}
-				}
-				it++;	
-			}
-			RGBColor color = RGBColor(0.0,0.0,0.0);
-			if(interMin.valid()) {
-			//if(!(interBase<interMin)&&!(interMin<interBase)) {
-				const Triangle *triF = interMin.triangle();
-				Math::Vector3 vision = ray.direction().normalized();
-				Math::Vector3 normale = triF->normal(vision);
-				std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
-				while(itLights != m_lights.end()) {
-					Math::Vector3 pInter = interMin.intersection();
-					Math::Vector3 dirLight = (itLights->position()-pInter).normalized();
-					float nv = normale*vision;
-					float np = normale*dirLight;
-					if(nv*np>0) {
-						color=color+(triF->material()->diffuseColor()*np/distCarree(pInter,itLights->position()))*0.01; //TODO WTF PK C NOIR ?
-					}
-					itLights++;
-				}
-			}
-					
-
-
-		return color;
-
-				*/
-			//else
-				//return RGBColor(0.0,0.0,1.0);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// \fn	void Scene::compute(int maxDepth)
@@ -371,7 +252,7 @@ namespace Geometry
 							//m_visu->update();
 						}
 						// Updates the rendering context (per line)
-						//m_visu->update();
+						m_visu->update();
 					}
 					// Updates the rendering context (per pass)
 					m_visu->update();

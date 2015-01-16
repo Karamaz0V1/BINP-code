@@ -99,8 +99,8 @@ void initSpecular(Geometry::Scene & scene)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void initDiffuseSpecular(Geometry::Scene & scene)
 {
-	Geometry::Material * material = new Geometry::Material(RGBColor(), RGBColor(0,0,0.5), RGBColor(1.0f,1.00f,1.0f), 100, RGBColor()) ;
-	//Geometry::Material * material = new Geometry::Material(RGBColor(), RGBColor(0,0,0.0), RGBColor(0.7f,0.7f,0.7f), 100, RGBColor()) ;
+	//Geometry::Material * material = new Geometry::Material(RGBColor(), RGBColor(0,0,0.5), RGBColor(1.0f,1.00f,1.0f), 100, RGBColor()) ;
+	Geometry::Material * material = new Geometry::Material(RGBColor(), RGBColor(0,0,0.0), RGBColor(0.7f,0.7f,0.7f), 100, RGBColor()) ;
 	Geometry::Material * material2 = new Geometry::Material(RGBColor(), RGBColor(1,1,1.0f), RGBColor(0,0,0), 1000, RGBColor()) ;
 	Geometry::Material * cubeMat = new Geometry::Material(RGBColor(), RGBColor(1.0f,0.0,0.0), RGBColor(0.0,0.0,0.0), 20.0f, RGBColor(10.0,0,0)) ;
 	Geometry::Material * cubeMat2 = new Geometry::Material(RGBColor(), RGBColor(1.0f,0.0,0.0), RGBColor(0.0,0.0,0.0), 20.0f, RGBColor(0.0,10,0)) ;
@@ -168,7 +168,7 @@ int main(int argc, char ** argv)
 
 	// 1 - Initializes a window for rendering
 	//Visualizer::Visualizer visu(600,600) ;
-	Visualizer::Visualizer visu(600,600) ;
+	Visualizer::Visualizer visu(1000,1000) ;
 	
 	// 2 - Initializes the scene
 	Geometry::Scene scene(&visu) ;
@@ -193,9 +193,11 @@ int main(int argc, char ** argv)
 	}
 
 	// 3 - Computes the scene
-	scene.compute(2) ;
+	scene.compute(5) ;
 
 	// 4 - waits until a key is pressed
+	waitKeyPressed() ;
+	waitKeyPressed() ;
 	waitKeyPressed() ;
 
 	return 0 ;
