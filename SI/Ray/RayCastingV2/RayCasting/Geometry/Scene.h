@@ -99,24 +99,6 @@ namespace Geometry
 			m_camera = cam ;
 		}
 
-		const Triangle & getGeometryTriangle(const Geometry & geo, const Ray & ray) {
-			const Triangle * top = NULL;
-			::std::deque<Triangle,aligned_allocator<Triangle,16U>>::const_iterator it = geo.getTriangles().begin();
-			const Triangle* triangle = &*it;
-			top = triangle;
-			RayTriangleIntersection inter(triangle, &ray);
-			while (it != geo.getTriangles().end()) {
-				//if (it->intersection(CastedRay(ray))) {
-					if ( (! inter.valid()) || (RayTriangleIntersection(triangle, &ray) < inter) ) {
-						top = &*it;
-						inter = RayTriangleIntersection(triangle, &ray);
-					}
-				//}
-				it++;
-			}
-			return *top;
-		}
-
 		const RayTriangleIntersection * const firstIntersection(Ray const & ray) {
 			RayTriangleIntersection * intersection = new RayTriangleIntersection(&ray);
 
@@ -148,66 +130,97 @@ namespace Geometry
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		RGBColor sendRay(Ray const & ray, int depth, int maxDepth)
 		{
-			RGBColor color = RGBColor(0.0,0.0,0.0);
+			
 
-			// Debut refactoring
+			// Touver la face intersectée la plus proche de la caméra
 			const RayTriangleIntersection * const intersection = firstIntersection(ray);
 
-			// Fin refactoring, je m'occupe de la suite quand j'aurais le temps
+			if(!intersection->valid()) return RGBColor(0.0,0.0,0.0);
+			RGBColor color = RGBColor(0.0,0.0,0.0);
 
-			float distance, distanceMin = std::numeric_limits<float>::max();
-			::std::deque<::std::pair<BoundingBox, Geometry> >::iterator itGeo;
-			bool shadowIntersect=false;
-			RayTriangleIntersection interShadow = NULL;
-			if(intersection->valid()) {
-				std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
-				while(itLights != m_lights.end()) {
-					Math::Vector3 dirLight = (itLights->position()-intersection->intersection()).normalized(); //vecteur L
-					Ray shadowRay(itLights->position(),-dirLight);
-					distanceMin=std::numeric_limits<float>::max();
-					itGeo=m_geometries.begin();
-					while(itGeo!=m_geometries.end()) {
-						::std::deque<Triangle, aligned_allocator<Triangle,16U>>::const_iterator itTri = itGeo->second.getTriangles().begin();
-						while(itTri!=itGeo->second.getTriangles().end()) {
-							RayTriangleIntersection currentShadowInter(&*itTri,&shadowRay);
-							if(currentShadowInter.valid()) {
-								distance = currentShadowInter.tRayValue();
-								if(distance<distanceMin) {
-									interShadow=currentShadowInter;
-									shadowIntersect=true;
-									distanceMin=distance;
-								}
-							}
-							itTri++;
-						}
-						itGeo++;
-					}
+			// Parcourir les lampes de la scène
+			for(std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin(); itLights != m_lights.end(); itLights++) {
 
-					if(shadowIntersect && intersection->triangle()==interShadow.triangle()) {
-						RGBColor kd = intersection->triangle()->material()->diffuseColor();
-						RGBColor ks = intersection->triangle()->material()->specularColor();
-						float n = intersection->triangle()->material()->specularExponent();
-						RGBColor isource = itLights->color();
-						Math::Vector3 normale = intersection->triangle()->normal(ray.source()).normalized();
-						float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
-						Math::Vector3 dirRefl = intersection->triangle()->reflectionDirection(dirLight); //vecteur R
-						Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
-						if(visible>0) {
-							color=color+kd*isource*visible;
-							if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
+				
+				Math::Vector3 dirLight = (itLights->position()-intersection->intersection()).normalized(); //vecteur L
+				Ray shadowRay(itLights->position(),-dirLight);
+
+				// Lancer le rayon d'ombre
+				const RayTriangleIntersection * const shadowIntersection = firstIntersection(shadowRay);
+
+				// Si l'objet est éclairé apr la lampe, alors on applique phong
+				if(shadowIntersection->valid() && intersection->triangle()==shadowIntersection->triangle()) {
+					RGBColor kd = intersection->triangle()->material()->diffuseColor();
+					RGBColor ks = intersection->triangle()->material()->specularColor();
+					float n = intersection->triangle()->material()->specularExponent();
+					RGBColor isource = itLights->color();
+					Math::Vector3 normale = intersection->triangle()->normal(ray.source()).normalized();
+					float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
+					Math::Vector3 dirRefl = intersection->triangle()->reflectionDirection(dirLight); //vecteur R
+					Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
+					if(visible>0) {
+						color=color+kd*isource*visible;
+						if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
 								
-								float prdtRV = dirRefl*vision;
-								Ray reflectionRay(intersection->intersection(),intersection->triangle()->reflectionDirection(ray));
-								color=color+ks*isource*pow(prdtRV,n)+sendRay(reflectionRay,depth+1,maxDepth);
-							}
+							float prdtRV = dirRefl*vision;
+							Ray reflectionRay(intersection->intersection(),intersection->triangle()->reflectionDirection(ray));
+							color=color+ks*isource*pow(prdtRV,n)+sendRay(reflectionRay,depth+1,maxDepth);
 						}
 					}
-					itLights++;
 				}
+
 			}
 			return color;
 		}
+			
+			/*
+			std::deque<PointLight,aligned_allocator<PointLight,16>>::iterator itLights = m_lights.begin();
+			while(itLights != m_lights.end()) {
+				Math::Vector3 dirLight = (itLights->position()-intersection->intersection()).normalized(); //vecteur L
+				Ray shadowRay(itLights->position(),-dirLight);
+				distanceMin=std::numeric_limits<float>::max();
+				itGeo=m_geometries.begin();
+				while(itGeo!=m_geometries.end()) {
+					::std::deque<Triangle, aligned_allocator<Triangle,16U>>::const_iterator itTri = itGeo->second.getTriangles().begin();
+					while(itTri!=itGeo->second.getTriangles().end()) {
+						RayTriangleIntersection currentShadowInter(&*itTri,&shadowRay);
+						if(currentShadowInter.valid()) {
+							distance = currentShadowInter.tRayValue();
+							if(distance<distanceMin) {
+								interShadow=currentShadowInter;
+								shadowIntersect=true;
+								distanceMin=distance;
+							}
+						}
+						itTri++;
+					}
+					itGeo++;
+				}
 
+				if(shadowIntersect && intersection->triangle()==interShadow.triangle()) {
+					RGBColor kd = intersection->triangle()->material()->diffuseColor();
+					RGBColor ks = intersection->triangle()->material()->specularColor();
+					float n = intersection->triangle()->material()->specularExponent();
+					RGBColor isource = itLights->color();
+					Math::Vector3 normale = intersection->triangle()->normal(ray.source()).normalized();
+					float visible = normale*dirLight; //indique si lumière éclaire le triangle (également égal au prdt scalaire)
+					Math::Vector3 dirRefl = intersection->triangle()->reflectionDirection(dirLight); //vecteur R
+					Math::Vector3 vision = ray.direction().inv().normalized(); //vecteur V
+					if(visible>0) {
+						color=color+kd*isource*visible;
+						if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
+								
+							float prdtRV = dirRefl*vision;
+							Ray reflectionRay(intersection->intersection(),intersection->triangle()->reflectionDirection(ray));
+							color=color+ks*isource*pow(prdtRV,n)+sendRay(reflectionRay,depth+1,maxDepth);
+						}
+					}
+				}
+				itLights++;
+			}
+			return color;
+		}
+		*/
 
 			
 			/*RGBColor color = RGBColor(0.0,0.0,0.0);
