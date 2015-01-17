@@ -154,7 +154,7 @@ namespace Geometry
 
 			// Si le matériau est spéculaire et si depth < maxDepth, on calcule la couleur réfléchie
 			RGBColor ks = intersection->triangle()->material()->specularColor();
-			int glossyReflection = 5;
+			int glossyReflection = 0; //2;
 			if(depth<maxDepth && ks!=RGBColor(0.0,0.0,0.0)) {
 				if (depth<glossyReflection) {
 					int nbRay = 4;
